@@ -26,13 +26,11 @@
 </template>
 
 <script>
-import VueDraggableResizable from 'vue-draggable-resizable'
 import draggable from 'vuedraggable'
 export default {
   name: 'Layer',
   props: ['name'],
   components: {
-    VueDraggableResizable,
     draggable
   },
   data () {
@@ -44,10 +42,8 @@ export default {
   },
   methods: {
     listDragBegin () {
-      console.log('dragstart!')
     },
     listDragEnd () {
-      console.log('dragend!')
     },
     opacityChange (item) {
       item.layer.setOpacity(item.opacity / 100)
@@ -78,7 +74,7 @@ export default {
   },
   watch: {
     // ストアを監視。レイヤーを追加したとき・順番を変えたときに動く
-    storeLayerList: function (newLayerList, oldLayerList) {
+    storeLayerList: function (newLayerList) {
       // this.dialogHeight = ((40 * newLayerList.length) + 30 + 5) + 'px'
       let map
       switch (this.name) {
@@ -103,7 +99,7 @@ export default {
         }
       }
     },
-    storeNotification: function (newValue, oldValue) {
+    storeNotification: function (newValue) {
       if (newValue === 'cyouhuku') {
         this.$store.commit('updateNotification', '')
         this.$snotify.simple('すでに選択されています。', {

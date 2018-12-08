@@ -14,7 +14,8 @@ const store = new Vuex.Store({
     layerList03: [{id: 4, name: '色別標高図', layer: layers[1].children[3].data.layer[2], opacity: 100}],
     layerList04: [{id: 5, name: '全国最新写真', layer: layers[1].children[4].data.layer[3], opacity: 100}],
     notification: '',
-    dialogArr: []
+    dialogArr: [],
+    splitFlg: 1
   },
   getters: {
     map01 (state) { return state.map01 },
@@ -36,7 +37,8 @@ const store = new Vuex.Store({
     close01Flg (state) { return state.close01Flg },
     close02Flg (state) { return state.close02Flg },
     notification (state) { return state.notification },
-    dialogArr (state) { return state.dialogArr }
+    dialogArr (state) { return state.dialogArr },
+    splitFlg (state) { return state.splitFlg }
   },
   mutations: {
     setMap01 (state, payload) { state.map01 = payload },
@@ -96,7 +98,15 @@ const store = new Vuex.Store({
       }
     },
     // 通知------------------------------------------------------------------------
-    updateNotification (state, payload) { state.notification = payload }
+    updateNotification (state, payload) { state.notification = payload },
+    //--------------------------------------------------------------------------
+    incrSplitFlg (state) {
+      state.splitFlg++
+      if (state.splitFlg === 6) state.splitFlg = 1
+    },
+    updateSplitFlg (state, payload) {
+      state.splitFlg = Number(payload)
+    }
   }
 })
 export default store

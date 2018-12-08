@@ -79,6 +79,7 @@ import View from 'ol/View.js'
 import { fromLonLat } from 'ol/proj.js'
 import LayerList from './LayerList.vue'
 import Layer from './Layer.vue'
+import * as permalink from '../js/permalink'
 const center = fromLonLat([140.097, 37.856])
 export default {
   name: 'MyMap',
@@ -106,63 +107,67 @@ export default {
     }
   },
   computed: {
+
   },
   methods: {
     // レイヤーのダイアログを開く
     openDialog (dialog) { this.$store.commit('editDialogArr', {name: dialog, flg: 'toggle'}) },
     // 分割
     splitMap () {
-      this.splitFlg++
-      if (this.splitFlg === 6) this.splitFlg = 1
+      this.$store.commit('incrSplitFlg')
+      this.splitMap2()
+      permalink.moveEnd()
+    },
+    // 分割その２
+    splitMap2 () {
       const height = window.innerHeight + 'px'
       const height2 = window.innerHeight / 2 + 'px'
       const vm = this
-      switch (this.splitFlg) {
+      switch (this.$store.getters.splitFlg) {
         // 一画面
         case 1:
-          this.synchDivFlg = false
-          this.map02Flg = false; this.map03Flg = false; this.map04Flg = false
-          this.map01Size = {top: 0, left: 0, width: '100%', height: height}
-          this.map02Size = {top: 0, right: 0, width: 0, height: 0}
-          this.map03Size = {top: 0, left: 0, width: 0, height: 0}
-          this.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.synchDivFlg = false
+          vm.map02Flg = false; vm.map03Flg = false; vm.map04Flg = false
+          vm.map01Size = {top: 0, left: 0, width: '100%', height: height}
+          vm.map02Size = {top: 0, right: 0, width: 0, height: 0}
+          vm.map03Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
           break
         // 2画面
         case 2:
-          this.synchDivFlg = true
-          this.map02Flg = true; this.map03Flg = false; this.map04Flg = false
-          this.map01Size = {top: 0, left: 0, width: '50%', height: height}
-          this.map02Size = {top: 0, left: '50%', width: '50%', height: height}
-          this.map03Size = {top: 0, left: 0, width: 0, height: 0}
-          this.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.synchDivFlg = true
+          vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false
+          vm.map01Size = {top: 0, left: 0, width: '50%', height: height}
+          vm.map02Size = {top: 0, left: '50%', width: '50%', height: height}
+          vm.map03Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
           break
         // 3画面１
         case 3:
-          this.synchDivFlg = true
-          this.map02Flg = true; this.map03Flg = true; this.map04Flg = false
-          this.map01Size = {top: 0, left: 0, width: '50%', height: height}
-          this.map02Size = {top: 0, left: '50%', width: '50%', height: height2}
-          this.map03Size = {top: '50%', left: '50%', width: '50%', height: height2}
-          this.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.synchDivFlg = true
+          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false
+          vm.map01Size = {top: 0, left: 0, width: '50%', height: height}
+          vm.map02Size = {top: 0, left: '50%', width: '50%', height: height2}
+          vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2}
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
           break
         // 3画面2
         case 4:
-          // this.map02Flg = false; this.map03Flg = false; this.map04Flg = false
-          this.synchDivFlg = true
-          this.map02Flg = true; this.map03Flg = true; this.map04Flg = false
-          this.map01Size = {top: 0, left: 0, width: '100%', height: height2}
-          this.map02Size = {top: '50%', left: 0, width: '50%', height: height2}
-          this.map03Size = {top: '50%', left: '50%', width: '50%', height: height2}
-          this.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.synchDivFlg = true
+          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false
+          vm.map01Size = {top: 0, left: 0, width: '100%', height: height2}
+          vm.map02Size = {top: '50%', left: 0, width: '50%', height: height2}
+          vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2}
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
           break
         // 4画面
         case 5:
-          this.synchDivFlg = true
-          this.map02Flg = true; this.map03Flg = true; this.map04Flg = true
-          this.map01Size = {top: 0, left: 0, width: '50%', height: height2}
-          this.map02Size = {top: 0, right: 0, width: '50%', height: height2}
-          this.map03Size = {top: '50%', left: 0, width: '50%', height: height2}
-          this.map04Size = {top: '50%', left: '50%', width: '50%', height: height2}
+          vm.synchDivFlg = true
+          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = true
+          vm.map01Size = {top: 0, left: 0, width: '50%', height: height2}
+          vm.map02Size = {top: 0, right: 0, width: '50%', height: height2}
+          vm.map03Size = {top: '50%', left: 0, width: '50%', height: height2}
+          vm.map04Size = {top: '50%', left: '50%', width: '50%', height: height2}
       }
       this.$nextTick(function () {
         vm.$store.state.map01.updateSize()
@@ -195,7 +200,8 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
-      initMap(this.$store)
+      // initMap(this.$store)
+      initMap(this)
       // デバイスによって高さ設定が効かないときがあるようなので再度
       // this.map01Size = {width: '100%', height: window.innerHeight + 'px'}
       // this.map02Size = {width: '0', height: window.innerHeight + 'px'}
@@ -203,7 +209,7 @@ export default {
     })
   }
 }
-function initMap (store) {
+function initMap (vm) {
   let map01 = null
   let view01 = new View({
     center: center,
@@ -211,46 +217,48 @@ function initMap (store) {
   })
   map01 = new Map({
     layers: [
-      store.getters.layerList('map01Dialog')[0].layer
+      vm.$store.getters.layerList('map01Dialog')[0].layer
     ],
     target: 'map01',
     view: view01
   })
-  store.commit('setMap01', map01)
-  map01 = store.state.map01
+  vm.$store.commit('setMap01', map01)
+  map01 = vm.$store.state.map01
   map01.on('singleclick', function (evt) {
-    console.log(store.state.map01)
+    console.log(vm.$store.state.map01)
   })
   // map2
   let map02 = null
   map02 = new Map({
     layers: [
-      store.getters.layerList('map02Dialog')[0].layer
+      vm.$store.getters.layerList('map02Dialog')[0].layer
     ],
     target: 'map02',
     view: view01
   })
-  store.commit('setMap02', map02)
+  vm.$store.commit('setMap02', map02)
   // map3
   let map03 = null
   map03 = new Map({
     layers: [
-      store.getters.layerList('map03Dialog')[0].layer
+      vm.$store.getters.layerList('map03Dialog')[0].layer
     ],
     target: 'map03',
     view: view01
   })
-  store.commit('setMap03', map03)
+  vm.$store.commit('setMap03', map03)
   // map4
   let map04 = null
   map04 = new Map({
     layers: [
-      store.getters.layerList('map04Dialog')[0].layer
+      vm.$store.getters.layerList('map04Dialog')[0].layer
     ],
     target: 'map04',
     view: view01
   })
-  store.commit('setMap04', map04)
+  vm.$store.commit('setMap04', map04)
+  permalink.permalinkEventSet()
+  vm.splitMap2()
 }
 </script>
 
