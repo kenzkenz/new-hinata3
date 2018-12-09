@@ -27,6 +27,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import * as permalink from '../js/permalink'
 export default {
   name: 'Layer',
   props: ['name'],
@@ -47,14 +48,26 @@ export default {
     },
     opacityChange (item) {
       item.layer.setOpacity(item.opacity / 100)
+      permalink.moveEnd()
     },
     removeLayer (item) {
       const result = this.storeLayerList.filter((el) => el.id !== item.id)
       this.$store.commit('updateList', {value: result, name: this.name})
-      if (this.name === 'map01Dialog') {
-        this.map01.removeLayer(item.layer)
-      } else {
-        this.map02.removeLayer(item.layer)
+      // 削除するレイヤーの透過度を１００に戻す。再度追加するときのために
+      item.layer.setOpacity(100)
+      switch (this.name) {
+        case 'map01Dialog':
+          this.map01.removeLayer(item.layer)
+          break
+        case 'map02Dialog':
+          this.map02.removeLayer(item.layer)
+          break
+        case 'map03Dialog':
+          this.map03.removeLayer(item.layer)
+          break
+        case 'map04Dialog':
+          this.map04.removeLayer(item.layer)
+          break
       }
     }
   },
@@ -75,7 +88,6 @@ export default {
   watch: {
     // ストアを監視。レイヤーを追加したとき・順番を変えたときに動く
     storeLayerList: function (newLayerList) {
-      // this.dialogHeight = ((40 * newLayerList.length) + 30 + 5) + 'px'
       let map
       switch (this.name) {
         case 'map01Dialog':
@@ -95,9 +107,10 @@ export default {
         for (let i = newLayerList.length - 1; i >= 0; i--) {
           map.removeLayer(newLayerList[i].layer)
           map.addLayer(newLayerList[i].layer)
-          newLayerList[i].layer.setOpacity(100)
+          newLayerList[i].layer.setOpacity(newLayerList[i].opacity / 100)
         }
       }
+      permalink.moveEnd()
     },
     storeNotification: function (newValue) {
       if (newValue === 'cyouhuku') {

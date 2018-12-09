@@ -34,6 +34,20 @@ const store = new Vuex.Store({
           return state.layerList04
       }
     },
+    layerLists (state) {
+      const layerListArr = []
+      layerListArr.push(state.layerList01);layerListArr.push(state.layerList02),layerListArr.push(state.layerList03);layerListArr.push(state.layerList04)
+      const layerListArr2 = []
+      for (let layerList of layerListArr) {
+        // console.log(layerList)
+        const layerList2 = []
+        for (let layer of layerList) {
+          layerList2.push({ id:layer.id, o:layer.opacity})
+        }
+        layerListArr2.push(layerList2)
+      }
+      return JSON.stringify(layerListArr2)
+    },
     close01Flg (state) { return state.close01Flg },
     close02Flg (state) { return state.close02Flg },
     notification (state) { return state.notification },
@@ -45,7 +59,7 @@ const store = new Vuex.Store({
     setMap02 (state, payload) { state.map02 = payload },
     setMap03 (state, payload) { state.map03 = payload },
     setMap04 (state, payload) { state.map04 = payload },
-    // ダイアログの開閉フラグ---------------------------------------------------------
+    // ダイアログの開閉フラグ---------------------------------------------------------------------
     pushDialogArr (state, payload) { state.dialogArr.push(payload) },
     editDialogArr (state, payload) {
       const result = state.dialogArr.find(el => el.name === payload.name)
@@ -55,7 +69,7 @@ const store = new Vuex.Store({
         result.flg = payload.flg
       }
     },
-    // 背景リスト-------------------------------------------------------------------
+    // レイヤーリスト更新-------------------------------------------------------------------------
     updateList (state, payload) {
       switch (payload.name) {
         case 'map01Dialog':
@@ -72,6 +86,7 @@ const store = new Vuex.Store({
           break
       }
     },
+    // レイヤーリスト先頭に追加------------------------------------------------------------------
     unshiftLayerList (state, payload) {
       let layerList, layer
       switch (payload.name) {
@@ -97,12 +112,12 @@ const store = new Vuex.Store({
         layerList.unshift(payload.value)
       }
     },
-    // 通知------------------------------------------------------------------------
+    // 通知-------------------------------------------------------------------------------------
     updateNotification (state, payload) { state.notification = payload },
-    //--------------------------------------------------------------------------
+    //マップ分割フラグ----------------------------------------------------------------------------
     incrSplitFlg (state) {
       state.splitFlg++
-      if (state.splitFlg === 6) state.splitFlg = 1
+      if (state.splitFlg === 7) state.splitFlg = 1
     },
     updateSplitFlg (state, payload) {
       state.splitFlg = Number(payload)

@@ -8,11 +8,13 @@
                     <el-button type="info" size="medium" @click="openDialog('map01Dialog')">背景</el-button>
                 </div>
                 <G-Dialog :opt="opt01">
-                    <div class="first-content-div">
-                        <Layer :name="opt01.name"/>
-                    </div>
-                    <div class="second-content-div">
-                        <LayerList :name="opt01.name" />
+                    <div class="content-div" :style="map01DialogContentSize">
+                        <div class="first-content-div">
+                            <Layer :name="opt01.name"/>
+                        </div>
+                        <div class="second-content-div">
+                            <LayerList :name="opt01.name" />
+                        </div>
                     </div>
                 </G-Dialog>
             </div>
@@ -24,11 +26,13 @@
                     <el-button type="info" size="medium" @click="openDialog('map02Dialog')">背景</el-button>
                 </div>
                 <G-Dialog :opt="opt02">
-                    <div class="first-content-div">
-                        <Layer :name="opt02.name"/>
-                    </div>
-                    <div class="second-content-div">
-                        <LayerList :name="opt02.name" />
+                    <div class="content-div" :style="map02DialogContentSize">
+                        <div class="first-content-div">
+                            <Layer :name="opt02.name"/>
+                        </div>
+                        <div class="second-content-div">
+                            <LayerList :name="opt02.name" />
+                        </div>
                     </div>
                 </G-Dialog>
             </div>
@@ -39,11 +43,13 @@
                     <el-button type="info" size="medium" @click="openDialog('map03Dialog')">背景</el-button>
                 </div>
                 <G-Dialog :opt="opt03">
-                    <div class="first-content-div">
-                        <Layer :name="opt03.name"/>
-                    </div>
-                    <div class="second-content-div">
-                        <LayerList :name="opt03.name" />
+                    <div class="content-div" :style="map03DialogContentSize" >
+                        <div class="first-content-div">
+                            <Layer :name="opt03.name"/>
+                        </div>
+                        <div class="second-content-div">
+                            <LayerList :name="opt03.name" />
+                        </div>
                     </div>
                 </G-Dialog>
             </div>
@@ -54,11 +60,13 @@
                     <el-button type="info" size="medium" @click="openDialog('map04Dialog')">背景</el-button>
                 </div>
                 <G-Dialog :opt="opt04">
-                    <div class="first-content-div">
-                        <Layer :name="opt04.name"/>
-                    </div>
-                    <div class="second-content-div">
-                        <LayerList :name="opt04.name" />
+                    <div class="content-div" :style="map04DialogContentSize">
+                        <div class="first-content-div">
+                            <Layer :name="opt04.name"/>
+                        </div>
+                        <div class="second-content-div">
+                            <LayerList :name="opt04.name" />
+                        </div>
                     </div>
                 </G-Dialog>
             </div>
@@ -76,7 +84,7 @@
 import 'ol/ol.css'
 import Map from 'ol/Map.js'
 import View from 'ol/View.js'
-import { fromLonLat } from 'ol/proj.js'
+import { transform, fromLonLat } from 'ol/proj.js'
 import LayerList from './LayerList.vue'
 import Layer from './Layer.vue'
 import * as permalink from '../js/permalink'
@@ -93,6 +101,10 @@ export default {
       map02Size: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
       map03Size: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
       map04Size: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
+      map01DialogContentSize: {'max-height': '300px'},
+      map02DialogContentSize: {'max-height': '300px'},
+      map03DialogContentSize: {'max-height': '300px'},
+      map04DialogContentSize: {'max-height': '300px'},
       opt01: {close: false, name: 'map01Dialog', position: {top: '56px', right: '210px'}, dialog: {height: 'auto'}},
       opt02: {close: false, name: 'map02Dialog', position: {top: '56px', right: '210px'}, dialog: {height: 'auto'}},
       opt03: {close: false, name: 'map03Dialog', position: {top: '56px', right: '210px'}, dialog: {height: 'auto'}},
@@ -122,6 +134,8 @@ export default {
     splitMap2 () {
       const height = window.innerHeight + 'px'
       const height2 = window.innerHeight / 2 + 'px'
+      const contentHeight =(window.innerHeight -100) + 'px'
+      const contentHeight2 =((window.innerHeight/2) -100) + 'px'
       const vm = this
       switch (this.$store.getters.splitFlg) {
         // 一画面
@@ -132,8 +146,9 @@ export default {
           vm.map02Size = {top: 0, right: 0, width: 0, height: 0}
           vm.map03Size = {top: 0, left: 0, width: 0, height: 0}
           vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.map01DialogContentSize = {'max-height': contentHeight}
           break
-        // 2画面
+        // 2画面（縦２画面）
         case 2:
           vm.synchDivFlg = true
           vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false
@@ -141,33 +156,56 @@ export default {
           vm.map02Size = {top: 0, left: '50%', width: '50%', height: height}
           vm.map03Size = {top: 0, left: 0, width: 0, height: 0}
           vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.map01DialogContentSize = {'max-height': contentHeight}
+          vm.map02DialogContentSize = {'max-height': contentHeight}
           break
-        // 3画面１
+        // 2画面（横２画面）
         case 3:
+          vm.synchDivFlg = true
+          vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false
+          vm.map01Size = {top: 0, left: 0, width: '100%', height: height2}
+          vm.map02Size = {top: '50%', left: 0, width: '100%', height: height2}
+          vm.map03Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.map01DialogContentSize = {'max-height': contentHeight2}
+          vm.map02DialogContentSize = {'max-height': contentHeight2}
+          break
+        // 3画面１（左が縦全、右が縦半）
+        case 4:
           vm.synchDivFlg = true
           vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false
           vm.map01Size = {top: 0, left: 0, width: '50%', height: height}
           vm.map02Size = {top: 0, left: '50%', width: '50%', height: height2}
           vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2}
           vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.map01DialogContentSize = {'max-height': contentHeight}
+          vm.map02DialogContentSize = {'max-height': contentHeight2}
+          vm.map03DialogContentSize = {'max-height': contentHeight2}
           break
-        // 3画面2
-        case 4:
+        // 3画面2（全て縦半）
+        case 5:
           vm.synchDivFlg = true
           vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false
           vm.map01Size = {top: 0, left: 0, width: '100%', height: height2}
           vm.map02Size = {top: '50%', left: 0, width: '50%', height: height2}
           vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2}
           vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
+          vm.map01DialogContentSize = {'max-height': contentHeight2}
+          vm.map02DialogContentSize = {'max-height': contentHeight2}
+          vm.map03DialogContentSize = {'max-height': contentHeight2}
           break
-        // 4画面
-        case 5:
+        // 4画面（全て縦半）
+        case 6:
           vm.synchDivFlg = true
           vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = true
           vm.map01Size = {top: 0, left: 0, width: '50%', height: height2}
           vm.map02Size = {top: 0, right: 0, width: '50%', height: height2}
           vm.map03Size = {top: '50%', left: 0, width: '50%', height: height2}
           vm.map04Size = {top: '50%', left: '50%', width: '50%', height: height2}
+          vm.map01DialogContentSize = {'max-height': contentHeight2}
+          vm.map02DialogContentSize = {'max-height': contentHeight2}
+          vm.map03DialogContentSize = {'max-height': contentHeight2}
+          vm.map04DialogContentSize = {'max-height': contentHeight2}
       }
       this.$nextTick(function () {
         vm.$store.state.map01.updateSize()
@@ -225,7 +263,7 @@ function initMap (vm) {
   vm.$store.commit('setMap01', map01)
   map01 = vm.$store.state.map01
   map01.on('singleclick', function (evt) {
-    console.log(vm.$store.state.map01)
+    console.log(transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
   })
   // map2
   let map02 = null
@@ -302,6 +340,9 @@ function initMap (vm) {
         top: 0;
         right: 0;
         z-index: 1;
+    }
+    .content-div{
+        overflow: auto;
     }
     .first-content-div{
         /*height: 150px;*/
