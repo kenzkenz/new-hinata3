@@ -10,6 +10,9 @@ import Icon from 'vue-awesome/components/Icon'
 import Snotify from 'vue-snotify'
 import 'vue-snotify/styles/material.css'
 import Dialog from './components/Dialog.vue'
+import jQuery from 'jquery'
+global.jquery = jQuery
+global.$ = jQuery
 Vue.component('G-Dialog', Dialog)
 Vue.component('v-icon', Icon)
 Vue.use(ElementUI, { locale })

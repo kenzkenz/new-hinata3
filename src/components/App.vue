@@ -17,6 +17,7 @@
                         </div>
                     </div>
                 </G-Dialog>
+                <div id="zoom-div">{{ zoom01 }}</div>
             </div>
         </transition>
         <transition>
@@ -88,6 +89,7 @@ import { transform, fromLonLat } from 'ol/proj.js'
 import LayerList from './LayerList.vue'
 import Layer from './Layer.vue'
 import * as permalink from '../js/permalink'
+import Target from 'ol-ext/control/Target'
 const center = fromLonLat([140.097, 37.856])
 export default {
   name: 'MyMap',
@@ -105,6 +107,7 @@ export default {
       map02DialogContentSize: {'max-height': '300px'},
       map03DialogContentSize: {'max-height': '300px'},
       map04DialogContentSize: {'max-height': '300px'},
+      zoom01: '99',
       opt01: {close: false, name: 'map01Dialog', position: {top: '56px', right: '210px'}, dialog: {height: 'auto'}},
       opt02: {close: false, name: 'map02Dialog', position: {top: '56px', right: '210px'}, dialog: {height: 'auto'}},
       opt03: {close: false, name: 'map03Dialog', position: {top: '56px', right: '210px'}, dialog: {height: 'auto'}},
@@ -238,8 +241,9 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
-      // initMap(this.$store)
       initMap(this)
+
+
       // デバイスによって高さ設定が効かないときがあるようなので再度
       // this.map01Size = {width: '100%', height: window.innerHeight + 'px'}
       // this.map02Size = {width: '0', height: window.innerHeight + 'px'}
@@ -265,6 +269,12 @@ function initMap (vm) {
   map01.on('singleclick', function (evt) {
     console.log(transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
   })
+  map01.on('moveend', function () {
+    vm.zoom01 = 'zoom=' + String(Math.floor(map01.getView().getZoom() * 100) / 100)
+  })
+  const target01 = new Target({composite: 'difference'})
+  map01.addControl(target01);
+
   // map2
   let map02 = null
   map02 = new Map({
@@ -275,6 +285,9 @@ function initMap (vm) {
     view: view01
   })
   vm.$store.commit('setMap02', map02)
+  const target02 = new Target({composite: 'difference'})
+  map02.addControl(target02);
+
   // map3
   let map03 = null
   map03 = new Map({
@@ -285,6 +298,9 @@ function initMap (vm) {
     view: view01
   })
   vm.$store.commit('setMap03', map03)
+  const target03 = new Target({composite: 'difference'})
+  map03.addControl(target03);
+
   // map4
   let map04 = null
   map04 = new Map({
@@ -295,6 +311,9 @@ function initMap (vm) {
     view: view01
   })
   vm.$store.commit('setMap04', map04)
+  const target04 = new Target({composite: 'difference'})
+  map04.addControl(target04);
+
   permalink.permalinkEventSet()
   vm.splitMap2()
 }
@@ -340,6 +359,15 @@ function initMap (vm) {
         top: 0;
         right: 0;
         z-index: 1;
+    }
+    #zoom-div{
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        z-index: 1;
+        color: #fff;
+        text-shadow: black 1px 1px 0px, black -1px 1px 0px,
+        black 1px -1px 0px, black -1px -1px 0px;
     }
     .content-div{
         overflow: auto;

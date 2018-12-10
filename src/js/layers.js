@@ -102,6 +102,18 @@ const gihuCsArr = []
 for (let i = 0; i < 4; i++) {
   gihuCsArr[i] = new TileLayer(new GihuCs())
 }
+// 日本CS立体図
+function NihonCs () {
+  this.source = new XYZ({
+    url: 'http://kouapp.main.jp/csmap/tile/japan/{z}/{x}/{y}.jpg',
+    minZoom:9,
+    maxZoom:15
+  })
+}
+const nihonCsArr = []
+for (let i = 0; i < 4; i++) {
+  nihonCsArr[i] = new TileLayer(new NihonCs())
+}
 
 // ここにレイヤーを全部書く。クリックするとストアのlayerListに追加されていく
 const layers =
@@ -121,7 +133,8 @@ const layers =
       ]},
     { text: '立体図等',
       children: [
-        { text: '岐阜県CS立体図', data: { id: 7, layer: gihuCsArr, opacity: 100 } }
+        { text: '岐阜県CS立体図', data: { id: 'r01', layer: gihuCsArr, opacity: 100 } },
+        { text: '日本CS立体図', data: { id: 'r02', layer: nihonCsArr, opacity: 100 } }
       ]}
   ]
 export default layers
