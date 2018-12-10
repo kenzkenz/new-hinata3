@@ -105,6 +105,5 @@ export function moveEnd () {
     center: center4326,
     rotation: rotation
   };
-
   window.history.pushState(state, 'map', hash + parameter);
 }

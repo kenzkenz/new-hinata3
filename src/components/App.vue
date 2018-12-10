@@ -242,8 +242,6 @@ export default {
   mounted () {
     this.$nextTick(function () {
       initMap(this)
-
-
       // デバイスによって高さ設定が効かないときがあるようなので再度
       // this.map01Size = {width: '100%', height: window.innerHeight + 'px'}
       // this.map02Size = {width: '0', height: window.innerHeight + 'px'}
@@ -274,8 +272,7 @@ function initMap (vm) {
   })
   const target01 = new Target({composite: 'difference'})
   map01.addControl(target01);
-
-  // map2
+  // map2-------------------------------------------------------------------------------------
   let map02 = null
   map02 = new Map({
     layers: [
@@ -287,8 +284,7 @@ function initMap (vm) {
   vm.$store.commit('setMap02', map02)
   const target02 = new Target({composite: 'difference'})
   map02.addControl(target02);
-
-  // map3
+  // map3-------------------------------------------------------------------------------------
   let map03 = null
   map03 = new Map({
     layers: [
@@ -300,8 +296,7 @@ function initMap (vm) {
   vm.$store.commit('setMap03', map03)
   const target03 = new Target({composite: 'difference'})
   map03.addControl(target03);
-
-  // map4
+  // map4-------------------------------------------------------------------------------------
   let map04 = null
   map04 = new Map({
     layers: [
@@ -313,8 +308,10 @@ function initMap (vm) {
   vm.$store.commit('setMap04', map04)
   const target04 = new Target({composite: 'difference'})
   map04.addControl(target04);
-
+  //--------------------------------------------------------------------------------------------
+  // パーマリンク
   permalink.permalinkEventSet()
+  // 画面分割
   vm.splitMap2()
 }
 </script>
@@ -362,12 +359,13 @@ function initMap (vm) {
     }
     #zoom-div{
         position: absolute;
-        left: 0px;
-        bottom: 0px;
+        left: 10px;
+        bottom: 10px;
         z-index: 1;
         color: #fff;
         text-shadow: black 1px 1px 0px, black -1px 1px 0px,
         black 1px -1px 0px, black -1px -1px 0px;
+        font-size: x-large;
     }
     .content-div{
         overflow: auto;
