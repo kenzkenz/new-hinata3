@@ -26,7 +26,8 @@ export default {
             id: node.data.id,
             name: node.text,
             layer: node.data.layer,
-            opacity: node.data.opacity
+            opacity: node.data.opacity,
+            addFlg:true
           },
           name: this.name
         })

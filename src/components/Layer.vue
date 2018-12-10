@@ -28,6 +28,8 @@
 <script>
 import draggable from 'vuedraggable'
 import * as permalink from '../js/permalink'
+import { transform } from 'ol/proj.js'
+import View from 'ol/View.js'
 export default {
   name: 'Layer',
   props: ['name'],
@@ -80,6 +82,10 @@ export default {
       get () { return this.$store.getters.layerList(this.name) },
       set (value) { this.$store.commit('updateList', {value: value, name: this.name}) }
     },
+    // watch用にlengthのあるオブジェクト
+    storeLayerListWatch: {
+      get () { return {value: this.$store.getters.layerList(this.name), length:this.$store.getters.layerList(this.name).length} },
+    },
     storeNotification: {
       get () { return this.$store.getters.notification },
       set (value) { this.$store.commit('updateNotification', value) }
@@ -87,7 +93,7 @@ export default {
   },
   watch: {
     // ストアを監視。レイヤーを追加したとき・順番を変えたときに動く
-    storeLayerList: function (newLayerList) {
+    storeLayerListWatch : function (newLayerList,oldLayerList) {
       let map
       switch (this.name) {
         case 'map01Dialog':
@@ -104,14 +110,23 @@ export default {
           break
       }
       if (map) {
-        for (let i = newLayerList.length - 1; i >= 0; i--) {
-          map.removeLayer(newLayerList[i].layer)
-          map.addLayer(newLayerList[i].layer)
-          newLayerList[i].layer.setOpacity(newLayerList[i].opacity / 100)
+        // 逆ループ
+        for (let i = newLayerList.value.length - 1; i >= 0; i--) {
+          // リストクリックによる追加したレイヤーで
+          if (newLayerList.value[i].addFlg) {
+            if (newLayerList.length > oldLayerList.length) {
+              const center = newLayerList.value[i].layer.getProperties().center
+              if (center) map.getView().setCenter(transform(center,"EPSG:4326","EPSG:3857"))
+            }
+          }
+          map.removeLayer(newLayerList.value[i].layer)
+          map.addLayer(newLayerList.value[i].layer)
+          newLayerList.value[i].layer.setOpacity(newLayerList.value[i].opacity / 100)
         }
       }
       permalink.moveEnd()
     },
+    //
     storeNotification: function (newValue) {
       if (newValue === 'cyouhuku') {
         this.$store.commit('updateNotification', '')

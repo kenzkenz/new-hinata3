@@ -1,6 +1,13 @@
 import TileLayer from 'ol/layer/Tile.js'
 import OSM from 'ol/source/OSM.js'
 import XYZ from 'ol/source/XYZ.js'
+import { transformExtent } from 'ol/proj.js'
+
+const transformE = function (extent) {
+    return transformExtent(extent,'EPSG:4326','EPSG:3857');
+}
+
+
 // オープンストリートマップ
 function Osm () {
   this.source = new OSM()
@@ -87,7 +94,9 @@ function GihuCs () {
     url: 'https://kenzkenz2.xsrv.jp/gihucs/{z}/{x}/{-y}.png',
     minZoom: 1,
     maxZoom: 17
-  })
+  }),
+  this.extent = transformE([136.257111,35.141011,137.666902,36.482164143934]),
+  this.center = [136.92019043124094,35.55338980561788]
 }
 const gihuCsArr = []
 for (let i = 0; i < 4; i++) {
