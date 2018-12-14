@@ -14,6 +14,8 @@
     "liquor-tree": "^0.2.45",
     "ol": "^5.3.0",
     "ol-ext": "^3.0.2",
+    "olcs": "^2.6.0",
+    "rison": "^0.1.1",
     "vue": "^2.5.17",
     "vue-awesome": "^3.2.0",
     "vue-draggable-resizable": "^1.7.5",

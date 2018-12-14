@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 module.exports = {
   //  ビルドしたときのパス 空文字にして相対パスにする。
   baseUrl: process.env.NODE_ENV === 'production'
@@ -12,4 +14,13 @@ module.exports = {
   //   maxEntrypointSize: 10000000,
   //   maxAssetSize: 10000000
   // }
+  // cdnでjqueryを使うとき
+  // plugins: [
+  //   new webpack.ProvidePlugin(
+  //     {
+  //       jQuery: "jquery",
+  //       $: "jquery",
+  //     }
+  //   ),
+  // ],
 }

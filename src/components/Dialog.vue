@@ -1,13 +1,15 @@
 ダイアログ作成用の汎用vueファイル。グローバルで宣言。親からoptを取得して位置、スタイル等を設定する。
 <template>
     <transition>
-        <div class="dialog-parent-div" :style="this.opt.position">
+        <div class="dialog-parent-div" :style="this.opt.position" @mousedown="dialogMouseDown">
             <vue-draggable-resizable  class="dialog-div" v-show="!this.storeFlg" :resizable="true" :parent="false" drag-handle=".drag-handle" :style="this.opt.dialog" :handles="['ml','mr']">
-                <div class="drag-handle"></div>
-                <div class="close-btn-div" @click="closeBtn">
-                    <v-icon name="times" scale="1.5" class="hover"/>
+                <div>
+                    <div class="drag-handle"></div>
+                    <div class="close-btn-div" @click="closeBtn">
+                        <v-icon name="times" scale="1.5" class="hover"/>
+                    </div>
+                    <slot></slot>
                 </div>
-                <slot></slot>
             </vue-draggable-resizable>
         </div>
     </transition>
@@ -24,11 +26,16 @@ export default {
   methods: {
     closeBtn () {
       this.$store.commit('editDialogArr', {name: this.opt.name, flg: true})
+    },
+    dialogMouseDown (e) {
+      this.$store.commit('incrDialogMaxZindex')
+      const maxZindex = this.$store.state.dialogMaxZindex
+      this.opt.position["z-index"] = maxZindex
     }
   },
   computed: {
     storeDialogArr: {
-      get () { return this.$store.getters.dialogArr },
+      get () { return this.$store.state.dialogArr },
       set (value) { this.$store.commit('pushDialogArr', value) }
     },
     storeFlg: function () {
@@ -37,6 +44,7 @@ export default {
     }
   },
   created () {
+    // ダイアログクリエイト時に開閉のフラグをストアに設定する。
     this.$store.commit('pushDialogArr', {name: this.opt.name, flg: this.opt.close})
   }
 }
@@ -50,7 +58,6 @@ export default {
         top: 55px;
         right: 210px;
         /*left: 230px;*/
-        z-index: 1;
     }
     .dialog-div{
         background-color: #fff;

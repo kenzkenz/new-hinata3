@@ -1,14 +1,18 @@
 import store from './store'
 import { transform } from 'ol/proj.js'
 import layers from './layers.js'
+import rison from 'rison'
 export function permalinkEventSet() {
+
+  // console.log(rison.encode_object({supportsObjects: true, ints: 435}))
+
   // 起動時の処理------------------------------------------------------------------------------
   if (window.location.hash !== '') {
-     const hash = decodeURIComponent(window.location.hash.replace('#map=', ''))
+     const hash = decodeURIComponent(window.location.hash.replace('#', ''))
      // 場所、ズームを復帰
      const parts = hash.split('/');
-     const map = store.getters.map01
-     if (parts.length === 4) {
+     const map = store.state.map01
+     if (parts.length === 3) {
        const center = [ parseFloat(parts[1]), parseFloat(parts[2]) ]
        const center3857 = transform(center,'EPSG:4326','EPSG:3857')
        map.getView().setCenter(center3857)
@@ -29,14 +33,15 @@ export function permalinkEventSet() {
       }
       if (key==='L') {
         // 初期レイヤーをリセット
-        store.commit('updateList', {value: [], name: 'map01Dialog'})
-        store.commit('updateList', {value: [], name: 'map02Dialog'})
-        store.commit('updateList', {value: [], name: 'map03Dialog'})
-        store.commit('updateList', {value: [], name: 'map04Dialog'})
-        store.getters.map01.removeLayer(store.getters.map01.getLayers().getArray()[0])
-        store.getters.map02.removeLayer(store.getters.map02.getLayers().getArray()[0])
-        store.getters.map03.removeLayer(store.getters.map03.getLayers().getArray()[0])
-        store.getters.map04.removeLayer(store.getters.map04.getLayers().getArray()[0])
+        store.commit('updateList', {value: [], name: 'map01'})
+        store.commit('updateList', {value: [], name: 'map02'})
+        store.commit('updateList', {value: [], name: 'map03'})
+        store.commit('updateList', {value: [], name: 'map04'})
+        store.state.map01.removeLayer(store.state.map01.getLayers().getArray()[0])
+        store.state.map02.removeLayer(store.state.map02.getLayers().getArray()[0])
+        store.state.map03.removeLayer(store.state.map03.getLayers().getArray()[0])
+        store.state.map04.removeLayer(store.state.map04.getLayers().getArray()[0])
+        // const urlLayerListArr = rison.decode(obj[key])
         const urlLayerListArr = JSON.parse(obj[key])
         for (let i = 0; i < urlLayerListArr.length; i++) {
           // 逆ループ
@@ -50,16 +55,16 @@ export function permalinkEventSet() {
                     let name
                     switch (i) {
                       case 0:
-                        name = 'map01Dialog'
+                        name = 'map01'
                         break
                       case 1:
-                        name = 'map02Dialog'
+                        name = 'map02'
                         break
                       case 2:
-                        name = 'map03Dialog'
+                        name = 'map03'
                         break
                       case 3:
-                        name = 'map04Dialog'
+                        name = 'map04'
                         break
                     }
                     store.commit('unshiftLayerList', {
@@ -82,22 +87,23 @@ export function permalinkEventSet() {
     }
   }
   // マップ移動時イベント------------------------------------------------------------------------
-  store.getters.map01.on('moveend', moveEnd)
+  store.state.map01.on('moveend', moveEnd)
 }
 
 export function moveEnd () {
-  const map = store.getters.map01
+  const map = store.state.map01
   const zoom = map.getView().getZoom()
   const center = map.getView().getCenter()
   const center4326 = transform(center,'EPSG:3857','EPSG:4326')
   const rotation = map.getView().getRotation()
-  const hash = '#map=' +
+  const hash = '#' +
     zoom + '/' +
     Math.round(center4326[0] * 100) / 100 + '/' +
-    Math.round(center4326[1] * 100) / 100 + '/' +
-    rotation;
-  let parameter = '?S=' + store.getters.splitFlg
+    Math.round(center4326[1] * 100) / 100
+    // rotation;
+  let parameter = '?S=' + store.state.splitFlg
   parameter += '&L=' + store.getters.layerLists
+  // parameter += '&L=' + rison.encode(store.getters.layerLists)
   // parameterだけエンコードする。起動時にwindow.location.hashでハッシュ値を取得するため
   parameter = encodeURIComponent(parameter)
   const state = {

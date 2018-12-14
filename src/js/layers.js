@@ -7,7 +7,6 @@ const transformE = function (extent) {
     return transformExtent(extent,'EPSG:4326','EPSG:3857');
 }
 
-
 // オープンストリートマップ
 function Osm () {
   this.source = new OSM()
@@ -83,6 +82,7 @@ function MiyazakiOrt () {
     minZoom: 1,
     maxZoom: 19
   })
+  this.extent = transformE([130.66371,31.34280,131.88045,32.87815])
 }
 const miyazakiOrtArr = []
 for (let i = 0; i < 4; i++) {
@@ -93,9 +93,9 @@ function GihuCs () {
   this.source = new XYZ({
     url: 'https://kenzkenz2.xsrv.jp/gihucs/{z}/{x}/{-y}.png',
     minZoom: 1,
-    maxZoom: 17
-  }),
-  this.extent = transformE([136.257111,35.141011,137.666902,36.482164143934]),
+    maxZoom: 18
+  })
+  this.extent = transformE([136.257111,35.141011,137.666902,36.482164143934])
   this.center = [136.92019043124094,35.55338980561788]
 }
 const gihuCsArr = []
@@ -114,27 +114,57 @@ const nihonCsArr = []
 for (let i = 0; i < 4; i++) {
   nihonCsArr[i] = new TileLayer(new NihonCs())
 }
+// 今昔マップ
+// 福岡・北九州編
+function Kon_hukuoka01 () {
+  this.source = new XYZ({
+    url: 'https://sv53.wadax.ne.jp/~ktgis-net/kjmapw/kjtilemap/fukuoka/00/{z}/{x}/{-y}.png',
+    minZoom: 1,
+    maxZoom: 16
+  })
+  this.center = [130.6152588501701, 33.720855341479506]
+  this.extent = transformE([130.12549,33.41993,131.1254516,34.003285])
+}
+const kon_hukuoka01Arr = []
+for (let i = 0; i < 4; i++) {
+  kon_hukuoka01Arr[i] = new TileLayer(new Kon_hukuoka01())
+}
+
+
+
+
+
+
+
 
 // ここにレイヤーを全部書く。クリックするとストアのlayerListに追加されていく
 const layers =
   [
-    { text: 'OpenStreetMap', data: { id: 0, layer: osmArr, opacity: 100 } },
+    { text: 'OpenStreetMap', data: { id: 0, layer: osmArr, opacity: 1 } },
     { text: '国土地理院',
       children: [
-        { text: '標準地図', data: { id: 1, layer: stdArr, opacity: 100 } },
-        { text: '淡色地図', data: { id: 2, layer: paleArr, opacity: 100 } },
-        { text: '白地図', data: { id: 3, layer: blankArr, opacity: 100 } },
-        { text: '色別標高図', data: { id: 4, layer: reliefArr, opacity: 100 } },
-        { text: '全国最新写真', data: { id: 5, layer: seamlessphotoArr, opacity: 100 } }
+        { text: '標準地図', data: { id: 1, layer: stdArr, opacity: 1 } },
+        { text: '淡色地図', data: { id: 2, layer: paleArr, opacity: 1 } },
+        { text: '白地図', data: { id: 3, layer: blankArr, opacity: 1 } },
+        { text: '色別標高図', data: { id: 4, layer: reliefArr, opacity: 1 } },
+        { text: '全国最新写真', data: { id: 5, layer: seamlessphotoArr, opacity: 1 } }
       ]},
     { text: '宮崎県',
       children: [
-        { text: '宮崎県航空写真', data: { id: 6, layer: miyazakiOrtArr, opacity: 100 } }
+        { text: '宮崎県航空写真', data: { id: 6, layer: miyazakiOrtArr, opacity: 1 } }
       ]},
     { text: '立体図等',
       children: [
-        { text: '岐阜県CS立体図', data: { id: 'r01', layer: gihuCsArr, opacity: 100 } },
-        { text: '日本CS立体図', data: { id: 'r02', layer: nihonCsArr, opacity: 100 } }
+        { text: '岐阜県CS立体図', data: { id: 'r01', layer: gihuCsArr, opacity: 1 } },
+        { text: '日本CS立体図', data: { id: 'r02', layer: nihonCsArr, opacity: 1 } }
+      ]},
+    { text: '今昔マップ',
+      children: [
+        { text: '福岡・北九州編',
+          children: [
+            { text: '1922-1926年', data: { id: 'kon_hu01', layer: kon_hukuoka01Arr, opacity: 1 } },
+            // { text: '1936-1938年', data: { id: 'kon_hu02', layer: nihonCsArr, opacity: 1 } }
+          ]}
       ]}
   ]
 export default layers
