@@ -4,11 +4,11 @@
         <transition>
             <div id="map01" :style="map01Size" v-show="map01Flg">
                 <div class="top-left-div">
-                    <el-button type="info" size="medium" @click="openDialog(arguments[0],menu01)"><v-icon name="bars"  scale="0.7" class=""/></el-button>
-                    <el-button type="info" size="medium" @click="splitMap" icon="el-icon-menu"></el-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],menu01)"　style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="splitMap"><v-icon name="columns"  scale="1.0" /></b-button>
                 </div>
                 <div class="top-right-div">
-                    <el-button type="info" size="medium" @click="openDialog(arguments[0],opt01)">背景</el-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt01)">背景</b-button>
                 </div>
                 <G-Dialog :opt="opt01">
                     <div :style="map01DialogContentSize">
@@ -22,7 +22,7 @@
                 </G-Dialog>
                 <G-Dialog :opt="menu01">
                   <div :style="menuContentSize">
-                      <el-button type="info" size="medium" @click="shortUrl">短縮URL作成</el-button>
+                      <b-button class='olbtn' :size="btnSize" @click="shortUrl">短縮URL作成</b-button>
                       <div class="shortUrl-div">{{ shortUrlText }}</div>
                   </div>
                 </G-Dialog>
@@ -32,7 +32,7 @@
         <transition>
             <div id="map02" :style="map02Size" v-show="map02Flg">
                 <div class="top-right-div">
-                    <el-button type="info" size="medium" @click="openDialog(arguments[0],opt02)">背景</el-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt02)">背景</b-button>
                 </div>
                 <G-Dialog :opt="opt02">
                     <div class="content-div" :style="map02DialogContentSize">
@@ -50,7 +50,7 @@
         <transition>
             <div id="map03" :style="map03Size" v-show="map03Flg">
                 <div class="top-right-div">
-                    <el-button type="info" size="medium" @click="openDialog(arguments[0],opt03)">背景</el-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt03)">背景</b-button>
                 </div>
                 <G-Dialog :opt="opt03">
                     <div class="content-div" :style="map03DialogContentSize" >
@@ -68,7 +68,7 @@
         <transition>
             <div id="map04" :style="map04Size"  v-show="map04Flg">
                 <div class="top-right-div">
-                    <el-button type="info" size="medium" @click="openDialog(arguments[0],opt04)">背景</el-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt04)">背景</b-button>
                 </div>
                 <G-Dialog :opt="opt04">
                     <div class="content-div" :style="map04DialogContentSize">
@@ -112,6 +112,7 @@ export default {
   },
   data () {
     return {
+      btnSize: '',
       menuContentSize: {'height': '100px','margin': '10px', 'overflow': 'auto'},
       map01Size: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
       map02Size: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
@@ -158,11 +159,12 @@ export default {
     },
     // 分割その２
     splitMap2 () {
+      const vm = this
       const height = window.innerHeight + 'px'
       const height2 = window.innerHeight / 2 + 'px'
       const contentHeight =(window.innerHeight -100) + 'px'
       const contentHeight2 =((window.innerHeight/2) -100) + 'px'
-      const vm = this
+
       switch (this.$store.state.splitFlg) {
         // 1画面
         case 1:
@@ -281,16 +283,21 @@ export default {
       }).fail(function () {
         console.log("エラー")
       });
-
     }
   },
   mounted () {
     this.$nextTick(function () {
       initMap(this)
-      // デバイスによって高さ設定が効かないときがあるようなので再度
-      // this.map01Size = {width: '100%', height: window.innerHeight + 'px'}
-      // this.map02Size = {width: '0', height: window.innerHeight + 'px'}
-      // this.$store.state.map01.updateSize(); this.$store.state.map02.updateSize()
+      const resize = () => {
+        if (window.innerWidth < 700) {
+          this.btnSize = 'sm'
+        } else {
+          this.btnSize = ''
+        }
+        this.splitMap2()
+      }
+      resize()
+      window.onresize =  () => resize()
     })
   }
 }
@@ -461,7 +468,7 @@ function initMap (vm) {
         border: 1px solid grey;
         margin: 5px;
         /*overflow: auto;*/
-        background: whitesmoke;
+        background: rgba(255,255,255,0.5);
     }
     #lock{
         position: absolute;
@@ -472,20 +479,22 @@ function initMap (vm) {
         border-radius: 30px;
         text-align: center;
         background-color: #fff;
-        color: #606266;
+        color: rgba(0,60,136,0.5);
         z-index: 10001;
     }
     .shortUrl-div{
         margin-top: 10px;
         padding: 5px;
         border: solid 1px gray;
-        height: 20px;
     }
     #lock:hover{
-        color: gainsboro;
+        color: rgba(0,60,136,0.7);
     }
-    .el-button{
-        margin-left: 5px!important;
+    .olbtn{
+        background-color: rgba(0,60,136,0.5);
+    }
+    .btn-secondary:hover{
+        background-color: rgba(0,60,136,0.7);
     }
     .v-enter-active, .v-leave-active {
         transition: opacity 3s;

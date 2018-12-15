@@ -37,8 +37,6 @@ export default {
   },
   data () {
     return {
-      // dialogWidth: '200px',
-      // dialogHeight: '200px',
       list: this.storeLayerList
     }
   },
@@ -173,7 +171,7 @@ export default {
     ul li {
         color: black;
         border-bottom: solid 1px gainsboro;
-        background: whitesmoke;
+        background: rgba(255,255,255,0.5);
         padding-top: 0;
         list-style-type: none!important;
         text-align: left;

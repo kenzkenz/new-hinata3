@@ -1,8 +1,8 @@
 ダイアログ作成用の汎用vueファイル。グローバルで宣言。親からoptを取得して位置、スタイル等を設定する。
 <template>
     <transition>
-        <div class="dialog-parent-div" :style="this.opt.position" @mousedown="dialogMouseDown">
-            <vue-draggable-resizable  class="dialog-div" v-show="!this.storeFlg" :resizable="true" :parent="false" drag-handle=".drag-handle" :style="this.opt.dialog" :handles="['ml','mr']">
+        <div class="dialog-parent-div" :style="this.opt.position" @mousedown="dialogMouseDown" @mouseenter="dialogEnter" @mouseleave="dialogLeave">
+            <vue-draggable-resizable  :class="{'dialog-div-enter': isEnter, 'dialog-div': !isEnter}" v-show="!this.storeFlg" :resizable="true" :parent="false" drag-handle=".drag-handle" :style="this.opt.dialog" :handles="['ml','mr']">
                 <div>
                     <div class="drag-handle"></div>
                     <div class="close-btn-div" @click="closeBtn">
@@ -23,6 +23,11 @@ export default {
   components: {
     VueDraggableResizable
   },
+  data () {
+    return {
+      isEnter: false
+    }
+  },
   methods: {
     closeBtn () {
       this.$store.commit('editDialogArr', {name: this.opt.name, flg: true})
@@ -31,6 +36,12 @@ export default {
       this.$store.commit('incrDialogMaxZindex')
       const maxZindex = this.$store.state.dialogMaxZindex
       this.opt.position["z-index"] = maxZindex
+    },
+    dialogEnter () {
+      this.isEnter = true
+    },
+    dialogLeave () {
+      this.isEnter = false
     }
   },
   computed: {
@@ -60,15 +71,21 @@ export default {
         /*left: 230px;*/
     }
     .dialog-div{
+        background-color: rgba(255,255,255,0.1);
+        /*border: 1px solid black;*/
+        box-shadow:2px 2px 5px #787878;
+        border-radius: 4px;
+    }
+    .dialog-div-enter{
         background-color: #fff;
         /*border: 1px solid black;*/
         box-shadow:2px 2px 5px #787878;
         border-radius: 4px;
     }
     .drag-handle{
-        height: 20px;
+        height: 30px;
         padding: 5px;
-        background-color: #CCC;
+        background-color: rgba(0,60,136,0.5);
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
         cursor: grab;
