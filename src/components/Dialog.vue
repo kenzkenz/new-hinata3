@@ -2,7 +2,7 @@
 <template>
     <transition>
         <div class="dialog-parent-div" :style="this.opt.position" @mousedown="dialogMouseDown" @mouseenter="dialogEnter" @mouseleave="dialogLeave">
-            <vue-draggable-resizable  :class="{'dialog-div-enter': isEnter, 'dialog-div': !isEnter}" v-show="!this.storeFlg" :resizable="true" :parent="false" drag-handle=".drag-handle" :style="this.opt.dialog" :handles="['ml','mr']">
+            <vue-draggable-resizable  :draggable="true" :class="{'dialog-div-enter': isEnter, 'dialog-div': !isEnter}" v-show="!this.storeFlg" :resizable="true" :parent="false"  drag-handle=".drag-handle" :style="this.opt.dialog" :handles="['ml','mr']">
                 <div>
                     <div class="drag-handle"></div>
                     <div class="close-btn-div" @click="closeBtn">
@@ -57,18 +57,20 @@ export default {
   created () {
     // ダイアログクリエイト時に開閉のフラグをストアに設定する。
     this.$store.commit('pushDialogArr', {name: this.opt.name, flg: this.opt.close})
+  },
+  mounted () {
+    this.$nextTick(function () {
+      // $('.drag-handle').draggable()
+    })
   }
 }
 </script>
 
 <style scoped>
     .dialog-parent-div{
-        height: 1px;
-        width: 1px;
+        height: 100%;
+        width: 0;
         position: absolute;
-        top: 55px;
-        right: 210px;
-        /*left: 230px;*/
     }
     .dialog-div{
         background-color: rgba(255,255,255,0.1);

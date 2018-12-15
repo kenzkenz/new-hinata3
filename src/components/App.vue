@@ -3,6 +3,12 @@
     <div id="map00">
         <transition>
             <div id="map01" :style="map01Size" v-show="map01Flg">
+
+
+                <!--<div id="test">-->
+                    <!--sssss-->
+                <!--</div>-->
+
                 <div class="top-left-div">
                     <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],menu01)"　style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
                     <b-button class='olbtn' :size="btnSize" @click="splitMap"><v-icon name="columns"  scale="1.0" /></b-button>
@@ -11,7 +17,7 @@
                     <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt01)">背景</b-button>
                 </div>
                 <G-Dialog :opt="opt01">
-                    <div :style="map01DialogContentSize">
+                    <div class="content-div" :style="map01DialogContentSize">
                         <div class="first-content-div">
                             <Layer :name="opt01.name"/>
                         </div>
@@ -97,10 +103,12 @@ import 'ol/ol.css'
 import Map from 'ol/Map.js'
 import View from 'ol/View.js'
 import { transform, fromLonLat } from 'ol/proj.js'
+import {defaults as defaultControls, ScaleLine} from 'ol/control.js';
 import LayerList from './LayerList.vue'
 import Layer from './Layer.vue'
 import * as permalink from '../js/permalink'
 import Target from 'ol-ext/control/Target'
+import Inobounce from '../js/inobounce'
 const center = fromLonLat([140.097, 37.856])
 import Notification from '../js/notification'
 // import OLCesium from 'olcs/OLCesium.js'
@@ -127,7 +135,7 @@ export default {
       zoom03: '',
       zoom04: '',
       menu01: {close: true, name: 'menu01', position: {top: '56px', left: '10px', 'z-index': 1}, dialog: {height: 'auto', 'min-width': '220px'}},
-      opt01: {close: true, name: 'map01', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
+      opt01: {close: true, name: 'map01', position: {top: '56px', right: '210px',' z-index': 1}, dialog: {height: 'auto'}},
       opt02: {close: true, name: 'map02', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
       opt03: {close: true, name: 'map03', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
       opt04: {close: true, name: 'map04', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
@@ -271,7 +279,6 @@ export default {
       const target = window.location.href
       $.ajax({
         type: 'GET',
-        // url: "https://api-ssl.bitly.com/v3/shorten?access_token=032704dc9764ff62c36ef2aff9464eb50e89b4fe&longUrl=http://kenzkenz.xsrv.jp/aaa/#8/140.1/37.86%3FS%3D1%26L%3D%5B%5B%7B%22id%22%3A1%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A2%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A4%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A5%2C%22o%22%3A1%7D%5D%5D",
         url: url,
         dataType: 'json',
         data: {
@@ -287,7 +294,11 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
+      // 縦バウンス無効化
+      Inobounce()
+      // map初期化
       initMap(this)
+      // リサイズ
       const resize = () => {
         if (window.innerWidth < 700) {
           this.btnSize = 'sm'
@@ -324,9 +335,11 @@ function initMap (vm) {
   })
   const target01 = new Target({composite: 'difference'})
   map01.addControl(target01);
-
   const notification01 = new Notification();
   map01.addControl(notification01);
+  const scaleLineControl01 = new ScaleLine();
+  map01.addControl(scaleLineControl01)
+
   vm.$store.commit('setNotifications',{name:'map01', control: notification01})
   // map2-------------------------------------------------------------------------------------
   let map02 = null
@@ -345,6 +358,9 @@ function initMap (vm) {
   map02.addControl(target02);
   const notification02 = new Notification();
   map02.addControl(notification02);
+  const scaleLineControl02 = new ScaleLine();
+  map02.addControl(scaleLineControl02)
+
   vm.$store.commit('setNotifications',{name:'map02', control: notification02})
   // map3-------------------------------------------------------------------------------------
   let map03 = null
@@ -363,6 +379,9 @@ function initMap (vm) {
   map03.addControl(target03)
   const notification03 = new Notification();
   map03.addControl(notification03);
+  const scaleLineControl03 = new ScaleLine();
+  map03.addControl(scaleLineControl03)
+
   vm.$store.commit('setNotifications',{name:'map03', control: notification03})
   // map4-------------------------------------------------------------------------------------
   let map04 = null
@@ -381,6 +400,9 @@ function initMap (vm) {
   map04.addControl(target04)
   const notification04 = new Notification();
   map04.addControl(notification04);
+  const scaleLineControl04 = new ScaleLine();
+  map04.addControl(scaleLineControl04)
+
   vm.$store.commit('setNotifications',{name:'map04', control: notification04})
   //--------------------------------------------------------------------------------------------
   // パーマリンク
@@ -392,11 +414,22 @@ function initMap (vm) {
   //   map:map01
   // });
 
-
+// スクロールを無効にする
+  $(window).on('touchmove.noScroll', function(e) {
+    e.preventDefault();
+  });
 }
 </script>
 
 <style scoped>
+    #test{
+        width: 100px;
+        height:100px;
+        position: absolute;
+        z-index: 9;
+        background-color: red;
+
+    }
     h1, h2 {
         font-weight: normal;
     }
@@ -455,19 +488,16 @@ function initMap (vm) {
         black 1px -1px 0px, black -1px -1px 0px;
         font-size: x-large;
     }
-    /*.content-div{*/
-        /*overflow: auto;*/
-    /*}*/
+    .content-div{
+        overflow: auto;
+    }
     .first-content-div{
-        /*height: 150px;*/
         border: 1px solid grey;
         margin: 5px;
     }
     .second-content-div{
-        /*height: 150px;*/
         border: 1px solid grey;
         margin: 5px;
-        /*overflow: auto;*/
         background: rgba(255,255,255,0.5);
     }
     #lock{
@@ -507,6 +537,9 @@ function initMap (vm) {
     }
 </style>
 <style>
+    .ol-scale-line{
+        left: calc(50% - 50px);
+    }
     /*汎用的なスタイルはここに*/
     .ol-zoom {
         bottom: 40px;
