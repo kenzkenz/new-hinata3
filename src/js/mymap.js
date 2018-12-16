@@ -45,7 +45,7 @@ export function initMap (vm) {
 
 export function synch (vm) {
   vm.synchFlg = !vm.synchFlg
-  let map01View = vm.$store.state.map01.getView()
+  let map01View = vm.$store.state.maps.map01.getView()
   if (!vm.synchFlg) {
     const viewArr = []
     for (let i = 0; i < 3; i++) {
@@ -54,12 +54,12 @@ export function synch (vm) {
         zoom: map01View.getZoom()
       })
     }
-    vm.$store.state.map02.setView(viewArr[0])
-    vm.$store.state.map03.setView(viewArr[1])
-    vm.$store.state.map04.setView(viewArr[2])
+    vm.$store.state.maps.map02.setView(viewArr[0])
+    vm.$store.state.maps.map03.setView(viewArr[1])
+    vm.$store.state.maps.map04.setView(viewArr[2])
   } else {
-    vm.$store.state.map02.setView(map01View)
-    vm.$store.state.map03.setView(map01View)
-    vm.$store.state.map04.setView(map01View)
+    vm.$store.state.maps.map02.setView(map01View)
+    vm.$store.state.maps.map03.setView(map01View)
+    vm.$store.state.maps.map04.setView(map01View)
   }
 }
