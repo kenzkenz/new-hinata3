@@ -2,7 +2,7 @@ import store from './store'
 import { transform } from 'ol/proj.js'
 import layers from './layers.js'
 // import rison from 'rison'
-export function permalinkEventSet() {
+export function permalinkEventSet () {
 
   // console.log(rison.encode_object({supportsObjects: true, ints: 435}))
 
