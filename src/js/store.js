@@ -38,7 +38,6 @@ const store = new Vuex.Store({
       layerListArr.push(state.layerList01);layerListArr.push(state.layerList02),layerListArr.push(state.layerList03);layerListArr.push(state.layerList04)
       const layerListArr2 = []
       for (let layerList of layerListArr) {
-        // console.log(layerList)
         const layerList2 = []
         for (let layer of layerList) {
           layerList2.push({ id:layer.id, o:layer.opacity})
@@ -50,10 +49,22 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    setMap01 (state, payload) { state.map01 = payload },
-    setMap02 (state, payload) { state.map02 = payload },
-    setMap03 (state, payload) { state.map03 = payload },
-    setMap04 (state, payload) { state.map04 = payload },
+    setMap (state,payload) {
+      switch (payload.name) {
+        case 'map01':
+          state.map01 = payload.map
+          break
+        case 'map02':
+          state.map02 = payload.map
+          break
+        case 'map03':
+          state.map03 = payload.map
+          break
+        case 'map04':
+          state.map04 = payload.map
+          break
+      }
+    },
     //---------------------------------------------------------------------------------
     setNotifications(state, payload) {
       state.notifications[payload.name] = payload.control

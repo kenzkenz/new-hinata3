@@ -149,7 +149,7 @@ export default {
     splitMap () {
       this.$store.commit('incrSplitFlg')
       this.splitMap2()
-      permalink.moveEnd()
+      Permalink.moveEnd()
     },
     // 分割その２
     splitMap2 () {
@@ -262,7 +262,7 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
-      // 縦バウンス無効化
+      // 縦バウンス無効化https://github.com/lazd/iNoBounce
       Inobounce()
       // map初期化
       MyMap.initMap(this)
@@ -287,14 +287,6 @@ export default {
 </script>
 
 <style scoped>
-    #test{
-        width: 100px;
-        height:100px;
-        position: absolute;
-        z-index: 9;
-        background-color: red;
-
-    }
     h1, h2 {
         font-weight: normal;
     }
@@ -353,8 +345,10 @@ export default {
         black 1px -1px 0px, black -1px -1px 0px;
         font-size: x-large;
     }
+    /*重要！！バウンスを止めたときに同時にスクロールを無効化させないために必要*/
     .content-div{
         overflow: auto;
+        -webkit-overflow-scrolling: touch;
     }
     .first-content-div{
         border: 1px solid grey;
@@ -501,6 +495,10 @@ export default {
 </style>
 <style>
     /*ol関係のスタイル*/
+    .ol-rotate {
+        right: 49%;
+        top: 50px;
+    }
     .ol-scale-line{
         left: calc(50% - 50px);
     }
