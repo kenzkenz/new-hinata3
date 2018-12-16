@@ -11,7 +11,7 @@ export function permalinkEventSet () {
      const hash = decodeURIComponent(window.location.hash.replace('#', ''))
      // 場所、ズームを復帰
      const parts = hash.split('/');
-     const map = store.state.map01
+     const map = store.state.maps.map01
      if (parts.length === 3) {
        const center = [ parseFloat(parts[1]), parseFloat(parts[2]) ]
        const center3857 = transform(center,'EPSG:4326','EPSG:3857')
@@ -37,10 +37,10 @@ export function permalinkEventSet () {
         store.commit('updateList', {value: [], name: 'map02'})
         store.commit('updateList', {value: [], name: 'map03'})
         store.commit('updateList', {value: [], name: 'map04'})
-        store.state.map01.removeLayer(store.state.map01.getLayers().getArray()[0])
-        store.state.map02.removeLayer(store.state.map02.getLayers().getArray()[0])
-        store.state.map03.removeLayer(store.state.map03.getLayers().getArray()[0])
-        store.state.map04.removeLayer(store.state.map04.getLayers().getArray()[0])
+        store.state.maps.map01.removeLayer(store.state.maps.map01.getLayers().getArray()[0])
+        store.state.maps.map02.removeLayer(store.state.maps.map02.getLayers().getArray()[0])
+        store.state.maps.map03.removeLayer(store.state.maps.map03.getLayers().getArray()[0])
+        store.state.maps.map04.removeLayer(store.state.maps.map04.getLayers().getArray()[0])
         // const urlLayerListArr = rison.decode(obj[key])
         const urlLayerListArr = JSON.parse(obj[key])
         for (let i = 0; i < urlLayerListArr.length; i++) {
@@ -87,11 +87,12 @@ export function permalinkEventSet () {
     }
   }
   // マップ移動時イベント------------------------------------------------------------------------
-  store.state.map01.on('moveend', moveEnd)
+  // store.state.map01.on('moveend', moveEnd)
+  store.state.maps.map01.on('moveend', moveEnd)
 }
 
 export function moveEnd () {
-  const map = store.state.map01
+  const map = store.state.maps.map01
   const zoom = map.getView().getZoom()
   const center = map.getView().getCenter()
   const center4326 = transform(center,'EPSG:3857','EPSG:4326')

@@ -34,7 +34,7 @@ export function initMap (vm) {
     map.on('moveend', function () {
       vm.zoom01 = 'zoom=' + String(Math.floor(map.getView().getZoom() * 100) / 100)
     })
-    //　コントロール追加
+    // コントロール追加
     map.addControl(new Target({composite: 'difference'}));
     const notification = new Notification();
     map.addControl(notification)

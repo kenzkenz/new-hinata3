@@ -5,10 +5,7 @@ import layers from './layers.js'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
-    map01: null,
-    map02: null,
-    map03: null,
-    map04: null,
+    maps: {map01: null, map02: null, map03: null, map04: null},
     layerList01: [{id: 1, name: '標準地図', layer: layers[1].children[0].data.layer[0], opacity: 1}],
     layerList02: [{id: 2, name: '淡色地図', layer: layers[1].children[1].data.layer[1], opacity: 1}],
     layerList03: [{id: 4, name: '色別標高図', layer: layers[1].children[3].data.layer[2], opacity: 1}],
@@ -49,21 +46,9 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    // マップを登録------------------------------------------------------------------------------
     setMap (state,payload) {
-      switch (payload.name) {
-        case 'map01':
-          state.map01 = payload.map
-          break
-        case 'map02':
-          state.map02 = payload.map
-          break
-        case 'map03':
-          state.map03 = payload.map
-          break
-        case 'map04':
-          state.map04 = payload.map
-          break
-      }
+      state.maps[payload.name] = payload.map
     },
     //---------------------------------------------------------------------------------
     setNotifications(state, payload) {

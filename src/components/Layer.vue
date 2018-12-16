@@ -71,10 +71,6 @@ export default {
     }
   },
   computed: {
-    map01 () { return this.$store.state.map01 },
-    map02 () { return this.$store.state.map02 },
-    map03 () { return this.$store.state.map03 },
-    map04 () { return this.$store.state.map04 },
     storeLayerList: {
       get () { return this.$store.getters.layerList(this.name) },
       set (value) { this.$store.commit('updateList', {value: value, name: this.name}) }
@@ -94,20 +90,7 @@ export default {
       let map
       const thisName = this.name
       const store = this.$store
-      switch (thisName) {
-        case 'map01':
-          map = this.map01
-          break
-        case 'map02':
-          map = this.map02
-          break
-        case 'map03':
-          map = this.map03
-          break
-        case 'map04':
-          map = this.map04
-          break
-      }
+      map = store.state.maps[thisName]
       if (map) {
         // 逆ループ
         for (let i = newLayerList.value.length - 1; i >= 0; i--) {
@@ -180,7 +163,7 @@ export default {
     .handle-div{
         position: absolute;
         height: 100%;
-        background-color: gray;
+        background-color: rgba(0,60,136,0.5);
         cursor: grab;
     }
     .handle-icon{

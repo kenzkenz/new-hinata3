@@ -60,7 +60,6 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
-      // $('.drag-handle').draggable()
     })
   }
 }
