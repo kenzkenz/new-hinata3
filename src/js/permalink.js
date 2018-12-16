@@ -87,7 +87,6 @@ export function permalinkEventSet () {
     }
   }
   // マップ移動時イベント------------------------------------------------------------------------
-  // store.state.map01.on('moveend', moveEnd)
   store.state.maps.map01.on('moveend', moveEnd)
 }
 
