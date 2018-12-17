@@ -4,7 +4,7 @@
         <transition>
             <div id="map01" :style="map01Size" v-show="map01Flg">
                 <div class="top-left-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],menu01)"　style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],menu01)" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
                     <b-button class='olbtn' :size="btnSize" @click="splitMap"><v-icon name="columns"  scale="1.0" /></b-button>
                 </div>
                 <div class="top-right-div">
@@ -22,8 +22,13 @@
                 </G-Dialog>
                 <G-Dialog :opt="menu01">
                   <div :style="menuContentSize">
-                      <b-button class='olbtn' :size="btnSize" @click="shortUrl">短縮URL作成</b-button>
-                      <div class="shortUrl-div">{{ shortUrlText }}</div>
+                      <div>
+                          <b-button class='olbtn' :size="btnSize" @click="">リセット</b-button>
+                      </div>
+                      <div>
+                          <b-button class='olbtn' :size="btnSize" @click="shortUrl">短縮URL作成</b-button>
+                          <div class="shortUrl-div">{{ shortUrlText }}</div>
+                      </div>
                   </div>
                 </G-Dialog>
                 <div class="zoom-div">{{ zoom01 }}</div>
@@ -107,7 +112,7 @@ export default {
   data () {
     return {
       btnSize: '',
-      menuContentSize: {'height': '100px','margin': '10px', 'overflow': 'auto'},
+      menuContentSize: {'height': '200px','margin': '10px', 'overflow': 'auto'},
       map01Size: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
       map02Size: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
       map03Size: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
@@ -140,98 +145,97 @@ export default {
   methods: {
     // レイヤーのダイアログを開く
     openDialog (e,dialog) {
-      this.$store.commit('incrDialogMaxZindex')
-      const maxZindex = this.$store.state.dialogMaxZindex
-      dialog.position["z-index"] = maxZindex
+      this.$store.commit('incrDialogMaxZindex');
+      dialog.position["z-index"] = this.$store.state.dialogMaxZindex;
       this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
     },
     // 分割
     splitMap () {
-      this.$store.commit('incrSplitFlg')
-      this.splitMap2()
+      this.$store.commit('incrSplitFlg');
+      this.splitMap2();
       Permalink.moveEnd()
     },
     // 分割その２
     splitMap2 () {
-      const vm = this
-      const height = window.innerHeight + 'px'
-      const height2 = window.innerHeight / 2 + 'px'
-      const contentHeight =(window.innerHeight -100) + 'px'
-      const contentHeight2 =((window.innerHeight/2) -100) + 'px'
+      const vm = this;
+      const height = window.innerHeight + 'px';
+      const height2 = window.innerHeight / 2 + 'px';
+      const contentHeight =(window.innerHeight -100) + 'px';
+      const contentHeight2 =((window.innerHeight/2) -100) + 'px';
       switch (this.$store.state.splitFlg) {
         // 1画面
         case 1:
-          vm.synchDivFlg = false
-          vm.map02Flg = false; vm.map03Flg = false; vm.map04Flg = false
-          vm.map01Size = {top: 0, left: 0, width: '100%', height: height}
-          vm.map02Size = {top: 0, right: 0, width: 0, height: 0}
-          vm.map03Size = {top: 0, left: 0, width: 0, height: 0}
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
-          vm.map01DialogContentSize = {'max-height': contentHeight}
-          break
+          vm.synchDivFlg = false;
+          vm.map02Flg = false; vm.map03Flg = false; vm.map04Flg = false;
+          vm.map01Size = {top: 0, left: 0, width: '100%', height: height};
+          vm.map02Size = {top: 0, right: 0, width: 0, height: 0};
+          vm.map03Size = {top: 0, left: 0, width: 0, height: 0};
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
+          vm.map01DialogContentSize = {'max-height': contentHeight};
+          break;
         // 2画面（縦２画面）
         case 2:
-          vm.synchDivFlg = true
-          vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false
-          vm.map01Size = {top: 0, left: 0, width: '50%', height: height}
-          vm.map02Size = {top: 0, left: '50%', width: '50%', height: height}
-          vm.map03Size = {top: 0, left: 0, width: 0, height: 0}
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
-          vm.map01DialogContentSize = {'max-height': contentHeight}
-          vm.map02DialogContentSize = {'max-height': contentHeight}
-          break
+          vm.synchDivFlg = true;
+          vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false;
+          vm.map01Size = {top: 0, left: 0, width: '50%', height: height};
+          vm.map02Size = {top: 0, left: '50%', width: '50%', height: height};
+          vm.map03Size = {top: 0, left: 0, width: 0, height: 0};
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
+          vm.map01DialogContentSize = {'max-height': contentHeight};
+          vm.map02DialogContentSize = {'max-height': contentHeight};
+          break;
         // 2画面（横２画面）
         case 3:
-          vm.synchDivFlg = true
-          vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false
-          vm.map01Size = {top: 0, left: 0, width: '100%', height: height2}
-          vm.map02Size = {top: '50%', left: 0, width: '100%', height: height2}
-          vm.map03Size = {top: 0, left: 0, width: 0, height: 0}
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
-          vm.map01DialogContentSize = {'max-height': contentHeight2}
-          vm.map02DialogContentSize = {'max-height': contentHeight2}
-          break
+          vm.synchDivFlg = true;
+          vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false;
+          vm.map01Size = {top: 0, left: 0, width: '100%', height: height2};
+          vm.map02Size = {top: '50%', left: 0, width: '100%', height: height2};
+          vm.map03Size = {top: 0, left: 0, width: 0, height: 0};
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
+          vm.map01DialogContentSize = {'max-height': contentHeight2};
+          vm.map02DialogContentSize = {'max-height': contentHeight2};
+          break;
         // 3画面１（左が縦全、右が縦半）
         case 4:
-          vm.synchDivFlg = true
-          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false
-          vm.map01Size = {top: 0, left: 0, width: '50%', height: height}
-          vm.map02Size = {top: 0, left: '50%', width: '50%', height: height2}
-          vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2}
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
-          vm.map01DialogContentSize = {'max-height': contentHeight}
-          vm.map02DialogContentSize = {'max-height': contentHeight2}
-          vm.map03DialogContentSize = {'max-height': contentHeight2}
-          break
+          vm.synchDivFlg = true;
+          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false;
+          vm.map01Size = {top: 0, left: 0, width: '50%', height: height};
+          vm.map02Size = {top: 0, left: '50%', width: '50%', height: height2};
+          vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2};
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
+          vm.map01DialogContentSize = {'max-height': contentHeight};
+          vm.map02DialogContentSize = {'max-height': contentHeight2};
+          vm.map03DialogContentSize = {'max-height': contentHeight2};
+          break;
         // 3画面2（全て縦半）
         case 5:
-          vm.synchDivFlg = true
-          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false
-          vm.map01Size = {top: 0, left: 0, width: '100%', height: height2}
-          vm.map02Size = {top: '50%', left: 0, width: '50%', height: height2}
-          vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2}
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0}
-          vm.map01DialogContentSize = {'max-height': contentHeight2}
-          vm.map02DialogContentSize = {'max-height': contentHeight2}
-          vm.map03DialogContentSize = {'max-height': contentHeight2}
-          break
+          vm.synchDivFlg = true;
+          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false;
+          vm.map01Size = {top: 0, left: 0, width: '100%', height: height2};
+          vm.map02Size = {top: '50%', left: 0, width: '50%', height: height2};
+          vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2};
+          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
+          vm.map01DialogContentSize = {'max-height': contentHeight2};
+          vm.map02DialogContentSize = {'max-height': contentHeight2};
+          vm.map03DialogContentSize = {'max-height': contentHeight2};
+          break;
         // 4画面（全て縦半）
         case 6:
-          vm.synchDivFlg = true
-          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = true
-          vm.map01Size = {top: 0, left: 0, width: '50%', height: height2}
-          vm.map02Size = {top: 0, right: 0, width: '50%', height: height2}
-          vm.map03Size = {top: '50%', left: 0, width: '50%', height: height2}
-          vm.map04Size = {top: '50%', left: '50%', width: '50%', height: height2}
-          vm.map01DialogContentSize = {'max-height': contentHeight2}
-          vm.map02DialogContentSize = {'max-height': contentHeight2}
-          vm.map03DialogContentSize = {'max-height': contentHeight2}
+          vm.synchDivFlg = true;
+          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = true;
+          vm.map01Size = {top: 0, left: 0, width: '50%', height: height2};
+          vm.map02Size = {top: 0, right: 0, width: '50%', height: height2};
+          vm.map03Size = {top: '50%', left: 0, width: '50%', height: height2};
+          vm.map04Size = {top: '50%', left: '50%', width: '50%', height: height2};
+          vm.map01DialogContentSize = {'max-height': contentHeight2};
+          vm.map02DialogContentSize = {'max-height': contentHeight2};
+          vm.map03DialogContentSize = {'max-height': contentHeight2};
           vm.map04DialogContentSize = {'max-height': contentHeight2}
       }
       this.$nextTick(function () {
-        vm.$store.state.maps.map01.updateSize()
-        vm.$store.state.maps.map02.updateSize()
-        vm.$store.state.maps.map03.updateSize()
+        vm.$store.state.maps.map01.updateSize();
+        vm.$store.state.maps.map02.updateSize();
+        vm.$store.state.maps.map03.updateSize();
         vm.$store.state.maps.map04.updateSize()
       })
     },
@@ -240,11 +244,11 @@ export default {
       MyMap.synch(this)
     },
     shortUrl () {
-      const vm = this
-      const url = 'https://api-ssl.bitly.com/v3/shorten'
-      const myToken = '032704dc9764ff62c36ef2aff9464eb50e89b4fe'
+      const vm = this;
+      const url = 'https://api-ssl.bitly.com/v3/shorten';
+      const myToken = '032704dc9764ff62c36ef2aff9464eb50e89b4fe';
       // const target = 'https://kenzkenz.xsrv.jp/aaa/#8/140.1/37.86%3FS%3D1%26L%3D%5B%5B%7B%22id%22%3A1%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A2%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A4%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A5%2C%22o%22%3A1%7D%5D%5D'
-      const target = window.location.href
+      const target = window.location.href;
       $.ajax({
         type: 'GET',
         url: url,
@@ -263,12 +267,12 @@ export default {
   mounted () {
     this.$nextTick(function () {
       // 縦バウンス無効化https://github.com/lazd/iNoBounce
-      Inobounce()
+      Inobounce();
       // map初期化
-      MyMap.initMap(this)
+      MyMap.initMap(this);
       // パーマリンク
-      Permalink.permalinkEventSet()
-      this.splitMap2()
+      Permalink.permalinkEventSet();
+      this.splitMap2();
       // リサイズ
       const resize = () => {
         if (window.innerWidth < 700) {
@@ -278,8 +282,8 @@ export default {
         }
         // 画面分割
         this.splitMap2()
-      }
-      resize()
+      };
+      resize();
       window.onresize =  () => resize()
     })
   }
@@ -341,8 +345,8 @@ export default {
         bottom: 10px;
         z-index: 1;
         color: #fff;
-        text-shadow: black 1px 1px 0px, black -1px 1px 0px,
-        black 1px -1px 0px, black -1px -1px 0px;
+        text-shadow: black 1px 1px 0, black -1px 1px 0,
+        black 1px -1px 0, black -1px -1px 0;
         font-size: x-large;
     }
     /*重要！！バウンスを止めたときに同時にスクロールを無効化させないために必要*/
@@ -375,6 +379,7 @@ export default {
         margin-top: 10px;
         padding: 5px;
         border: solid 1px gray;
+        height: 36px;
     }
     #lock:hover{
         color: rgba(0,60,136,0.7);
@@ -417,7 +422,7 @@ export default {
         height: 5px;
         cursor: pointer;
         animate: 0.2s;
-        box-shadow: 0px 0px 0px #000000;
+        box-shadow: 0 0 0 #000000;
         background: #B6B6B6;
         border-radius: 6px;
         border: 1px solid #8A8A8A;
@@ -441,7 +446,7 @@ export default {
         height: 5px;
         cursor: pointer;
         animate: 0.2s;
-        box-shadow: 0px 0px 0px #000000;
+        box-shadow: 0 0 0 #000000;
         background: #B6B6B6;
         border-radius: 6px;
         border: 1px solid #8A8A8A;
@@ -468,13 +473,13 @@ export default {
         background: #B6B6B6;
         border: 1px solid #8A8A8A;
         border-radius: 12px;
-        box-shadow: 0px 0px 0px #000000;
+        box-shadow: 0 0 0 #000000;
     }
     input[type=range]::-ms-fill-upper {
         background: #B6B6B6;
         border: 1px solid #8A8A8A;
         border-radius: 12px;
-        box-shadow: 0px 0px 0px #000000;
+        box-shadow: 0 0 0 #000000;
     }
     input[type=range]::-ms-thumb {
         margin-top: 1px;

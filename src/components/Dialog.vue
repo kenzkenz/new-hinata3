@@ -32,10 +32,9 @@ export default {
     closeBtn () {
       this.$store.commit('editDialogArr', {name: this.opt.name, flg: true})
     },
-    dialogMouseDown (e) {
-      this.$store.commit('incrDialogMaxZindex')
-      const maxZindex = this.$store.state.dialogMaxZindex
-      this.opt.position["z-index"] = maxZindex
+    dialogMouseDown () {
+      this.$store.commit('incrDialogMaxZindex');
+      this.opt.position["z-index"] = this.$store.state.dialogMaxZindex
     },
     dialogEnter () {
       this.isEnter = true
@@ -50,7 +49,7 @@ export default {
       set (value) { this.$store.commit('pushDialogArr', value) }
     },
     storeFlg: function () {
-      const result = this.storeDialogArr.find(el => el.name === this.opt.name)
+      const result = this.storeDialogArr.find(el => el.name === this.opt.name);
       return result.flg
     }
   },
@@ -72,16 +71,17 @@ export default {
         position: absolute;
     }
     .dialog-div{
-        background-color: rgba(255,255,255,0.1);
-        /*border: 1px solid black;*/
+        background-color: #fff;
         box-shadow:2px 2px 5px #787878;
         border-radius: 4px;
+        opacity: 0.7;
+        transition: opacity 1s;
     }
     .dialog-div-enter{
         background-color: #fff;
-        /*border: 1px solid black;*/
         box-shadow:2px 2px 5px #787878;
         border-radius: 4px;
+        transition: opacity 1s;
     }
     .drag-handle{
         height: 30px;
