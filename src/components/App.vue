@@ -233,10 +233,7 @@ export default {
           vm.map04DialogContentSize = {'max-height': contentHeight2}
       }
       this.$nextTick(function () {
-        vm.$store.state.maps.map01.updateSize();
-        vm.$store.state.maps.map02.updateSize();
-        vm.$store.state.maps.map03.updateSize();
-        vm.$store.state.maps.map04.updateSize()
+        MyMap.resize ()
       })
     },
     // 同期
