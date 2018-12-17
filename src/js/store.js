@@ -71,25 +71,8 @@ const store = new Vuex.Store({
     },
     // レイヤーリスト先頭に追加------------------------------------------------------------------
     unshiftLayerList (state, payload) {
-      let layerList, layer;
-      switch (payload.name) {
-        case 'map01':
-          layerList = state.layerLists[payload.name];
-          layer = payload.value.layer[0];
-          break;
-        case 'map02':
-          layerList = state.layerLists[payload.name];
-          layer = payload.value.layer[1];
-          break;
-        case 'map03':
-          layerList = state.layerLists[payload.name];
-          layer = payload.value.layer[2];
-          break;
-        case 'map04':
-          layerList = state.layerLists[payload.name];
-          layer = payload.value.layer[3];
-          break
-      }
+      const layerList = state.layerLists[payload.name];
+      const layer = payload.value.layer[Number(payload.name.slice(-1))-1];
       if (!layerList.find(el => el.id === payload.value.id)) {
         payload.value.layer = layer;
         layerList.unshift(payload.value)
