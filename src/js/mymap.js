@@ -10,10 +10,10 @@ import Notification from '../js/notification'
 export function initMap (vm) {
   // マップ作製ループ用の配列を作成
   const maps = [
-    {name: 'map01', map:store.state.map01, layer:store.state.layerLists.map01[0].layer},
-    {name: 'map02', map:store.state.map02, layer:store.state.layerLists.map02[0].layer},
-    {name: 'map03', map:store.state.map03, layer:store.state.layerLists.map03[0].layer},
-    {name: 'map04', map:store.state.map04, layer:store.state.layerLists.map04[0].layer}
+    {name: 'map01', map:store.state.map01, layer:store.state.layerLists.map01[0].layer, zoom: 'zoom01'},
+    {name: 'map02', map:store.state.map02, layer:store.state.layerLists.map02[0].layer, zoom: 'zoom02'},
+    {name: 'map03', map:store.state.map03, layer:store.state.layerLists.map03[0].layer, zoom: 'zoom03'},
+    {name: 'map04', map:store.state.map04, layer:store.state.layerLists.map04[0].layer, zoom: 'zoom04'}
   ];
   const view01 = new View({
     center: fromLonLat([140.097, 37.856]),
@@ -33,7 +33,7 @@ export function initMap (vm) {
       console.log(transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
     });
     map.on('moveend', function () {
-      vm.zoom01 = 'zoom=' + String(Math.floor(map.getView().getZoom() * 100) / 100)
+      vm.zoom[maps[i].name] = 'zoom=' + String(Math.floor(map.getView().getZoom() * 100) / 100)
     });
     // コントロール追加
     map.addControl(new Target({composite: 'difference'}));

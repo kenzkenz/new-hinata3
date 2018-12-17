@@ -7,10 +7,10 @@ const store = new Vuex.Store({
   state: {
     maps: {map01: null, map02: null, map03: null, map04: null},
     layerLists: {
-      map01: [{id: 1, name: '標準地図', layer: layers[1].children[0].data.layer[0], opacity: 1}],
-      map02: [{id: 2, name: '淡色地図', layer: layers[1].children[1].data.layer[1], opacity: 1}],
-      map03: [{id: 4, name: '色別標高図', layer: layers[1].children[3].data.layer[2], opacity: 1}],
-      map04: [{id: 5, name: '全国最新写真', layer: layers[1].children[4].data.layer[3], opacity: 1}]
+      map01: [{id: 1, name: '標準地図', layer: layers[1].children[0].data.layer['map01'], opacity: 1}],
+      map02: [{id: 2, name: '淡色地図', layer: layers[1].children[1].data.layer['map02'], opacity: 1}],
+      map03: [{id: 4, name: '色別標高図', layer: layers[1].children[3].data.layer['map03'], opacity: 1}],
+      map04: [{id: 5, name: '全国最新写真', layer: layers[1].children[4].data.layer['map04'], opacity: 1}]
     },
     menuFlg:false,
     notifications: {},
@@ -72,7 +72,7 @@ const store = new Vuex.Store({
     // レイヤーリスト先頭に追加------------------------------------------------------------------
     unshiftLayerList (state, payload) {
       const layerList = state.layerLists[payload.name];
-      const layer = payload.value.layer[Number(payload.name.slice(-1))-1];
+      const layer = payload.value.layer[payload.name];
       if (!layerList.find(el => el.id === payload.value.id)) {
         payload.value.layer = layer;
         layerList.unshift(payload.value)

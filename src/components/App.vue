@@ -31,7 +31,7 @@
                       </div>
                   </div>
                 </G-Dialog>
-                <div class="zoom-div">{{ zoom01 }}</div>
+                <div class="zoom-div">{{ zoom.map01 }}</div>
             </div>
         </transition>
         <transition>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 </G-Dialog>
-                <div class="zoom-div">{{ zoom02 }}</div>
+                <div class="zoom-div">{{ zoom.map02 }}</div>
             </div>
         </transition>
         <transition>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </G-Dialog>
-                <div class="zoom-div">{{ zoom03 }}</div>
+                <div class="zoom-div">{{ zoom.map03 }}</div>
             </div>
         </transition>
         <transition>
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                 </G-Dialog>
-                <div class="zoom-div">{{ zoom04 }}</div>
+                <div class="zoom-div">{{ zoom.map04 }}</div>
             </div>
         </transition>
         <transition>
@@ -121,10 +121,7 @@ export default {
       map02DialogContentSize: {'max-height': '300px','overflow': 'auto'},
       map03DialogContentSize: {'max-height': '300px','overflow': 'auto'},
       map04DialogContentSize: {'max-height': '300px','overflow': 'auto'},
-      zoom01: '',
-      zoom02: '',
-      zoom03: '',
-      zoom04: '',
+      zoom: {map01: '',map02: '',map03: '',map04: ''},
       menu01: {close: true, name: 'menu01', position: {top: '56px', left: '10px', 'z-index': 1}, dialog: {height: 'auto', 'min-width': '220px'}},
       opt01: {close: true, name: 'map01', position: {top: '56px', right: '210px',' z-index': 1}, dialog: {height: 'auto'}},
       opt02: {close: true, name: 'map02', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},

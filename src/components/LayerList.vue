@@ -5,7 +5,7 @@
 
 <script>
 import LiquorTree from 'liquor-tree'
-import layers from '../js/layers'
+import Layers from '../js/layers'
 export default {
   name: 'LayerList',
   props: ['name'],
@@ -14,7 +14,7 @@ export default {
   },
   data () {
     return {
-      treeData: layers,
+      treeData: Layers,
       treeOptions: {} // 今の所なにも設定していない
     }
   },
