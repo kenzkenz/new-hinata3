@@ -2,6 +2,7 @@ import TileLayer from 'ol/layer/Tile.js'
 import OSM from 'ol/source/OSM.js'
 import XYZ from 'ol/source/XYZ.js'
 import { transformExtent } from 'ol/proj.js'
+import LayerGroup from 'ol/layer/Group';
 const transformE = function (extent) {
     return transformExtent(extent,'EPSG:4326','EPSG:3857');
 };
@@ -124,13 +125,147 @@ function Kon_hukuoka01 () {
   this.center = [130.6152588501701, 33.720855341479506];
   this.extent = transformE([130.12549,33.41993,131.1254516,34.003285])
 }
-const kon_hukuoka01Arr = [];
-for (let i = 0; i < 4; i++) {
-  kon_hukuoka01Arr[i] = new TileLayer(new Kon_hukuoka01())
-}
 const kon_hukuoka01Obj = {};
 for (let i of mapsStr) {
   kon_hukuoka01Obj[i] = new TileLayer(new Kon_hukuoka01())
+}
+
+
+
+
+// CS立体図10M
+function Cs10m01 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/1/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([128.4,32.5,129.530,34.7]);
+}
+function Cs10m02 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/2/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([129.02,30.2,132.9,34]);
+}
+function Cs10m03 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/3/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([129.99,33.33,133.7,36.6]);
+}
+function Cs10m04 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/4/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([131.99,32.68,134.98,34.67]);
+}
+function Cs10m05 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/5/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([132.99,34.00,135.48,35.8]);
+}
+function Cs10m06 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/6/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([134.51,33.40,137.02,36.34]);
+}
+function Cs10m07 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/7/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([135.99,34.00,137.90,37.66]);
+}
+function Cs10m08 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/8/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([137.00,38.68,139.97,34.56]);
+}
+function Cs10m09 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/9/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([138.05,38.00,140.99,32.43]);
+}
+function Cs10m10 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/10/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([139.46,41.65,142.12,37.66]);
+}
+function Cs10m11 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/11/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([139.00,43.35,141.19,41.33]);
+}
+function Cs10m12 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/12/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([140.93,45.65,144.05,41.85]);
+}
+function Cs10m13 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/13/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([143.95,44.35,145.95,42.70]);
+}
+function Cs10m15 () {
+  this.source = new XYZ({
+    url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/15/{z}/{x}/{-y}.png',
+    minZoom:1,
+    maxZoom:15
+  });
+  this.extent = transformE([126.60,27.37,128.82,26.00]);
+}
+const cs10mObj = {};
+for (let i of mapsStr) {
+  cs10mObj[i] = new LayerGroup({
+    layers: [
+      new TileLayer(new Cs10m01()),
+      new TileLayer(new Cs10m02()),
+      new TileLayer(new Cs10m03()),
+      new TileLayer(new Cs10m04()),
+      new TileLayer(new Cs10m05()),
+      new TileLayer(new Cs10m06()),
+      new TileLayer(new Cs10m07()),
+      new TileLayer(new Cs10m08()),
+      new TileLayer(new Cs10m09()),
+      new TileLayer(new Cs10m10()),
+      new TileLayer(new Cs10m11()),
+      new TileLayer(new Cs10m12()),
+      new TileLayer(new Cs10m13()),
+      new TileLayer(new Cs10m15())
+      ]
+  })
 }
 
 // ここにレイヤーを全部書く。クリックするとストアのlayerListに追加されていく
@@ -151,14 +286,15 @@ const layers =
       ]},
     { text: '立体図等',
       children: [
-        { text: '岐阜県CS立体図', data: { id: 'r01', layer: gihuCsObj, opacity: 1 } },
-        { text: '日本CS立体図', data: { id: 'r02', layer: nihonCsObj, opacity: 1 } }
+        { text: '日本CS立体図', data: { id: 'jcs', layer: nihonCsObj, opacity: 1 } },
+        { text: '全国CS立体図10m', data: { id: 'cs10', layer: cs10mObj, opacity: 1 } },
+        { text: '岐阜県CS立体図', data: { id: 'gcs', layer: gihuCsObj, opacity: 1 } }
       ]},
     { text: '今昔マップ',
       children: [
         { text: '福岡・北九州編',
           children: [
-            { text: '1922-1926年', data: { id: 'kon_hu01', layer: kon_hukuoka01Arr, opacity: 1 } },
+            { text: '1922-1926年', data: { id: 'kon_hu01', layer: kon_hukuoka01Obj, opacity: 1 } },
             // { text: '1936-1938年', data: { id: 'kon_hu02', layer: nihonCsArr, opacity: 1 } }
           ]}
       ]}

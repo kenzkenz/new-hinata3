@@ -21,16 +21,36 @@ export default {
   methods: {
     onNodeSelected: function (node) {
       if (node.children.length === 0) {
-        this.$store.commit('unshiftLayerList', {
-          value: {
-            id: node.data.id,
-            name: node.text,
-            layer: node.data.layer,
-            opacity: node.data.opacity,
-            addFlg:true
-          },
-          name: this.name
-        })
+        if (!node.data.layer.length) {
+          this.$store.commit('unshiftLayerList', {
+            value: {
+              id: node.data.id,
+              name: node.text,
+              layer: node.data.layer,
+              opacity: node.data.opacity,
+              addFlg:true
+            },
+            name: this.name
+          })
+        } else {
+          console.log(node.data);
+          console.log(node.data.layer[0]);
+          this.$store.commit('unshiftLayerList', {
+            value: {
+              id: node.data.id,
+              name: node.text,
+              layer: node.data.layer,
+
+              opacity: node.data.opacity,
+              addFlg:true
+            },
+            name: this.name
+          })
+        }
+
+
+
+
       }
       node.unselect()// セレクト状態を解除。解除しないと続けて押せない。
     }

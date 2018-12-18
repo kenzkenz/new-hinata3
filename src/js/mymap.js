@@ -1,3 +1,4 @@
+// マップ関係の関数
 import store from './store'
 import 'ol/ol.css'
 import Map from 'ol/Map.js'
@@ -10,14 +11,14 @@ import Notification from '../js/notification'
 export function initMap (vm) {
   // マップ作製ループ用の配列を作成
   const maps = [
-    {name: 'map01', map:store.state.map01, layer:store.state.layerLists.map01[0].layer, zoom: 'zoom01'},
-    {name: 'map02', map:store.state.map02, layer:store.state.layerLists.map02[0].layer, zoom: 'zoom02'},
-    {name: 'map03', map:store.state.map03, layer:store.state.layerLists.map03[0].layer, zoom: 'zoom03'},
-    {name: 'map04', map:store.state.map04, layer:store.state.layerLists.map04[0].layer, zoom: 'zoom04'}
+    {name: 'map01', map:store.state.map01, layer:store.state.layerLists.map01[0].layer},
+    {name: 'map02', map:store.state.map02, layer:store.state.layerLists.map02[0].layer},
+    {name: 'map03', map:store.state.map03, layer:store.state.layerLists.map03[0].layer},
+    {name: 'map04', map:store.state.map04, layer:store.state.layerLists.map04[0].layer}
   ];
   const view01 = new View({
     center: fromLonLat([140.097, 37.856]),
-    zoom: 8
+    zoom: 7
   });
   for (let i in maps) {
     // マップ作製
@@ -72,3 +73,53 @@ export function resize () {
   store.state.maps.map04.updateSize()
 }
 
+export function watchLayer (map, thisName, newLayerList,oldLayerList) {
+  // 逆ループ
+  for (let i = newLayerList.value.length - 1; i >= 0; i--) {
+    // リストクリックによる追加したレイヤーで リストの先頭で リストの増加があったとき
+    const layer = newLayerList.value[i].layer;
+
+    if (newLayerList.value[i].addFlg) {
+      if (i === 0 ) {
+        if (newLayerList.length > oldLayerList.length) {
+          const oldCenter = map.getView().getCenter();
+          const center = layer.getProperties().center;
+          if (center) {
+            map.getView().setCenter(transform(center,"EPSG:4326","EPSG:3857"));
+            const div = $('<div>').text('元の位置に戻しますか？ ');
+
+            $('<a>').text('戻す')
+            .click(function() {
+              map.getView().setCenter(oldCenter);
+              store.state.notifications[thisName].hide();
+            })
+            .appendTo(div);
+
+            $('<a style="margin-left: 10px;">').text('NO')
+            .click(function() {
+              store.state.notifications[thisName].hide();
+            })
+            .appendTo(div);
+            store.state.notifications[thisName].show(div.get(0),5000)
+          }
+        }
+      }
+    }
+    map.removeLayer(layer);
+    map.addLayer(layer);
+    layer.setOpacity(newLayerList.value[i].opacity)
+  }
+}
+
+export function opacityChange (item) {
+  item.layer.setOpacity(item.opacity);
+}
+
+export function removeLayer (item, layerList, name) {
+  const result = layerList.filter((el) => el.id !== item.id);
+  store.commit('updateList', {value: result, name: name});
+  // 削除するレイヤーの透過度を１に戻す。再度追加するときのために
+  item.layer.setOpacity(1);
+  const map = store.state.maps[name];
+  map.removeLayer(item.layer)
+}

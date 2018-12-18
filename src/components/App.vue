@@ -23,7 +23,7 @@
                 <G-Dialog :opt="menu01">
                   <div :style="menuContentSize">
                       <div>
-                          <b-button class='olbtn' :size="btnSize" @click="">リセット</b-button>
+                          <b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button>
                       </div>
                       <div>
                           <b-button class='olbtn' :size="btnSize" @click="shortUrl">短縮URL作成</b-button>
@@ -140,6 +140,10 @@ export default {
   computed: {
   },
   methods: {
+    // リセット
+    reset01 () {
+      alert('作成中！')
+    },
     // レイヤーのダイアログを開く
     openDialog (e,dialog) {
       this.$store.commit('incrDialogMaxZindex');

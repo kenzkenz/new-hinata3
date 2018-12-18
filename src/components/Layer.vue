@@ -1,8 +1,6 @@
 選択されたリストを表示するvueファイル。親から取得したvalで右画面用、左画面用に分岐する。
 <template>
-    <draggable element="ul"
-               :options="{handle:'.handle-div',animation: 200}"
-               @start="listDragBegin" @end="listDragEnd" v-model="storeLayerList">
+    <draggable element="ul" :options="{handle:'.handle-div',animation: 200}" v-model="storeLayerList">
         <li v-for="item in storeLayerList" :key="item.id">
             <div class="list-div">
                 <div class="handle-div" >
@@ -28,7 +26,7 @@
 <script>
 import draggable from 'vuedraggable'
 import * as permalink from '../js/permalink'
-import { transform } from 'ol/proj.js'
+import * as MyMap from '../js/mymap'
 export default {
   name: 'Layer',
   props: ['name'],
@@ -41,21 +39,12 @@ export default {
     }
   },
   methods: {
-    listDragBegin () {
-    },
-    listDragEnd () {
-    },
     opacityChange (item) {
-      item.layer.setOpacity(item.opacity);
+      MyMap.opacityChange(item);
       permalink.moveEnd()
     },
     removeLayer (item) {
-      const result = this.storeLayerList.filter((el) => el.id !== item.id);
-      this.$store.commit('updateList', {value: result, name: this.name});
-      // 削除するレイヤーの透過度を１に戻す。再度追加するときのために
-      item.layer.setOpacity(1);
-      const map = this.$store.state.maps[this.name];
-      map.removeLayer(item.layer)
+      MyMap.removeLayer(item, this.storeLayerList, this.name)
     }
   },
   computed: {
@@ -75,58 +64,9 @@ export default {
   watch: {
     // ストアを監視。レイヤーを追加したとき・順番を変えたときに動く
     storeLayerListWatch : function (newLayerList,oldLayerList) {
-      const thisName = this.name;
-      const store = this.$store;
-      const map = store.state.maps[thisName];
-      if (map) {
-        // 逆ループ
-        for (let i = newLayerList.value.length - 1; i >= 0; i--) {
-          // リストクリックによる追加したレイヤーで リストの先頭で リストの増加があったとき
-          if (newLayerList.value[i].addFlg) {
-            if (i === 0 ) {
-              if (newLayerList.length > oldLayerList.length) {
-                const oldCenter = map.getView().getCenter();
-                const center = newLayerList.value[i].layer.getProperties().center;
-                if (center) {
-                  map.getView().setCenter(transform(center,"EPSG:4326","EPSG:3857"));
-                  const div = $('<div>').text('元の位置に戻しますか？ ');
-
-                  $('<a>').text('戻す')
-                  .click(function() {
-                    map.getView().setCenter(oldCenter);
-                    store.state.notifications[thisName].hide();
-                  })
-                  .appendTo(div);
-
-                  $('<a style="margin-left: 10px;">').text('NO')
-                  .click(function() {
-                    store.state.notifications[thisName].hide();
-                  })
-                  .appendTo(div);
-                  store.state.notifications[thisName].show(div.get(0),5000)
-                }
-              }
-            }
-          }
-          map.removeLayer(newLayerList.value[i].layer);
-          map.addLayer(newLayerList.value[i].layer);
-          newLayerList.value[i].layer.setOpacity(newLayerList.value[i].opacity)
-        }
-      }
+      const map = this.$store.state.maps[this.name];
+      if (map) MyMap.watchLayer(map, this.name, newLayerList,oldLayerList);
       permalink.moveEnd()
-    },
-    //
-    storeNotification: function (newValue) {
-      if (newValue === 'cyouhuku') {
-        this.$store.commit('updateNotification', '');
-        this.$snotify.simple('すでに選択されています。', {
-          timeout: 2000,
-          showProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          position: 'centerTop'
-        })
-      }
     }
   }
 }
