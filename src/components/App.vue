@@ -123,7 +123,7 @@ export default {
       map04DialogContentSize: {'max-height': '300px','overflow': 'auto'},
       zoom: {map01: '',map02: '',map03: '',map04: ''},
       menu01: {close: true, name: 'menu01', position: {top: '56px', left: '10px', 'z-index': 1}, dialog: {height: 'auto', 'min-width': '220px'}},
-      opt01: {close: true, name: 'map01', position: {top: '56px', right: '210px',' z-index': 1}, dialog: {height: 'auto'}},
+      opt01: {close: true, name: 'map01', position: {top: '56px', right: '210px',' z-index': 1}, dialog: {height: 'auto', width: 'auto'}},
       opt02: {close: true, name: 'map02', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
       opt03: {close: true, name: 'map03', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
       opt04: {close: true, name: 'map04', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},

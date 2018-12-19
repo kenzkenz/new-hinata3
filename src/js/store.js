@@ -1,16 +1,17 @@
 import 'babel-polyfill'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import layers from './layers.js'
+import * as Layers from '../js/layers'
 Vue.use(Vuex);
+
 const store = new Vuex.Store({
   state: {
     maps: {map01: null, map02: null, map03: null, map04: null},
     layerLists: {
-      map01: [{id: 1, name: '標準地図', layer: layers[1].children[0].data.layer['map01'], opacity: 1}],
-      map02: [{id: 2, name: '淡色地図', layer: layers[1].children[1].data.layer['map02'], opacity: 1}],
-      map03: [{id: 4, name: '色別標高図', layer: layers[1].children[3].data.layer['map03'], opacity: 1}],
-      map04: [{id: 5, name: '全国最新写真', layer: layers[1].children[4].data.layer['map04'], opacity: 1}]
+      map01: [{id: 1, name: '標準地図', layer: Layers.Layers[1].children[0].data.layer['map01'], opacity: 1}],
+      map02: [{id: 2, name: '淡色地図', layer: Layers.Layers[1].children[1].data.layer['map02'], opacity: 1}],
+      map03: [{id: 4, name: '色別標高図', layer: Layers.Layers[1].children[3].data.layer['map03'], opacity: 1}],
+      map04: [{id: 5, name: '全国最新写真', layer: Layers.Layers[1].children[4].data.layer['map04'], opacity: 1}]
     },
     menuFlg:false,
     notifications: {},

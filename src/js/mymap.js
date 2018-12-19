@@ -7,6 +7,9 @@ import { transform, fromLonLat } from 'ol/proj.js'
 import {ScaleLine} from 'ol/control.js';
 import Target from 'ol-ext/control/Target'
 import Notification from '../js/notification'
+import * as Layers from '../js/layers'
+
+let maxZndex = 0;
 
 export function initMap (vm) {
   // マップ作製ループ用の配列を作成
@@ -22,9 +25,10 @@ export function initMap (vm) {
   });
   for (let i in maps) {
     // マップ作製
+    const name = maps[i].name;
     const map = new Map({
       layers: [maps[i].layer],
-      target: maps[i].name,
+      target: name,
       view: view01
     });
     // マップをストアに登録
@@ -32,6 +36,29 @@ export function initMap (vm) {
     // イベント
     map.on('singleclick', function (evt) {
       console.log(transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
+      const layers = map.getLayers().getArray();
+      const result = layers.find(el => el === Layers.mw5Obj[name]);
+      if (result) {
+        const lon = evt.coordinate[0], lat = evt.coordinate[1];
+        const gLayers = Layers.mw5Obj[name].values_.layers.array_;
+        for (let i in gLayers) {
+          const extent2 = gLayers[i].values_['extent2'];
+          const lonMin = extent2[0], lonMax = extent2[2], latMin = extent2[1], latMax = extent2[3];
+          if (lonMin < lon && lonMax > lon) {
+            if (latMin < lat && latMax > lat) {
+              if (gLayers[i].getExtent()[0] === extent2[0]) {
+                maxZndex++;
+                gLayers[i].setExtent([lonMin-5000.2,latMin-4000,lonMax+5000, latMax+4000]);
+                gLayers[i].setZIndex(maxZndex)
+              } else {
+                gLayers[i].setExtent(extent2);
+                gLayers[i].setZIndex(undefined)
+              }
+              break;
+            }
+          }
+        }
+      }
     });
     map.on('moveend', function () {
       vm.zoom[maps[i].name] = 'zoom=' + String(Math.floor(map.getView().getZoom() * 100) / 100)
@@ -123,3 +150,5 @@ export function removeLayer (item, layerList, name) {
   const map = store.state.maps[name];
   map.removeLayer(item.layer)
 }
+
+

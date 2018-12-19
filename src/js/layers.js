@@ -3,10 +3,12 @@ import OSM from 'ol/source/OSM.js'
 import XYZ from 'ol/source/XYZ.js'
 import { transformExtent } from 'ol/proj.js'
 import LayerGroup from 'ol/layer/Group';
-const transformE = function (extent) {
-    return transformExtent(extent,'EPSG:4326','EPSG:3857');
-};
+import mw5 from './mw5'
+
 const mapsStr = ['map01','map02','map03','map04'];
+const transformE = function (extent) {
+  return transformExtent(extent,'EPSG:4326','EPSG:3857');
+};
 // オープンストリートマップ
 function Osm () {
   this.source = new OSM()
@@ -129,11 +131,7 @@ const kon_hukuoka01Obj = {};
 for (let i of mapsStr) {
   kon_hukuoka01Obj[i] = new TileLayer(new Kon_hukuoka01())
 }
-
-
-
-
-// CS立体図10M
+// CS立体図10Mここから----------------------------------------------------------------------------------------------------
 function Cs10m01 () {
   this.source = new XYZ({
     url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/1/{z}/{x}/{-y}.png',
@@ -267,6 +265,38 @@ for (let i of mapsStr) {
       ]
   })
 }
+// CS立体図10Mここまで----------------------------------------------------------------------------------------------------
+
+
+
+
+// 日本版mapwarperここから------------------------------------------------------------------------------------------------
+function Mw5 (url,bbox) {
+  this.source = new XYZ({
+    url: url,
+    minZoom: 1,
+    maxZoom: 18
+  });
+  this.extent = transformE(bbox);
+  this.extent2 = transformE(bbox)
+}
+export const mw5Obj = {};
+for (let i of mapsStr) {
+  const layerGroup = [];
+  const length =  mw5.length;
+  for (var j = 0; j < length; j++) {
+    const id = mw5[j].id;
+    const url = 'https://mapwarper.h-gis.jp/maps/tile/' + id + '/{z}/{x}/{y}.png';
+    const bbox = mw5[j].extent;
+    const layer = new TileLayer(new Mw5(url,bbox));
+    layerGroup.push(layer)
+  }
+  mw5Obj[i] = new LayerGroup({
+    layers: layerGroup
+  })
+}
+// 日本版mapwarperここまで------------------------------------------------------------------------------------------------
+
 
 // ここにレイヤーを全部書く。クリックするとストアのlayerListに追加されていく
 const layers =
@@ -290,6 +320,10 @@ const layers =
         { text: '全国CS立体図10m', data: { id: 'cs10', layer: cs10mObj, opacity: 1 } },
         { text: '岐阜県CS立体図', data: { id: 'gcs', layer: gihuCsObj, opacity: 1 } }
       ]},
+    { text: '古地図',
+      children: [
+        { text: '旧版地形図', data: { id: 'mw5', layer: mw5Obj, opacity: 1 } }
+      ]},
     { text: '今昔マップ',
       children: [
         { text: '福岡・北九州編',
@@ -299,4 +333,5 @@ const layers =
           ]}
       ]}
   ];
-export default layers
+export const Layers = layers;
+
