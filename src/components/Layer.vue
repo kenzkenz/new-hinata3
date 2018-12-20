@@ -12,10 +12,12 @@
                 <div class="range-div">
                     <input type="range" min="0" max="1" step="0.01" class="range" v-model.number="item.opacity" @input="opacityChange(item)" />
                 </div>
-                <div class="button-div">
-                    <div @click="removeLayer(item)">
-                        <v-icon name="times" scale="1.0" class="hover"/>
-                    </div>
+                <div class="info-div" @click="info">
+                    <v-icon name="info-circle" scale="1.0" class="hover"/>
+                </div>
+
+                <div class="close-div" @click="removeLayer(item)">
+                    <v-icon name="times" scale="1.0" class="hover"/>
                 </div>
             </div>
         </li>
@@ -45,6 +47,9 @@ export default {
     },
     removeLayer (item) {
       MyMap.removeLayer(item, this.storeLayerList, this.name)
+    },
+    info () {
+      alert('作成中')
     }
   },
   computed: {
@@ -102,7 +107,7 @@ export default {
     }
     .item-div{
         position: absolute;
-        left: 30px;
+        left: 45px;
         top: 3px;
     }
     .range-div{
@@ -111,9 +116,17 @@ export default {
         left:30px;
         width:calc(100% - 60px);
     }
-    .button-div{
+    .info-div{
         position: absolute;
-        top:10px;
+        top:2px;
+        left:28px;
+        width:15px;
+        cursor: pointer;
+        color:rgba(0,60,136,0.5);
+    }
+    .close-div{
+        position: absolute;
+        top:13px;
         right:0;
         width:15px;
         cursor: pointer;

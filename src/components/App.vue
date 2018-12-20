@@ -3,6 +3,15 @@
     <div id="map00">
         <transition>
             <div id="map01" :style="map01Size" v-show="map01Flg">
+
+                <!--<div id="testDiv">-->
+                    <!--<div class="handle" @mousedown="startDrag"></div>-->
+                <!--</div>-->
+
+                <!--<div id="testDiv2">-->
+                    <!--<div class="handle" @mousedown="startDrag"></div>-->
+                <!--</div>-->
+
                 <div class="top-left-div">
                     <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],menu01)" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
                     <b-button class='olbtn' :size="btnSize" @click="splitMap"><v-icon name="columns"  scale="1.0" /></b-button>
@@ -111,6 +120,10 @@ export default {
   },
   data () {
     return {
+      dragTarget: '',
+      dragging: false,
+      yDifference: 0,
+      xDifference: 0,
       btnSize: '',
       menuContentSize: {'height': '200px','margin': '10px', 'overflow': 'auto'},
       map01Size: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
@@ -122,11 +135,11 @@ export default {
       map03DialogContentSize: {'max-height': '300px','overflow': 'auto'},
       map04DialogContentSize: {'max-height': '300px','overflow': 'auto'},
       zoom: {map01: '',map02: '',map03: '',map04: ''},
-      menu01: {close: true, name: 'menu01', position: {top: '56px', left: '10px', 'z-index': 1}, dialog: {height: 'auto', 'min-width': '220px'}},
-      opt01: {close: true, name: 'map01', position: {top: '56px', right: '210px',' z-index': 1}, dialog: {height: 'auto', width: 'auto'}},
-      opt02: {close: true, name: 'map02', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
-      opt03: {close: true, name: 'map03', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
-      opt04: {close: true, name: 'map04', position: {top: '56px', right: '210px', 'z-index': 1}, dialog: {height: 'auto'}},
+      menu01: {close: true, name: 'menu01', dialog: {top: '56px', left: '10px', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
+      opt01: {close: true, name: 'map01', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      opt02: {close: true, name: 'map02', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      opt03: {close: true, name: 'map03', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      opt04: {close: true, name: 'map04', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
       splitFlg: 1,
       map01Flg: true,
       map02Flg: false,
@@ -140,6 +153,21 @@ export default {
   computed: {
   },
   methods: {
+    startDrag(event) {
+      this.dragging = true;
+      this.dragTarget = event.currentTarget.parentNode;
+      this.yDifference = event.clientY - this.dragTarget.offsetTop;
+      this.xDifference = event.clientX - this.dragTarget.offsetLeft
+    },
+    stopDrag() {
+      this.dragging = false;
+    },
+    doDrag(event) {
+      if (this.dragging) {
+        this.dragTarget.style.top = (event.clientY - this.yDifference) + 'px';
+        this.dragTarget.style.left = (event.clientX - this.xDifference) + 'px';
+      }
+    },
     // リセット
     reset01 () {
       alert('作成中！')
@@ -147,7 +175,7 @@ export default {
     // レイヤーのダイアログを開く
     openDialog (e,dialog) {
       this.$store.commit('incrDialogMaxZindex');
-      dialog.position["z-index"] = this.$store.state.dialogMaxZindex;
+      dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
       this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
     },
     // 分割
@@ -263,7 +291,27 @@ export default {
     }
   },
   mounted () {
+
     this.$nextTick(function () {
+      window.addEventListener('mousemove', this.doDrag);
+      window.addEventListener('mouseup', this.stopDrag);
+
+      /*
+      $(".handle").mousedown(function(event){
+        const parent = $(this).parent();
+        parent.addClass("drag");
+        const eX = event.pageX - parent.css("left").replace(/px/,"");
+        const eY = event.pageY - parent.css("top").replace(/px/,"");
+        $(document).mousemove(function(event){
+          $(this).parent('.drag').css("left",event.pageX - eX).css("top",event.pageY - eY);
+        });
+        $(document).mouseup(function(event){
+          $("div.drag").unbind("mousemove");
+          $("div.drag").removeClass("drag");
+        });
+      });
+      */
+
       // 縦バウンス無効化https://github.com/lazd/iNoBounce
       Inobounce();
       // map初期化
@@ -289,6 +337,27 @@ export default {
 </script>
 
 <style scoped>
+    .handle{
+        width: 100%;
+        height: 50px;
+        background-color: black;
+    }
+    #testDiv2{
+        position: absolute;
+        height: 200px;
+        width: 200px;
+        top:300px;
+        left: 300px;
+        background-color: blue;
+        z-index: 10;
+    }
+    #testDiv{
+        position: absolute;
+        height: 200px;
+        width: 200px;
+        background-color: red;
+        z-index: 10;
+    }
     h1, h2 {
         font-weight: normal;
     }
@@ -346,6 +415,10 @@ export default {
         text-shadow: black 1px 1px 0, black -1px 1px 0,
         black 1px -1px 0, black -1px -1px 0;
         font-size: x-large;
+        -webkit-user-select: none;  /* Chrome all / Safari all */
+        -moz-user-select: none;     /* Firefox all */
+        -ms-user-select: none;      /* IE 10+ */
+        user-select: none;
     }
     /*重要！！バウンスを止めたときに同時にスクロールを無効化させないために必要*/
     .content-div{
