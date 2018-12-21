@@ -91,6 +91,10 @@ export default {
         list-style-type: none!important;
         text-align: left;
         height: 39px;
+        -webkit-user-select: none;  /* Chrome all / Safari all */
+        -moz-user-select: none;     /* Firefox all */
+        -ms-user-select: none;      /* IE 10+ */
+        user-select: none;
     }
     .handle-div{
         position: absolute;

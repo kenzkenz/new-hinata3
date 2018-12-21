@@ -1,37 +1,24 @@
 ダイアログ作成用の汎用vueファイル。グローバルで宣言。親からoptを取得して位置、スタイル等を設定する。
 <template>
     <!--<transition>-->
-        <!--<div class="dialog-parent-div" :style="this.opt.position" @mousedown="dialogMouseDown" @mouseenter="dialogEnter" @mouseleave="dialogLeave">-->
-            <!--<vue-draggable-resizable  :draggable="true" :class="{'dialog-div-enter': isEnter, 'dialog-div': !isEnter}" v-show="!this.storeFlg" :resizable="true" :parent="false"  drag-handle=".drag-handle" :style="this.opt.dialog" :handles="['ml','mr']">-->
+        <!--<div class="dialog-parent-div" :style="this.dialogStyle.position" @mousedown="dialogMouseDown" @mouseenter="dialogEnter" @mouseleave="dialogLeave">-->
+            <!--<vue-draggable-resizable  :draggable="true" :class="{'dialog-div-enter': isEnter, 'dialog-div': !isEnter}" v-show="!this.storeFlg" :resizable="true" :parent="false"  drag-handle=".drag-handle" :style="this.dialogStyle.dialog" :handles="['ml','mr']">-->
 
-    <!--<div id="testDiv">-->
-        <!--<div class="handle" @mousedown="startDrag"></div>-->
-    <!--</div>-->
-
-
-    <div  v-show="!this.storeFlg" class="dialog-div-enter"  :style="this.opt.dialog" @mousedown="dialogMouseDown" @mouseenter="dialogEnter" @mouseleave="dialogLeave">
-        <div class="drag-handle" @mousedown="startDrag"></div>
+    <div  v-show="!this.storeFlg" class="dialog-div-enter"  :style="this.dialogStyle.dialog" @mousedown="dialogMouseDown" @mouseenter="dialogEnter" @mouseleave="dialogLeave">
+        <div class="drag-handle" @mousedown="startDrag" @touchstart="startDrag"></div>
                 <div>
-                    <!--<div class="drag-handle"></div>-->
                     <div class="close-btn-div" @click="closeBtn">
                         <v-icon name="times" scale="1.5" class="hover"/>
                     </div>
                     <slot></slot>
                 </div>
     </div>
-
-
-
-
-            <!--</vue-draggable-resizable>-->
-        <!--</div>-->
-    <!--</transition>-->
 </template>
 
 <script>
 export default {
   name: 'Dialog',
-  props: ['opt'],
+  props: ['dialogStyle'],
   components: {
   },
   data () {
@@ -47,24 +34,40 @@ export default {
     startDrag(event) {
       this.dragging = true;
       this.dragTarget = event.currentTarget.parentNode;
-      this.yDifference = event.clientY - this.dragTarget.offsetTop;
-      this.xDifference = event.clientX - this.dragTarget.offsetLeft
+      if (event.changedTouches) {
+        const touchObject = event.changedTouches[0];
+        this.yDifference = touchObject.pageY - this.dragTarget.offsetTop;
+        this.xDifference = touchObject.pageX - this.dragTarget.offsetLeft
+      } else {
+        this.yDifference = event.clientY - this.dragTarget.offsetTop;
+        this.xDifference = event.clientX - this.dragTarget.offsetLeft
+      }
     },
     stopDrag() {
       this.dragging = false;
     },
     doDrag(event) {
       if (this.dragging) {
-        this.dragTarget.style.top = (event.clientY - this.yDifference) + 'px';
-        this.dragTarget.style.left = (event.clientX - this.xDifference) + 'px';
+        let x = 0; let y = 0
+        if (event.changedTouches) {
+          const touchObject = event.changedTouches[0] ;
+          y = touchObject.pageY- this.yDifference;
+          x = touchObject.pageX- this.xDifference
+        } else {
+          y = event.clientY - this.yDifference;
+          x = event.clientX - this.xDifference
+        }
+        if (y<10) y = 0;
+        this.dragTarget.style.top = y + 'px';
+        this.dragTarget.style.left = x + 'px';
       }
     },
     closeBtn () {
-      this.$store.commit('editDialogArr', {name: this.opt.name, flg: true})
+      this.$store.commit('editDialogArr', {name: this.dialogStyle.name, flg: true})
     },
     dialogMouseDown () {
       this.$store.commit('incrDialogMaxZindex');
-      this.opt.dialog["z-index"] = this.$store.state.dialogMaxZindex
+      this.dialogStyle.dialog["z-index"] = this.$store.state.dialogMaxZindex
     },
     dialogEnter () {
       this.isEnter = true
@@ -79,18 +82,20 @@ export default {
       set (value) { this.$store.commit('pushDialogArr', value) }
     },
     storeFlg: function () {
-      const result = this.storeDialogArr.find(el => el.name === this.opt.name);
+      const result = this.storeDialogArr.find(el => el.name === this.dialogStyle.name);
       return result.flg
     }
   },
   created () {
     // ダイアログクリエイト時に開閉のフラグをストアに設定する。
-    console.log(this.opt)
-    this.$store.commit('pushDialogArr', {name: this.opt.name, flg: this.opt.close})
+    this.$store.commit('pushDialogArr', {name: this.dialogStyle.name, flg: this.dialogStyle.close})
   },
   mounted () {
     window.addEventListener('mousemove', this.doDrag);
     window.addEventListener('mouseup', this.stopDrag);
+    window.addEventListener('touchmove', this.doDrag);
+    window.addEventListener('touchend', this.stopDrag);
+
     this.$nextTick(function () {
     })
   }

@@ -3,33 +3,24 @@
     <div id="map00">
         <transition>
             <div id="map01" :style="map01Size" v-show="map01Flg">
-
-                <!--<div id="testDiv">-->
-                    <!--<div class="handle" @mousedown="startDrag"></div>-->
-                <!--</div>-->
-
-                <!--<div id="testDiv2">-->
-                    <!--<div class="handle" @mousedown="startDrag"></div>-->
-                <!--</div>-->
-
                 <div class="top-left-div">
                     <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],menu01)" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
                     <b-button class='olbtn' :size="btnSize" @click="splitMap"><v-icon name="columns"  scale="1.0" /></b-button>
                 </div>
                 <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt01)">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],map01DialogStyle)">背景</b-button>
                 </div>
-                <G-Dialog :opt="opt01">
+                <G-Dialog :dialogStyle="map01DialogStyle">
                     <div class="content-div" :style="map01DialogContentSize">
                         <div class="first-content-div">
-                            <Layer :name="opt01.name"/>
+                            <Layer :name="map01DialogStyle.name"/>
                         </div>
                         <div class="second-content-div">
-                            <LayerList :name="opt01.name" />
+                            <LayerList :name="map01DialogStyle.name" />
                         </div>
                     </div>
                 </G-Dialog>
-                <G-Dialog :opt="menu01">
+                <G-Dialog :dialogStyle="menu01">
                   <div :style="menuContentSize">
                       <div>
                           <b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button>
@@ -46,15 +37,15 @@
         <transition>
             <div id="map02" :style="map02Size" v-show="map02Flg">
                 <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt02)">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],map02DialogStyle)">背景</b-button>
                 </div>
-                <G-Dialog :opt="opt02">
+                <G-Dialog :dialogStyle="map02DialogStyle">
                     <div class="content-div" :style="map02DialogContentSize">
                         <div class="first-content-div">
-                            <Layer :name="opt02.name"/>
+                            <Layer :name="map02DialogStyle.name"/>
                         </div>
                         <div class="second-content-div">
-                            <LayerList :name="opt02.name" />
+                            <LayerList :name="map02DialogStyle.name" />
                         </div>
                     </div>
                 </G-Dialog>
@@ -64,15 +55,15 @@
         <transition>
             <div id="map03" :style="map03Size" v-show="map03Flg">
                 <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt03)">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],map03DialogStyle)">背景</b-button>
                 </div>
-                <G-Dialog :opt="opt03">
+                <G-Dialog :dialogStyle="map03DialogStyle">
                     <div class="content-div" :style="map03DialogContentSize" >
                         <div class="first-content-div">
-                            <Layer :name="opt03.name"/>
+                            <Layer :name="map03DialogStyle.name"/>
                         </div>
                         <div class="second-content-div">
-                            <LayerList :name="opt03.name" />
+                            <LayerList :name="map03DialogStyle.name" />
                         </div>
                     </div>
                 </G-Dialog>
@@ -82,15 +73,15 @@
         <transition>
             <div id="map04" :style="map04Size"  v-show="map04Flg">
                 <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],opt04)">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],map04DialogStyle)">背景</b-button>
                 </div>
-                <G-Dialog :opt="opt04">
+                <G-Dialog :dialogStyle="map04DialogStyle">
                     <div class="content-div" :style="map04DialogContentSize">
                         <div class="first-content-div">
-                            <Layer :name="opt04.name"/>
+                            <Layer :name="map04DialogStyle.name"/>
                         </div>
                         <div class="second-content-div">
-                            <LayerList :name="opt04.name" />
+                            <LayerList :name="map04DialogStyle.name" />
                         </div>
                     </div>
                 </G-Dialog>
@@ -120,10 +111,6 @@ export default {
   },
   data () {
     return {
-      dragTarget: '',
-      dragging: false,
-      yDifference: 0,
-      xDifference: 0,
       btnSize: '',
       menuContentSize: {'height': '200px','margin': '10px', 'overflow': 'auto'},
       map01Size: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
@@ -136,10 +123,10 @@ export default {
       map04DialogContentSize: {'max-height': '300px','overflow': 'auto'},
       zoom: {map01: '',map02: '',map03: '',map04: ''},
       menu01: {close: true, name: 'menu01', dialog: {top: '56px', left: '10px', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
-      opt01: {close: true, name: 'map01', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
-      opt02: {close: true, name: 'map02', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
-      opt03: {close: true, name: 'map03', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
-      opt04: {close: true, name: 'map04', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      map01DialogStyle: {close: true, name: 'map01', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      map02DialogStyle: {close: true, name: 'map02', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      map03DialogStyle: {close: true, name: 'map03', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      map04DialogStyle: {close: true, name: 'map04', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
       splitFlg: 1,
       map01Flg: true,
       map02Flg: false,
@@ -153,21 +140,6 @@ export default {
   computed: {
   },
   methods: {
-    startDrag(event) {
-      this.dragging = true;
-      this.dragTarget = event.currentTarget.parentNode;
-      this.yDifference = event.clientY - this.dragTarget.offsetTop;
-      this.xDifference = event.clientX - this.dragTarget.offsetLeft
-    },
-    stopDrag() {
-      this.dragging = false;
-    },
-    doDrag(event) {
-      if (this.dragging) {
-        this.dragTarget.style.top = (event.clientY - this.yDifference) + 'px';
-        this.dragTarget.style.left = (event.clientX - this.xDifference) + 'px';
-      }
-    },
     // リセット
     reset01 () {
       alert('作成中！')
@@ -291,10 +263,7 @@ export default {
     }
   },
   mounted () {
-
     this.$nextTick(function () {
-      window.addEventListener('mousemove', this.doDrag);
-      window.addEventListener('mouseup', this.stopDrag);
 
       /*
       $(".handle").mousedown(function(event){
@@ -337,27 +306,6 @@ export default {
 </script>
 
 <style scoped>
-    .handle{
-        width: 100%;
-        height: 50px;
-        background-color: black;
-    }
-    #testDiv2{
-        position: absolute;
-        height: 200px;
-        width: 200px;
-        top:300px;
-        left: 300px;
-        background-color: blue;
-        z-index: 10;
-    }
-    #testDiv{
-        position: absolute;
-        height: 200px;
-        width: 200px;
-        background-color: red;
-        z-index: 10;
-    }
     h1, h2 {
         font-weight: normal;
     }

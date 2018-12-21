@@ -5,10 +5,7 @@
 
 <script>
 import LiquorTree from 'liquor-tree'
-// import Layers from '../js/layers'
 import * as Layers from '../js/layers'
-
-// import * as Test from '../js/test'
 export default {
   name: 'LayerList',
   props: ['name'],
@@ -50,10 +47,6 @@ export default {
             name: this.name
           })
         }
-
-
-
-
       }
       node.unselect()// セレクト状態を解除。解除しないと続けて押せない。
     }
