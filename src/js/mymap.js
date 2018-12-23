@@ -8,9 +8,8 @@ import {ScaleLine} from 'ol/control.js';
 import Target from 'ol-ext/control/Target'
 import Notification from '../js/notification'
 import * as Layers from '../js/layers'
-
+import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
 let maxZndex = 0;
-
 export function initMap (vm) {
   // マップ作製ループ用の配列を作成
   const maps = [
@@ -27,6 +26,9 @@ export function initMap (vm) {
     // マップ作製
     const name = maps[i].name;
     const map = new Map({
+      interactions: defaultInteractions().extend([
+        new DragRotateAndZoom()
+      ]),
       layers: [maps[i].layer],
       target: name,
       view: view01
@@ -68,7 +70,27 @@ export function initMap (vm) {
     const notification = new Notification();
     map.addControl(notification);
     store.commit('setNotifications',{name:maps[i].name, control: notification});
-    map.addControl(new ScaleLine())
+    map.addControl(new ScaleLine());
+
+    const className =' .ol-scale-line';
+    $(className).mousedown(function(event){
+      const target = $(this);
+      target.addClass("drag");
+      let eX; let eY;
+      if (!event.changedTouches) {
+        eY = event.pageY - target.css("top").replace(/px/,"");
+        eX = event.pageX - target.css("left").replace(/px/,"");
+      }
+      $(document).mousemove(function(event){
+        if (!event.changedTouches) {
+          $(className + ".drag").css("left",event.pageX - eX).css("top",event.pageY - eY);
+        }
+      });
+      $(document).mouseup(function(){
+        target.unbind("mousemove");
+        target.removeClass("drag");
+      });
+    });
   }
 }
 

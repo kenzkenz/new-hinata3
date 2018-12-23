@@ -4,12 +4,13 @@ import XYZ from 'ol/source/XYZ.js'
 import { transformExtent } from 'ol/proj.js'
 import LayerGroup from 'ol/layer/Group';
 import mw5 from './mw5'
+import mw20 from './mw20'
 
 const mapsStr = ['map01','map02','map03','map04'];
-const transformE = function (extent) {
+const transformE = extent => {
   return transformExtent(extent,'EPSG:4326','EPSG:3857');
 };
-// オープンストリートマップ
+// オープンストリートマップ------------------------------------------------------------------------
 function Osm () {
   this.source = new OSM()
 }
@@ -17,7 +18,7 @@ const osmObj = {};
 for (let i of mapsStr) {
   osmObj[i] = new TileLayer(new Osm())
 }
-// 標準地図
+// 標準地図------------------------------------------------------------------------------------
 function Std () {
   this.source = new XYZ({
     url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',
@@ -29,7 +30,7 @@ const stdObj = {};
 for (let i of mapsStr) {
   stdObj[i] = new TileLayer(new Std())
 }
-// 淡色地図
+// 淡色地図------------------------------------------------------------------------------------
 function Pale () {
   this.source = new XYZ({
     url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
@@ -41,7 +42,7 @@ const paleObj = {};
 for (let i of mapsStr) {
   paleObj[i] = new TileLayer(new Pale())
 }
-// 白地図
+// 白地図--------------------------------------------------------------------------------------
 function Blank () {
   this.source = new XYZ({
     url: 'https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png',
@@ -53,7 +54,7 @@ const blankObj = {};
 for (let i of mapsStr) {
   blankObj[i] = new TileLayer(new Blank())
 }
-// 全国最新写真
+// 全国最新写真-------------------------------------------------------------------------------
 function Seamlessphoto () {
   this.source = new XYZ({
     url: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
@@ -65,7 +66,7 @@ const seamlessphotoObj = {};
 for (let i of mapsStr) {
   seamlessphotoObj[i] = new TileLayer(new Seamlessphoto())
 }
-// 色別標高図
+// 色別標高図---------------------------------------------------------------------------------
 function Relief () {
   this.source = new XYZ({
     url: 'https://cyberjapandata.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png',
@@ -77,7 +78,7 @@ const reliefObj = {};
 for (let i of mapsStr) {
   reliefObj[i] = new TileLayer(new Relief())
 }
-// 宮崎県航空写真
+// 宮崎県航空写真----------------------------------------------------------------------------
 function MiyazakiOrt () {
   this.source = new XYZ({
     url: 'https://mtile.pref.miyazaki.lg.jp/tile/ort/{z}/{x}/{-y}.png',
@@ -90,7 +91,7 @@ const miyazakiOrtObj = {};
 for (let i of mapsStr) {
   miyazakiOrtObj[i] = new TileLayer(new MiyazakiOrt())
 }
-// 岐阜県CS立体図
+// 岐阜県CS立体図----------------------------------------------------------------------------
 function GihuCs () {
   this.source = new XYZ({
     url: 'https://kenzkenz2.xsrv.jp/gihucs/{z}/{x}/{-y}.png',
@@ -104,7 +105,7 @@ const gihuCsObj = {};
 for (let i of mapsStr) {
   gihuCsObj[i] = new TileLayer(new GihuCs())
 }
-// 日本CS立体図
+// 日本CS立体図------------------------------------------------------------------------------
 function NihonCs () {
   this.source = new XYZ({
     url: 'http://kouapp.main.jp/csmap/tile/japan/{z}/{x}/{y}.jpg',
@@ -116,8 +117,8 @@ const nihonCsObj = {};
 for (let i of mapsStr) {
   nihonCsObj[i] = new TileLayer(new NihonCs())
 }
-// 今昔マップ
-// 福岡・北九州編
+// 今昔マップ-----------------------------------------------------------------------------------
+// 福岡・北九州編------------------------------------------------------------------------------
 function Kon_hukuoka01 () {
   this.source = new XYZ({
     url: 'https://sv53.wadax.ne.jp/~ktgis-net/kjmapw/kjtilemap/fukuoka/00/{z}/{x}/{-y}.png',
@@ -131,7 +132,7 @@ const kon_hukuoka01Obj = {};
 for (let i of mapsStr) {
   kon_hukuoka01Obj[i] = new TileLayer(new Kon_hukuoka01())
 }
-// CS立体図10Mここから----------------------------------------------------------------------------------------------------
+// CS立体図10Mここから-----------------------------------------------------------------------
 function Cs10m01 () {
   this.source = new XYZ({
     url: 'https://mtile.pref.miyazaki.lg.jp/tile/cs/1/{z}/{x}/{-y}.png',
@@ -265,35 +266,54 @@ for (let i of mapsStr) {
       ]
   })
 }
-// CS立体図10Mここまで----------------------------------------------------------------------------------------------------
-// 日本版mapwarperここから------------------------------------------------------------------------------------------------
-function Mw5 (url,bbox) {
+// CS立体図10Mここまで-----------------------------------------------------------------------
+// 日本版mapwarper５万分の１ここから------------------------------------------------------
+// 5万分の1,20万分の1の共用コンストラクタ
+function Mapwarper (url,bbox) {
   this.source = new XYZ({
     url: url,
     minZoom: 1,
     maxZoom: 18
   });
   this.extent = transformE(bbox);
+  // クリックしたとときにextentを操作するため元のextentを保存しておく。
   this.extent2 = transformE(bbox)
 }
 export const mw5Obj = {};
 for (let i of mapsStr) {
   const layerGroup = [];
   const length =  mw5.length;
-  for (var j = 0; j < length; j++) {
+  for (let j = 0; j < length; j++) {
     const id = mw5[j].id;
     const url = 'https://mapwarper.h-gis.jp/maps/tile/' + id + '/{z}/{x}/{y}.png';
     const bbox = mw5[j].extent;
-    const layer = new TileLayer(new Mw5(url,bbox));
+    const layer = new TileLayer(new Mapwarper(url,bbox));
     layerGroup.push(layer)
   }
   mw5Obj[i] = new LayerGroup({
     layers: layerGroup
   })
 }
-// 日本版mapwarperここまで------------------------------------------------------------------------------------------------
+// 日本版mapwarper５万分の１ここまで------------------------------------------------------
+// 日本版mapwarper20万分の１ここから------------------------------------------------------
+export const mw20Obj = {};
+for (let i of mapsStr) {
+  const layerGroup = [];
+  const length =  mw20.length;
+  for (let j = 0; j < length; j++) {
+    const id = mw20[j].id;
+    const url = 'https://mapwarper.h-gis.jp/maps/tile/' + id + '/{z}/{x}/{y}.png';
+    const bbox = mw20[j].extent;
+    const layer = new TileLayer(new Mapwarper(url,bbox));
+    layerGroup.push(layer)
+  }
+  mw20Obj[i] = new LayerGroup({
+    layers: layerGroup
+  })
+}
+// 日本版mapwarper20万分の１ここまで------------------------------------------------------
 
-// ここにレイヤーを全部書く。クリックするとストアのlayerListに追加されていく-----------------------------------------------------
+// ここにレイヤーを全部書く。クリックするとストアのlayerListに追加されていく-------------------------
 const layers =
   [
     { text: 'OpenStreetMap', data: { id: 0, layer: osmObj, opacity: 1 } },
@@ -317,7 +337,8 @@ const layers =
       ]},
     { text: '古地図',
       children: [
-        { text: '旧版地形図', data: { id: 'mw5', layer: mw5Obj, opacity: 1 } }
+        { text: '旧版地形図5万分の１', data: { id: 'mw5', layer: mw5Obj, opacity: 1 } },
+        { text: '旧版地形図20万分の１', data: { id: 'mw20', layer: mw20Obj, opacity: 1 } }
       ]},
     { text: '今昔マップ',
       children: [

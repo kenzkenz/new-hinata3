@@ -11,14 +11,16 @@ import jQuery from 'jquery'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-global.$ = jQuery
-const $ = jQuery
+import drag from './js/drag'
+global.$ = jQuery;
+const $ = jQuery;
+Vue.use(drag);
 Vue.use(BootstrapVue);
-Vue.component('G-Dialog', Dialog)
-Vue.component('v-icon', Icon)
-Vue.use(Snotify)
-Vue.config.productionTip = false
+Vue.component('G-Dialog', Dialog);
+Vue.component('v-icon', Icon);
+Vue.use(Snotify);
+Vue.config.productionTip = false;
 new Vue({
     store,
     render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

@@ -5,7 +5,7 @@
             <!--<vue-draggable-resizable  :draggable="true" :class="{'dialog-div-enter': isEnter, 'dialog-div': !isEnter}" v-show="!this.storeFlg" :resizable="true" :parent="false"  drag-handle=".drag-handle" :style="this.dialogStyle.dialog" :handles="['ml','mr']">-->
 
     <div  v-show="!this.storeFlg" class="dialog-div-enter"  :style="this.dialogStyle.dialog" @mousedown="dialogMouseDown" @mouseenter="dialogEnter" @mouseleave="dialogLeave">
-        <div class="drag-handle" @mousedown="startDrag" @touchstart="startDrag"></div>
+        <div class="drag-handle" v-my-drag-handle></div>
                 <div>
                     <div class="close-btn-div" @click="closeBtn">
                         <v-icon name="times" scale="1.5" class="hover"/>
@@ -48,7 +48,7 @@ export default {
     },
     doDrag(event) {
       if (this.dragging) {
-        let x = 0; let y = 0
+        let x = 0; let y = 0;
         if (event.changedTouches) {
           const touchObject = event.changedTouches[0] ;
           y = touchObject.pageY- this.yDifference;
@@ -91,11 +91,6 @@ export default {
     this.$store.commit('pushDialogArr', {name: this.dialogStyle.name, flg: this.dialogStyle.close})
   },
   mounted () {
-    window.addEventListener('mousemove', this.doDrag);
-    window.addEventListener('mouseup', this.stopDrag);
-    window.addEventListener('touchmove', this.doDrag);
-    window.addEventListener('touchend', this.stopDrag);
-
     this.$nextTick(function () {
     })
   }
