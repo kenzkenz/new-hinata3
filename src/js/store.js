@@ -13,6 +13,12 @@ const store = new Vuex.Store({
       map03: [{id: 4, name: '色別標高図', layer: Layers.Layers[1].children[3].data.layer['map03'], opacity: 1}],
       map04: [{id: 5, name: '全国最新写真', layer: Layers.Layers[1].children[4].data.layer['map04'], opacity: 1}]
     },
+    infos: {
+      map01: {close: true, name: 'map01info', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
+      map02: {close: true, name: 'map02info', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
+      map03: {close: true, name: 'map03info', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
+      map04: {close: true, name: 'map04info', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
+    },
     menuFlg:false,
     notifications: {},
     notification: '',
@@ -21,6 +27,9 @@ const store = new Vuex.Store({
     splitFlg: 1
   },
   getters: {
+    // info: (state) => (name) => {
+    //   return state.info[name]
+    // },
     layerList: (state) => (name) => {
       return state.layerLists[name]
     },
@@ -40,6 +49,11 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    setInfo (state,payload) {
+      state.infos[payload.name] = payload.info
+    },
+
+
     // マップを登録------------------------------------------------------------------------------
     setMap (state,payload) {
       state.maps[payload.name] = payload.map

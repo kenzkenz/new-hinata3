@@ -31,6 +31,11 @@
                       </div>
                   </div>
                 </G-Dialog>
+                <G-Dialog :dialogStyle="this.$store.state.infos.map01">
+                    <div class="info-dialog  select-on">
+                        01
+                    </div>
+                </G-Dialog>
                 <div class="zoom-div">{{ zoom.map01 }}</div>
             </div>
         </transition>
@@ -47,6 +52,11 @@
                         <div class="second-content-div">
                             <LayerList :name="map02DialogStyle.name" />
                         </div>
+                    </div>
+                </G-Dialog>
+                <G-Dialog :dialogStyle="this.$store.state.infos.map02">
+                    <div class="info-dialog  select-on">
+                        02
                     </div>
                 </G-Dialog>
                 <div class="zoom-div">{{ zoom.map02 }}</div>
@@ -67,6 +77,11 @@
                         </div>
                     </div>
                 </G-Dialog>
+                <G-Dialog :dialogStyle="this.$store.state.infos.map03">
+                    <div class="info-dialog  select-on">
+                        03
+                    </div>
+                </G-Dialog>
                 <div class="zoom-div">{{ zoom.map03 }}</div>
             </div>
         </transition>
@@ -83,6 +98,11 @@
                         <div class="second-content-div">
                             <LayerList :name="map04DialogStyle.name" />
                         </div>
+                    </div>
+                </G-Dialog>
+                <G-Dialog :dialogStyle="this.$store.state.infos.map04">
+                    <div class="info-dialog  select-on">
+                        04
                     </div>
                 </G-Dialog>
                 <div class="zoom-div">{{ zoom.map04 }}</div>
@@ -127,6 +147,7 @@ export default {
       map02DialogStyle: {close: true, name: 'map02', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
       map03DialogStyle: {close: true, name: 'map03', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
       map04DialogStyle: {close: true, name: 'map04', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      // map01info: {close: false, name: 'map01info', dialog: {top: '56px', left: 'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
       splitFlg: 1,
       map01Flg: true,
       map02Flg: false,
@@ -138,6 +159,11 @@ export default {
     }
   },
   computed: {
+    /*
+    storeInfo : {
+      get () { return this.$store.getters.info(this.name) }
+    }
+    */
   },
   methods: {
     // リセット
@@ -264,7 +290,6 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
-
       $(".ol-scale-line").mousedown(function(event){
         const target = $(this);
         target.addClass("drag");
@@ -377,10 +402,19 @@ export default {
         text-shadow: black 1px 1px 0, black -1px 1px 0,
         black 1px -1px 0, black -1px -1px 0;
         font-size: x-large;
-        -webkit-user-select: none;  /* Chrome all / Safari all */
-        -moz-user-select: none;     /* Firefox all */
-        -ms-user-select: none;      /* IE 10+ */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         user-select: none;
+    }
+    .select-on{
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+    }
+    .info-dialog{
+        height: 300px;
     }
     /*重要！！バウンスを止めたときに同時にスクロールを無効化させないために必要*/
     .content-div{

@@ -98,11 +98,6 @@ export default {
 </script>
 
 <style scoped>
-    .dialog-parent-div{
-        height: 100%;
-        width: 0;
-        position: absolute;
-    }
     .dialog-div{
         position: absolute;
         z-index: 10;
@@ -122,8 +117,13 @@ export default {
         z-index: 10;
         background-color: #fff;
         box-shadow:2px 2px 5px #787878;
+        border: 1px solid whitesmoke;
         border-radius: 4px;
         transition: opacity 1s;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
     .drag-handle{
         height: 30px;

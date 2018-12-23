@@ -3,22 +3,11 @@
     <draggable element="ul" :options="{handle:'.handle-div',animation: 200}" v-model="storeLayerList">
         <li v-for="item in storeLayerList" :key="item.id">
             <div class="list-div">
-                <div class="handle-div" >
-                    <v-icon name="align-justify" class="hover-white handle-icon"/>
-                </div>
-                <div class="item-div">
-                    {{ item.name }}
-                </div>
-                <div class="range-div">
-                    <input type="range" min="0" max="1" step="0.01" class="range" v-model.number="item.opacity" @input="opacityChange(item)" />
-                </div>
-                <div class="info-div" @click="info">
-                    <v-icon name="info-circle" scale="1.0" class="hover"/>
-                </div>
-
-                <div class="close-div" @click="removeLayer(item)">
-                    <v-icon name="times" scale="1.0" class="hover"/>
-                </div>
+                <div class="handle-div" ><v-icon name="align-justify" class="hover-white handle-icon"/></div>
+                <div class="item-div">{{ item.name }}</div>
+                <div class="range-div"><input type="range" min="0" max="1" step="0.01" class="range" v-model.number="item.opacity" @input="opacityChange(item)" /></div>
+                <div class="info-div" @click="info()"><v-icon name="info-circle" scale="1.0" class="hover"/></div>
+                <div class="close-div" @click="removeLayer(item)"><v-icon name="times" scale="1.0" class="hover"/></div>
             </div>
         </li>
         <vue-snotify></vue-snotify>
@@ -49,7 +38,12 @@ export default {
       MyMap.removeLayer(item, this.storeLayerList, this.name)
     },
     info () {
-      alert('作成中')
+      this.$store.commit('incrDialogMaxZindex');
+      this.$store.commit('incrDialogMaxZindex');
+      const info =this.$store.state.infos[this.name];
+      info.dialog["z-index"] = this.$store.state.dialogMaxZindex;
+      this.$store.commit('setInfo', {name: this.name , info: info});
+      this.$store.commit('editDialogArr', {name: this.name + 'info', flg: 'toggle'})
     }
   },
   computed: {

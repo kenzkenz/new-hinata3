@@ -39,10 +39,30 @@ export function initMap (vm) {
     map.on('singleclick', function (evt) {
       console.log(transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
       const layers = map.getLayers().getArray();
-      const result = layers.find(el => el === Layers.mw5Obj[name]);
-      if (result) {
+      const result5 = layers.find(el => el === Layers.mw5Obj[name]);
+      const result20 = layers.find(el => el === Layers.mw20Obj[name]);
+      if(result5 && result20) {
+        if(result5.myZindex > result20.myZindex) {
+          extentChange(5)
+        } else {
+          extentChange(20)
+        }
+      } else if (result5) {
+        extentChange(5)
+      } else if (result20) {
+        extentChange(20)
+      }
+      function extentChange (mw){
+        let gLayers;
+        let lonOutside; let latOutside;
+        if(mw === 5) {
+          gLayers = Layers.mw5Obj[name].values_.layers.array_;
+          lonOutside = 5000; latOutside = 4000
+        } else {
+          gLayers = Layers.mw20Obj[name].values_.layers.array_;
+          lonOutside = 24000; latOutside = 14000
+        }
         const lon = evt.coordinate[0], lat = evt.coordinate[1];
-        const gLayers = Layers.mw5Obj[name].values_.layers.array_;
         for (let i in gLayers) {
           const extent2 = gLayers[i].values_['extent2'];
           const lonMin = extent2[0], lonMax = extent2[2], latMin = extent2[1], latMax = extent2[3];
@@ -50,7 +70,7 @@ export function initMap (vm) {
             if (latMin < lat && latMax > lat) {
               if (gLayers[i].getExtent()[0] === extent2[0]) {
                 maxZndex++;
-                gLayers[i].setExtent([lonMin-5000.2,latMin-4000,lonMax+5000, latMax+4000]);
+                gLayers[i].setExtent([lonMin - lonOutside, latMin - latOutside, lonMax + lonOutside, latMax + latOutside]);
                 gLayers[i].setZIndex(maxZndex)
               } else {
                 gLayers[i].setExtent(extent2);
@@ -124,10 +144,10 @@ export function resize () {
 
 export function watchLayer (map, thisName, newLayerList,oldLayerList) {
   // 逆ループ
+  let myZindex = 0;
   for (let i = newLayerList.value.length - 1; i >= 0; i--) {
     // リストクリックによる追加したレイヤーで リストの先頭で リストの増加があったとき
     const layer = newLayerList.value[i].layer;
-
     if (newLayerList.value[i].addFlg) {
       if (i === 0 ) {
         if (newLayerList.length > oldLayerList.length) {
@@ -154,6 +174,17 @@ export function watchLayer (map, thisName, newLayerList,oldLayerList) {
         }
       }
     }
+    // グループレイヤーで個別にzindexを触っているときがあるのでリセット。重くなるようならここをあきらめる。
+   if (layer.values_.layers) {
+     const gLayers = layer.values_.layers.array_;
+     for (let i in gLayers) {
+       gLayers[i].setZIndex(undefined);
+       const extent2 = gLayers[i].values_['extent2'];
+       gLayers[i].setExtent(extent2);
+     }
+   }
+    // グループレイヤーのときzindexは効かないようだ。しかしz順が必要になるときがあるので項目を作っている。
+    layer['myZindex'] = myZindex++;
     map.removeLayer(layer);
     map.addLayer(layer);
     layer.setOpacity(newLayerList.value[i].opacity)
