@@ -72,7 +72,8 @@ export function permalinkEventSet () {
                         id: node.data.id,
                         name: node.text,
                         layer: node.data.layer,
-                        opacity: urlLayerListArr[i][j].o
+                        opacity: urlLayerListArr[i][j].o,
+                        summary: node.data.summary
                       },
                       name: name
                     })

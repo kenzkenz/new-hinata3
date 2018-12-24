@@ -8,16 +8,21 @@ const store = new Vuex.Store({
   state: {
     maps: {map01: null, map02: null, map03: null, map04: null},
     layerLists: {
-      map01: [{id: 1, name: '標準地図', layer: Layers.Layers[1].children[0].data.layer['map01'], opacity: 1}],
+      map01: [{id: 1, name: '標準地図', layer: Layers.Layers[1].children[0].data.layer['map01'], opacity: 1, summary:Layers.Layers[1].children[0].data.summary}],
       map02: [{id: 2, name: '淡色地図', layer: Layers.Layers[1].children[1].data.layer['map02'], opacity: 1}],
       map03: [{id: 4, name: '色別標高図', layer: Layers.Layers[1].children[3].data.layer['map03'], opacity: 1}],
       map04: [{id: 5, name: '全国最新写真', layer: Layers.Layers[1].children[4].data.layer['map04'], opacity: 1}]
     },
-    infos: {
-      map01: {close: true, name: 'map01info', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
-      map02: {close: true, name: 'map02info', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
-      map03: {close: true, name: 'map03info', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
-      map04: {close: true, name: 'map04info', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
+    dialogs: {
+      menuDialog: {close: true, name: 'menu01', dialog: {top: '56px', left: '10px', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
+      map01Dialog: {close: true, name: 'map01', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      map02Dialog: {close: true, name: 'map02', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      map03Dialog: {close: true, name: 'map03', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      map04Dialog: {close: true, name: 'map04', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
+      map01info: {close: true, name: 'map01info', text: '01', summary:'', dialog: {top: '76px', left: 'calc(100% - 280px)', 'z-index': 1, height: 'auto'}},
+      map02info: {close: true, name: 'map02info', text: '02', summary:'', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto'}},
+      map03info: {close: true, name: 'map03info', text: '03', summary:'', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto'}},
+      map04info: {close: true, name: 'map04info', text: '04', summary:'', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto'}},
     },
     menuFlg:false,
     notifications: {},
@@ -49,11 +54,9 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    setInfo (state,payload) {
-      state.infos[payload.name] = payload.info
+    setDialogs (state,payload) {
+      state.dialogs[payload.name] = payload.dialog
     },
-
-
     // マップを登録------------------------------------------------------------------------------
     setMap (state,payload) {
       state.maps[payload.name] = payload.map
@@ -66,6 +69,14 @@ const store = new Vuex.Store({
     menuFlgToggle (state) {
       state.menuFlg = !state.menuFlg
     },
+
+
+
+
+
+
+
+
     // ダイアログの開閉フラグ---------------------------------------------------------------------
     pushDialogArr (state, payload) { state.dialogArr.push(payload) },
     editDialogArr (state, payload) {

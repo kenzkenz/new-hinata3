@@ -1,26 +1,27 @@
 最初に呼び出されるvueファイル。ここに他のvueファイルを取り込んでいく。
 <template>
     <div id="map00">
+        <!--map01--------------------------------------------------------------------------->
         <transition>
             <div id="map01" :style="map01Size" v-show="map01Flg">
                 <div class="top-left-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],menu01)" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMenuDialog)" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
                     <b-button class='olbtn' :size="btnSize" @click="splitMap"><v-icon name="columns"  scale="1.0" /></b-button>
                 </div>
                 <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],map01DialogStyle)">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMap01Dialog)">背景</b-button>
                 </div>
-                <G-Dialog :dialogStyle="map01DialogStyle">
+                <G-Dialog :dialogStyle="storeMap01Dialog">
                     <div class="content-div" :style="map01DialogContentSize">
                         <div class="first-content-div">
-                            <Layer :name="map01DialogStyle.name"/>
+                            <Layer :name="storeMap01Dialog.name"/>
                         </div>
                         <div class="second-content-div">
-                            <LayerList :name="map01DialogStyle.name" />
+                            <LayerList :name="storeMap01Dialog.name" />
                         </div>
                     </div>
                 </G-Dialog>
-                <G-Dialog :dialogStyle="menu01">
+                <G-Dialog :dialogStyle="storeMenuDialog">
                   <div :style="menuContentSize">
                       <div>
                           <b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button>
@@ -31,78 +32,89 @@
                       </div>
                   </div>
                 </G-Dialog>
-                <G-Dialog :dialogStyle="this.$store.state.infos.map01">
+                <G-Dialog :dialogStyle="this.$store.state.dialogs.map01info">
                     <div class="info-dialog  select-on">
-                        01
+                        <p>{{ this.$store.state.dialogs.map01info.text }}</p>
+                        <hr>
+                        <p v-html="this.$store.state.dialogs.map01info.summary"></p>
                     </div>
                 </G-Dialog>
                 <div class="zoom-div">{{ zoom.map01 }}</div>
             </div>
         </transition>
+        <!--map02--------------------------------------------------------------------------->
         <transition>
             <div id="map02" :style="map02Size" v-show="map02Flg">
                 <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],map02DialogStyle)">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMap02Dialog)">背景</b-button>
                 </div>
-                <G-Dialog :dialogStyle="map02DialogStyle">
+                <G-Dialog :dialogStyle="storeMap02Dialog">
                     <div class="content-div" :style="map02DialogContentSize">
                         <div class="first-content-div">
-                            <Layer :name="map02DialogStyle.name"/>
+                            <Layer :name="storeMap02Dialog.name"/>
                         </div>
                         <div class="second-content-div">
-                            <LayerList :name="map02DialogStyle.name" />
+                            <LayerList :name="storeMap02Dialog.name" />
                         </div>
                     </div>
                 </G-Dialog>
-                <G-Dialog :dialogStyle="this.$store.state.infos.map02">
+                <G-Dialog :dialogStyle="this.$store.state.dialogs.map02info">
                     <div class="info-dialog  select-on">
-                        02
+                        <p>{{ this.$store.state.dialogs.map02info.text }}</p>
+                        <hr>
+                        <p v-html="this.$store.state.dialogs.map02info.summary"></p>
                     </div>
                 </G-Dialog>
                 <div class="zoom-div">{{ zoom.map02 }}</div>
             </div>
         </transition>
+        <!--map03--------------------------------------------------------------------------->
         <transition>
             <div id="map03" :style="map03Size" v-show="map03Flg">
                 <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],map03DialogStyle)">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMap03Dialog)">背景</b-button>
                 </div>
-                <G-Dialog :dialogStyle="map03DialogStyle">
+                <G-Dialog :dialogStyle="storeMap03Dialog">
                     <div class="content-div" :style="map03DialogContentSize" >
                         <div class="first-content-div">
-                            <Layer :name="map03DialogStyle.name"/>
+                            <Layer :name="storeMap03Dialog.name"/>
                         </div>
                         <div class="second-content-div">
-                            <LayerList :name="map03DialogStyle.name" />
+                            <LayerList :name="storeMap03Dialog.name" />
                         </div>
                     </div>
                 </G-Dialog>
-                <G-Dialog :dialogStyle="this.$store.state.infos.map03">
+                <G-Dialog :dialogStyle="this.$store.state.dialogs.map03info">
                     <div class="info-dialog  select-on">
-                        03
+                        <p>{{ this.$store.state.dialogs.map03info.text }}</p>
+                        <hr>
+                        <p v-html="this.$store.state.dialogs.map03info.summary"></p>
                     </div>
                 </G-Dialog>
                 <div class="zoom-div">{{ zoom.map03 }}</div>
             </div>
         </transition>
+        <!--map04--------------------------------------------------------------------------->
         <transition>
             <div id="map04" :style="map04Size"  v-show="map04Flg">
                 <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],map04DialogStyle)">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMap04Dialog)">背景</b-button>
                 </div>
-                <G-Dialog :dialogStyle="map04DialogStyle">
+                <G-Dialog :dialogStyle="storeMap04Dialog">
                     <div class="content-div" :style="map04DialogContentSize">
                         <div class="first-content-div">
-                            <Layer :name="map04DialogStyle.name"/>
+                            <Layer :name="storeMap04Dialog.name"/>
                         </div>
                         <div class="second-content-div">
-                            <LayerList :name="map04DialogStyle.name" />
+                            <LayerList :name="storeMap04Dialog.name" />
                         </div>
                     </div>
                 </G-Dialog>
-                <G-Dialog :dialogStyle="this.$store.state.infos.map04">
+                <G-Dialog :dialogStyle="this.$store.state.dialogs.map04info">
                     <div class="info-dialog  select-on">
-                        04
+                        <p>{{ this.$store.state.dialogs.map04info.text }}</p>
+                        <hr>
+                        <p v-html="this.$store.state.dialogs.map04info.summary"></p>
                     </div>
                 </G-Dialog>
                 <div class="zoom-div">{{ zoom.map04 }}</div>
@@ -142,12 +154,6 @@ export default {
       map03DialogContentSize: {'max-height': '300px','overflow': 'auto'},
       map04DialogContentSize: {'max-height': '300px','overflow': 'auto'},
       zoom: {map01: '',map02: '',map03: '',map04: ''},
-      menu01: {close: true, name: 'menu01', dialog: {top: '56px', left: '10px', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
-      map01DialogStyle: {close: true, name: 'map01', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
-      map02DialogStyle: {close: true, name: 'map02', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
-      map03DialogStyle: {close: true, name: 'map03', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
-      map04DialogStyle: {close: true, name: 'map04', dialog: {top: '56px', left:'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
-      // map01info: {close: false, name: 'map01info', dialog: {top: '56px', left: 'calc(100% - 260px)', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
       splitFlg: 1,
       map01Flg: true,
       map02Flg: false,
@@ -159,11 +165,11 @@ export default {
     }
   },
   computed: {
-    /*
-    storeInfo : {
-      get () { return this.$store.getters.info(this.name) }
-    }
-    */
+    storeMenuDialog () {return this.$store.state.dialogs.menuDialog},
+    storeMap01Dialog () {return this.$store.state.dialogs.map01Dialog},
+    storeMap02Dialog () {return this.$store.state.dialogs.map02Dialog},
+    storeMap03Dialog () {return this.$store.state.dialogs.map03Dialog},
+    storeMap04Dialog () {return this.$store.state.dialogs.map04Dialog}
   },
   methods: {
     // リセット
@@ -172,6 +178,7 @@ export default {
     },
     // レイヤーのダイアログを開く
     openDialog (e,dialog) {
+      console.log(dialog);
       this.$store.commit('incrDialogMaxZindex');
       dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
       this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
@@ -345,9 +352,6 @@ export default {
 </script>
 
 <style scoped>
-    h1, h2 {
-        font-weight: normal;
-    }
     #map00{
         width: 100%;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -414,7 +418,10 @@ export default {
         user-select: text;
     }
     .info-dialog{
-        height: 300px;
+        margin: 0;
+        padding: 10px;
+        min-height: 100px;
+        width: 200px;
     }
     /*重要！！バウンスを止めたときに同時にスクロールを無効化させないために必要*/
     .content-div{
@@ -473,6 +480,17 @@ export default {
         margin: 0;
         padding: 0;
         overflow: hidden;
+    }
+    h1, h2 {
+        font-weight: normal;
+    }
+    p {
+        margin: 0!important;
+        padding: 0!important;
+    }
+    hr {
+        margin-top: 0.5em!important;
+        margin-bottom: 0.5em!important;
     }
     input[type=range] {
         height: 26px;

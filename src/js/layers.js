@@ -18,6 +18,7 @@ const osmObj = {};
 for (let i of mapsStr) {
   osmObj[i] = new TileLayer(new Osm())
 }
+const osmSumm = 'OpenStreetMapは、道路地図などの地理情報データを誰でも利用できるよう、フリーの地理情報データを作成することを目的としたプロジェクトです。<a href=\'https://openstreetmap.jp\' target=\'_blank\'>OpenStreetMap</a>';
 // 標準地図------------------------------------------------------------------------------------
 function Std () {
   this.source = new XYZ({
@@ -30,6 +31,7 @@ const stdObj = {};
 for (let i of mapsStr) {
   stdObj[i] = new TileLayer(new Std())
 }
+const stdSumm = '国土地理院作成のタイルです。<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">リンク</a>';
 // 淡色地図------------------------------------------------------------------------------------
 function Pale () {
   this.source = new XYZ({
@@ -42,6 +44,7 @@ const paleObj = {};
 for (let i of mapsStr) {
   paleObj[i] = new TileLayer(new Pale())
 }
+const paleSumm = '国土地理院作成のタイルです。<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">リンク</a>';
 // 白地図--------------------------------------------------------------------------------------
 function Blank () {
   this.source = new XYZ({
@@ -54,6 +57,7 @@ const blankObj = {};
 for (let i of mapsStr) {
   blankObj[i] = new TileLayer(new Blank())
 }
+const blankSumm = '国土地理院作成のタイルです。<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">リンク</a>';
 // 全国最新写真-------------------------------------------------------------------------------
 function Seamlessphoto () {
   this.source = new XYZ({
@@ -66,6 +70,7 @@ const seamlessphotoObj = {};
 for (let i of mapsStr) {
   seamlessphotoObj[i] = new TileLayer(new Seamlessphoto())
 }
+const seamlessphotoSumm = '国土地理院作成のタイルです。<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">リンク</a>';
 // 色別標高図---------------------------------------------------------------------------------
 function Relief () {
   this.source = new XYZ({
@@ -78,6 +83,7 @@ const reliefObj = {};
 for (let i of mapsStr) {
   reliefObj[i] = new TileLayer(new Relief())
 }
+const reliefSumm = '国土地理院作成のタイルです。<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">リンク</a>';
 // 宮崎県航空写真----------------------------------------------------------------------------
 function MiyazakiOrt () {
   this.source = new XYZ({
@@ -91,6 +97,7 @@ const miyazakiOrtObj = {};
 for (let i of mapsStr) {
   miyazakiOrtObj[i] = new TileLayer(new MiyazakiOrt())
 }
+const miyazakiOrtSumm = '';
 // 岐阜県CS立体図----------------------------------------------------------------------------
 function GihuCs () {
   this.source = new XYZ({
@@ -105,6 +112,7 @@ const gihuCsObj = {};
 for (let i of mapsStr) {
   gihuCsObj[i] = new TileLayer(new GihuCs())
 }
+const gihuCsSumm = '';
 // 日本CS立体図------------------------------------------------------------------------------
 function NihonCs () {
   this.source = new XYZ({
@@ -117,6 +125,7 @@ const nihonCsObj = {};
 for (let i of mapsStr) {
   nihonCsObj[i] = new TileLayer(new NihonCs())
 }
+const nihonCsSumm = '';
 // 今昔マップ-----------------------------------------------------------------------------------
 // 福岡・北九州編------------------------------------------------------------------------------
 function Kon_hukuoka01 () {
@@ -132,6 +141,7 @@ const kon_hukuoka01Obj = {};
 for (let i of mapsStr) {
   kon_hukuoka01Obj[i] = new TileLayer(new Kon_hukuoka01())
 }
+const kon_hukuoka01Summ = '';
 // CS立体図10Mここから-----------------------------------------------------------------------
 function Cs10m01 () {
   this.source = new XYZ({
@@ -266,6 +276,7 @@ for (let i of mapsStr) {
       ]
   })
 }
+const cs10mSumm = '';
 // CS立体図10Mここまで-----------------------------------------------------------------------
 // 日本版mapwarper５万分の１ここから------------------------------------------------------
 // 5万分の1,20万分の1の共用コンストラクタ
@@ -294,6 +305,7 @@ for (let i of mapsStr) {
     layers: layerGroup
   })
 }
+const mw5Summ = '';
 // 日本版mapwarper５万分の１ここまで------------------------------------------------------
 // 日本版mapwarper20万分の１ここから------------------------------------------------------
 export const mw20Obj = {};
@@ -311,40 +323,41 @@ for (let i of mapsStr) {
     layers: layerGroup
   })
 }
+const mw20Summ = '';
 // 日本版mapwarper20万分の１ここまで------------------------------------------------------
 
 // ここにレイヤーを全部書く。クリックするとストアのlayerListに追加されていく-------------------------
 const layers =
   [
-    { text: 'OpenStreetMap', data: { id: 0, layer: osmObj, opacity: 1 } },
+    { text: 'OpenStreetMap', data: { id: 0, layer: osmObj, opacity: 1, summary: osmSumm } },
     { text: '国土地理院',
       children: [
-        { text: '標準地図', data: { id: 1, layer: stdObj, opacity: 1 } },
-        { text: '淡色地図', data: { id: 2, layer: paleObj, opacity: 1 } },
-        { text: '白地図', data: { id: 3, layer: blankObj, opacity: 1 } },
-        { text: '色別標高図', data: { id: 4, layer: reliefObj, opacity: 1 } },
-        { text: '全国最新写真', data: { id: 5, layer: seamlessphotoObj, opacity: 1 } }
+        { text: '標準地図', data: { id: 1, layer: stdObj, opacity: 1, summary: stdSumm } },
+        { text: '淡色地図', data: { id: 2, layer: paleObj, opacity: 1, summary: paleSumm } },
+        { text: '白地図', data: { id: 3, layer: blankObj, opacity: 1, summary: blankSumm } },
+        { text: '色別標高図', data: { id: 4, layer: reliefObj, opacity: 1, summary: reliefSumm } },
+        { text: '全国最新写真', data: { id: 5, layer: seamlessphotoObj, opacity: 1, summary: seamlessphotoSumm } }
       ]},
     { text: '宮崎県',
       children: [
-        { text: '宮崎県航空写真', data: { id: 6, layer: miyazakiOrtObj, opacity: 1 } }
+        { text: '宮崎県航空写真', data: { id: 6, layer: miyazakiOrtObj, opacity: 1, summary: miyazakiOrtSumm } }
       ]},
     { text: '立体図等',
       children: [
-        { text: '日本CS立体図', data: { id: 'jcs', layer: nihonCsObj, opacity: 1 } },
-        { text: '全国CS立体図10m', data: { id: 'cs10', layer: cs10mObj, opacity: 1 } },
-        { text: '岐阜県CS立体図', data: { id: 'gcs', layer: gihuCsObj, opacity: 1 } }
+        { text: '日本CS立体図', data: { id: 'jcs', layer: nihonCsObj, opacity: 1, summary: nihonCsSumm } },
+        { text: '全国CS立体図10m', data: { id: 'cs10', layer: cs10mObj, opacity: 1, summary: cs10mSumm } },
+        { text: '岐阜県CS立体図', data: { id: 'gcs', layer: gihuCsObj, opacity: 1, summary: gihuCsSumm } }
       ]},
     { text: '古地図',
       children: [
-        { text: '旧版地形図5万分の１', data: { id: 'mw5', layer: mw5Obj, opacity: 1 } },
-        { text: '旧版地形図20万分の１', data: { id: 'mw20', layer: mw20Obj, opacity: 1 } }
+        { text: '旧版地形図5万分の１', data: { id: 'mw5', layer: mw5Obj, opacity: 1, summary: mw5Summ } },
+        { text: '旧版地形図20万分の１', data: { id: 'mw20', layer: mw20Obj, opacity: 1, summary: mw20Summ } }
       ]},
     { text: '今昔マップ',
       children: [
         { text: '福岡・北九州編',
           children: [
-            { text: '1922-1926年', data: { id: 'kon_hu01', layer: kon_hukuoka01Obj, opacity: 1 } },
+            { text: '1922-1926年', data: { id: 'kon_hu01', layer: kon_hukuoka01Obj, opacity: 1, summary: kon_hukuoka01Summ } },
             // { text: '1936-1938年', data: { id: 'kon_hu02', layer: nihonCsArr, opacity: 1 } }
           ]}
       ]}

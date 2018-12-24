@@ -6,7 +6,7 @@
                 <div class="handle-div" ><v-icon name="align-justify" class="hover-white handle-icon"/></div>
                 <div class="item-div">{{ item.name }}</div>
                 <div class="range-div"><input type="range" min="0" max="1" step="0.01" class="range" v-model.number="item.opacity" @input="opacityChange(item)" /></div>
-                <div class="info-div" @click="info()"><v-icon name="info-circle" scale="1.0" class="hover"/></div>
+                <div class="info-div" @click="info(item.name,item.summary)"><v-icon name="info-circle" scale="1.0" class="hover"/></div>
                 <div class="close-div" @click="removeLayer(item)"><v-icon name="times" scale="1.0" class="hover"/></div>
             </div>
         </li>
@@ -37,13 +37,16 @@ export default {
     removeLayer (item) {
       MyMap.removeLayer(item, this.storeLayerList, this.name)
     },
-    info () {
+    info (text,summary) {
+      console.log(summary);
       this.$store.commit('incrDialogMaxZindex');
-      this.$store.commit('incrDialogMaxZindex');
-      const info =this.$store.state.infos[this.name];
-      info.dialog["z-index"] = this.$store.state.dialogMaxZindex;
-      this.$store.commit('setInfo', {name: this.name , info: info});
-      this.$store.commit('editDialogArr', {name: this.name + 'info', flg: 'toggle'})
+      const dialogName = this.name + 'info';
+      const dialog =this.$store.state.dialogs[dialogName];
+      dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
+      dialog.text = text;
+      dialog.summary = summary;
+      // this.$store.commit('setDialogs', {name: dialogName, dialog: dialog});
+      this.$store.commit('editDialogArr', {name: dialogName, flg: false})
     }
   },
   computed: {
