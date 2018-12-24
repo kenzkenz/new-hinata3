@@ -1,4 +1,4 @@
-選択されたリストを表示するvueファイル。親から取得したvalで右画面用、左画面用に分岐する。
+選択されたリストを表示するvueファイル。
 <template>
     <draggable element="ul" :options="{handle:'.handle-div',animation: 200}" v-model="storeLayerList">
         <li v-for="item in storeLayerList" :key="item.id">

@@ -69,14 +69,6 @@ const store = new Vuex.Store({
     menuFlgToggle (state) {
       state.menuFlg = !state.menuFlg
     },
-
-
-
-
-
-
-
-
     // ダイアログの開閉フラグ---------------------------------------------------------------------
     pushDialogArr (state, payload) { state.dialogArr.push(payload) },
     editDialogArr (state, payload) {
