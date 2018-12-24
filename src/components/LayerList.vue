@@ -21,8 +21,6 @@ export default {
   methods: {
     onNodeSelected: function (node) {
       if (node.children.length === 0) {
-        console.log(node.data);
-        console.log(node.data.layer);
         this.$store.commit('unshiftLayerList', {
           value: {
             id: node.data.id,

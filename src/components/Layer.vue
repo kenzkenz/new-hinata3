@@ -88,9 +88,9 @@ export default {
         list-style-type: none!important;
         text-align: left;
         height: 39px;
-        -webkit-user-select: none;  /* Chrome all / Safari all */
-        -moz-user-select: none;     /* Firefox all */
-        -ms-user-select: none;      /* IE 10+ */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         user-select: none;
     }
     .handle-div{

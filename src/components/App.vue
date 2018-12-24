@@ -172,18 +172,18 @@ export default {
     storeMap04Dialog () {return this.$store.state.dialogs.map04Dialog}
   },
   methods: {
-    // リセット
+    // リセット------------------------------------------------------------------------------------
     reset01 () {
       alert('作成中！')
     },
-    // レイヤーのダイアログを開く
+    // レイヤーのダイアログを開く------------------------------------------------------------------
     openDialog (e,dialog) {
       console.log(dialog);
       this.$store.commit('incrDialogMaxZindex');
       dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
       this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
     },
-    // 分割
+    // 分割-------------------------------------------------------------------------------------
     splitMap () {
       this.$store.commit('incrSplitFlg');
       this.splitMap2();
@@ -270,10 +270,11 @@ export default {
         MyMap.resize ()
       })
     },
-    // 同期
+    // 同期-------------------------------------------------------------------------------------
     synch () {
       MyMap.synch(this)
     },
+    // 短縮URL作成----------------------------------------------------------------------------
     shortUrl () {
       const vm = this;
       const url = 'https://api-ssl.bitly.com/v3/shorten';

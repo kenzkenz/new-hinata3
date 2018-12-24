@@ -61,11 +61,11 @@ const store = new Vuex.Store({
     setMap (state,payload) {
       state.maps[payload.name] = payload.map
     },
-    //---------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------
     setNotifications(state, payload) {
       state.notifications[payload.name] = payload.control
     },
-    // メニューの展開フラグ----------------------------------------------------------------------
+    // メニューの展開フラグ-----------------------------------------------------------------------
     menuFlgToggle (state) {
       state.menuFlg = !state.menuFlg
     },
