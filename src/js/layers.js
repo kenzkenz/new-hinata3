@@ -126,6 +126,20 @@ for (let i of mapsStr) {
   nihonCsObj[i] = new TileLayer(new NihonCs())
 }
 const nihonCsSumm = '';
+// 迅速測図 (関東)----------------------------------------------------------------------------
+function Jinsoku () {
+  this.source = new XYZ({
+    url: 'https://www.finds.jp/ws/tmc/1.0.0/Kanto_Rapid-900913-L/{z}/{x}/{y}.png',
+    minZoom:1,
+    maxZoom:17
+  });
+  this.extent = transformE([138.954453,34.86946,140.8793163,36.45969967])
+}
+const jinsokuObj = {};
+for (let i of mapsStr) {
+  jinsokuObj[i] = new TileLayer(new Jinsoku())
+}
+const jinsokuSumm = '<a href=\'http://www.finds.jp/tmc/layers.html.ja\' target=\'_blank\'>農研機構</a>';
 // 今昔マップ-----------------------------------------------------------------------------------
 // 福岡・北九州編------------------------------------------------------------------------------
 function Kon_hukuoka01 () {
@@ -351,7 +365,8 @@ const layers =
     { text: '古地図',
       children: [
         { text: '旧版地形図5万分の１', data: { id: 'mw5', layer: mw5Obj, opacity: 1, summary: mw5Summ } },
-        { text: '旧版地形図20万分の１', data: { id: 'mw20', layer: mw20Obj, opacity: 1, summary: mw20Summ } }
+        { text: '旧版地形図20万分の１', data: { id: 'mw20', layer: mw20Obj, opacity: 1, summary: mw20Summ } },
+        { text: '迅速測図 (関東)', data: { id: 'jinsoku', layer: jinsokuObj, opacity: 1, summary: jinsokuSumm } }
       ]},
     { text: '今昔マップ',
       children: [
