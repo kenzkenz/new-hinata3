@@ -23,13 +23,14 @@
                 </G-Dialog>
                 <G-Dialog :dialogStyle="storeMenuDialog">
                   <div :style="menuContentSize">
-                      <div>
-                          <b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button>
-                      </div>
+                      <div><b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button></div>
+                      <hr>
                       <div>
                           <b-button class='olbtn' :size="btnSize" @click="shortUrl">短縮URL作成</b-button>
                           <div class="shortUrl-div">{{ shortUrlText }}</div>
                       </div>
+                      <hr>
+                      <div><b-button :pressed.sync="myToggle" class='olbtn' :size="btnSize">{{ myToggle ? 'ブロックOFF' : 'ブロックON' }}</b-button></div>
                   </div>
                 </G-Dialog>
                 <G-Dialog :dialogStyle="this.$store.state.dialogs.map01info">
@@ -144,7 +145,7 @@ export default {
   data () {
     return {
       btnSize: '',
-      menuContentSize: {'height': '200px','margin': '10px', 'overflow': 'auto'},
+      menuContentSize: {'height': 'auto','margin': '10px', 'overflow': 'auto'},
       map01Size: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
       map02Size: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
       map03Size: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
@@ -161,7 +162,17 @@ export default {
       map04Flg: false,
       synchDivFlg: false,
       synchFlg: true,
-      shortUrlText: ''
+      shortUrlText: '',
+      myToggle: false
+    }
+  },
+  watch: {
+    myToggle : function (newValue) {
+      if (newValue) {
+        MyMap.lego('map01')
+      } else {
+        MyMap.legoRemove('map01')
+      }
     }
   },
   computed: {
@@ -178,7 +189,6 @@ export default {
     },
     // レイヤーのダイアログを開く------------------------------------------------------------------
     openDialog (e,dialog) {
-      console.log(dialog);
       this.$store.commit('incrDialogMaxZindex');
       dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
       this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})

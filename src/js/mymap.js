@@ -6,6 +6,7 @@ import View from 'ol/View.js'
 import { transform, fromLonLat } from 'ol/proj.js'
 import {ScaleLine} from 'ol/control.js';
 import Target from 'ol-ext/control/Target'
+import Lego from 'ol-ext/filter/Lego'
 import Notification from '../js/notification'
 import * as Layers from '../js/layers'
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
@@ -203,5 +204,14 @@ export function removeLayer (item, layerList, name) {
   const map = store.state.maps[name];
   map.removeLayer(item.layer)
 }
+let legoFilter = null;
+export function lego (name) {
+  const map = store.state.maps[name];
+  legoFilter = new Lego({ brickSize:20, img:'brick' });
+  map.addFilter(legoFilter);
+}
 
-
+export function legoRemove (name) {
+  const map = store.state.maps[name];
+  map.removeFilter(legoFilter);
+}
