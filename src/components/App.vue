@@ -1,7 +1,7 @@
 最初に呼び出されるvueファイル。ここに他のvueファイルを取り込んでいく。
 <template>
     <div id="map00">
-        <!--map01--------------------------------------------------------------------------->
+        <!--map01-->
         <transition>
             <div id="map01" :style="map01Size" v-show="map01Flg">
                 <div class="top-left-div">
@@ -42,7 +42,7 @@
                 <div class="zoom-div">{{ zoom.map01 }}</div>
             </div>
         </transition>
-        <!--map02--------------------------------------------------------------------------->
+        <!--map02-->
         <transition>
             <div id="map02" :style="map02Size" v-show="map02Flg">
                 <div class="top-right-div">
@@ -68,7 +68,7 @@
                 <div class="zoom-div">{{ zoom.map02 }}</div>
             </div>
         </transition>
-        <!--map03--------------------------------------------------------------------------->
+        <!--map03-->
         <transition>
             <div id="map03" :style="map03Size" v-show="map03Flg">
                 <div class="top-right-div">
@@ -94,7 +94,7 @@
                 <div class="zoom-div">{{ zoom.map03 }}</div>
             </div>
         </transition>
-        <!--map04--------------------------------------------------------------------------->
+        <!--map04-->
         <transition>
             <div id="map04" :style="map04Size"  v-show="map04Flg">
                 <div class="top-right-div">
