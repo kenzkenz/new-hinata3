@@ -9,5 +9,5 @@ pemalink.jsのpermalinkEventSetが作動して初期設定のレイヤーを削�
 レイヤーリスト上段も作成する。
 ## 起動時にレイヤーリスト下段を作成
 起動時にレイヤーリスト下段（背景ダイアログの下段）を作成する。layerListsはlayers.jsのlayersに従ってリストを作っていく。
-
+## ddddd
 
