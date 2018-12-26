@@ -4,9 +4,12 @@
         <li v-for="item in storeLayerList" :key="item.id">
             <div class="list-div">
                 <div class="handle-div" ><v-icon name="align-justify" class="hover-white handle-icon"/></div>
-                <div class="item-div">{{ item.name }}</div>
+                <div class="item-div">
+                    <!--{{ item.name }}-->
+                    <span v-html="item.name"></span>
+                </div>
                 <div class="range-div"><input type="range" min="0" max="1" step="0.01" class="range" v-model.number="item.opacity" @input="opacityChange(item)" /></div>
-                <div class="info-div" @click="info(item.name,item.summary)"><v-icon name="info-circle" scale="1.0" class="hover"/></div>
+                <div class="info-div" @click="info(arguments[0],item)"><v-icon name="info-circle" scale="1.0" class="hover"/></div>
                 <div class="close-div" @click="removeLayer(item)"><v-icon name="times" scale="1.0" class="hover"/></div>
             </div>
         </li>
@@ -37,16 +40,48 @@ export default {
     removeLayer (item) {
       MyMap.removeLayer(item, this.storeLayerList, this.name)
     },
-    info (text,summary) {
-      console.log(summary);
+    info (e,item) {
+      console.log(item.compoName);
+      const rect = e.currentTarget.getBoundingClientRect();
+      console.log(rect.top);
+      const dialogEl = $(e.currentTarget).parents('.dialog-div')[0];
+      const top = dialogEl.offsetTop + 'px';
+      const left = dialogEl.offsetLeft - 210 + 'px';
+      const result = this.$store.state.dialogsInfo[this.name].find(el => el.id === item.id);
+      this.$store.commit('incrDialogMaxZindex');
+
+      if (!result) {
+        this.$store.state.dialogsInfo[this.name].push({
+          id: item.id,
+          name: item.name,
+          summary: item.summary,
+          compoName: item.compoName,
+          style: {
+            display: 'block',
+            top: top,
+            left: left,
+            'z-index': this.$store.state.dialogMaxZindex
+          }
+        })
+      } else {
+        // 既に存在しているときは表示のみ
+        result.style.display = 'block';
+        result.style["z-index"] = this.$store.state.dialogMaxZindex
+      }
+
+
+
+
+     /*
       this.$store.commit('incrDialogMaxZindex');
       const dialogName = this.name + 'info';
       const dialog =this.$store.state.dialogs[dialogName];
       dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
-      dialog.text = text;
-      dialog.summary = summary;
+      dialog.text = item.text;
+      dialog.summary = item.summary;
       // this.$store.commit('setDialogs', {name: dialogName, dialog: dialog});
       this.$store.commit('editDialogArr', {name: dialogName, flg: false})
+      */
     }
   },
   computed: {

@@ -6,7 +6,8 @@ import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 import Snotify from 'vue-snotify'
 import 'vue-snotify/styles/material.css'
-import Dialog from './components/Dialog.vue'
+import Dialog from './components/Dialog'
+import DialogInfo from './components/Dialog-info'
 import jQuery from 'jquery'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -17,6 +18,7 @@ const $ = jQuery;
 Vue.use(drag);
 Vue.use(BootstrapVue);
 Vue.component('G-Dialog', Dialog);
+Vue.component('G-Dialog-info', DialogInfo);
 Vue.component('v-icon', Icon);
 Vue.use(Snotify);
 Vue.config.productionTip = false;

@@ -73,7 +73,8 @@ export function permalinkEventSet () {
                         name: node.text,
                         layer: node.data.layer,
                         opacity: urlLayerListArr[i][j].o,
-                        summary: node.data.summary
+                        summary: node.data.summary,
+                        compoName: node.data.compoName
                       },
                       name: name
                     })
@@ -96,12 +97,10 @@ export function moveEnd () {
   const zoom = map.getView().getZoom();
   const center = map.getView().getCenter();
   const center4326 = transform(center,'EPSG:3857','EPSG:4326');
-  const rotation = map.getView().getRotation();
   const hash = '#' +
     zoom + '/' +
     Math.round(center4326[0] * 100000) / 100000 + '/' +
     Math.round(center4326[1] * 100000) / 100000;
-    // rotation;
   let parameter = '?S=' + store.state.splitFlg;
   parameter += '&L=' + store.getters.layerLists;
   // parameter += '&L=' + rison.encode(store.getters.layerLists)
@@ -109,8 +108,7 @@ export function moveEnd () {
   parameter = encodeURIComponent(parameter);
   const state = {
     zoom: zoom,
-    center: center4326,
-    rotation: rotation
+    center: center4326
   };
   window.history.pushState(state, 'map', hash + parameter);
 }

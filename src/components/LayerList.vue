@@ -28,7 +28,8 @@ export default {
             layer: node.data.layer,
             opacity: node.data.opacity,
             addFlg:true,
-            summary: node.data.summary
+            summary: node.data.summary,
+            compoName: node.data.compoName
           },
           name: this.name
         })

@@ -21,6 +21,7 @@
                         </div>
                     </div>
                 </G-Dialog>
+                <G-Dialog-info name="map01" />
                 <G-Dialog :dialogStyle="storeMenuDialog">
                   <div :style="menuContentSize">
                       <div><b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button></div>
@@ -30,15 +31,11 @@
                           <div class="shortUrl-div">{{ shortUrlText }}</div>
                       </div>
                       <hr>
-                      <div><b-button :pressed.sync="myToggle" class='olbtn' :size="btnSize">{{ myToggle ? 'ブロックOFF' : 'ブロックON' }}</b-button></div>
+                      <div>
+                          <b-button :pressed.sync="myToggle" class='olbtn' :size="btnSize">{{ myToggle ? 'ブロックOFF' : 'ブロックON' }}</b-button>
+                          <b-form-select v-model="selected" :options="options" style="width: 60px;margin-left: 10px;"/>
+                      </div>
                   </div>
-                </G-Dialog>
-                <G-Dialog :dialogStyle="this.$store.state.dialogs.map01info">
-                    <div class="info-dialog  select-on">
-                        <p>{{ this.$store.state.dialogs.map01info.text }}</p>
-                        <hr>
-                        <p v-html="this.$store.state.dialogs.map01info.summary"></p>
-                    </div>
                 </G-Dialog>
                 <div class="zoom-div">{{ zoom.map01 }}</div>
             </div>
@@ -59,13 +56,7 @@
                         </div>
                     </div>
                 </G-Dialog>
-                <G-Dialog :dialogStyle="this.$store.state.dialogs.map02info">
-                    <div class="info-dialog  select-on">
-                        <p>{{ this.$store.state.dialogs.map02info.text }}</p>
-                        <hr>
-                        <p v-html="this.$store.state.dialogs.map02info.summary"></p>
-                    </div>
-                </G-Dialog>
+                <G-Dialog-info name="map02" />
                 <div class="zoom-div">{{ zoom.map02 }}</div>
             </div>
         </transition>
@@ -85,13 +76,7 @@
                         </div>
                     </div>
                 </G-Dialog>
-                <G-Dialog :dialogStyle="this.$store.state.dialogs.map03info">
-                    <div class="info-dialog  select-on">
-                        <p>{{ this.$store.state.dialogs.map03info.text }}</p>
-                        <hr>
-                        <p v-html="this.$store.state.dialogs.map03info.summary"></p>
-                    </div>
-                </G-Dialog>
+                <G-Dialog-info name="map03" />
                 <div class="zoom-div">{{ zoom.map03 }}</div>
             </div>
         </transition>
@@ -111,13 +96,7 @@
                         </div>
                     </div>
                 </G-Dialog>
-                <G-Dialog :dialogStyle="this.$store.state.dialogs.map04info">
-                    <div class="info-dialog  select-on">
-                        <p>{{ this.$store.state.dialogs.map04info.text }}</p>
-                        <hr>
-                        <p v-html="this.$store.state.dialogs.map04info.summary"></p>
-                    </div>
-                </G-Dialog>
+                <G-Dialog-info name="map04" />
                 <div class="zoom-div">{{ zoom.map04 }}</div>
             </div>
         </transition>
@@ -136,6 +115,7 @@ import Layer from './Layer.vue'
 import * as Permalink from '../js/permalink'
 import Inobounce from '../js/inobounce'
 import * as MyMap from '../js/mymap'
+import JqueryFunction from '../js/jquery-function'
 export default {
   name: 'App',
   components: {
@@ -163,18 +143,24 @@ export default {
       synchDivFlg: false,
       synchFlg: true,
       shortUrlText: '',
-      myToggle: false
+      myToggle: false,
+      selected: 20,
+      options: [
+        { value: '20', text: '20' },
+        { value: '30', text: '30' },
+        { value: '50', text: '50' }
+        ]
     }
   },
-  watch: {
-    myToggle : function (newValue) {
-      if (newValue) {
-        MyMap.lego('map01')
-      } else {
-        MyMap.legoRemove('map01')
-      }
-    }
-  },
+  // watch: {
+  //   myToggle : function (newValue) {
+  //     if (newValue) {
+  //       MyMap.lego('map01', this.selected)
+  //     } else {
+  //       MyMap.legoRemove('map01', this.selected)
+  //     }
+  //   }
+  // },
   computed: {
     storeMenuDialog () {return this.$store.state.dialogs.menuDialog},
     storeMap01Dialog () {return this.$store.state.dialogs.map01Dialog},
@@ -307,37 +293,18 @@ export default {
     }
   },
   mounted () {
+    JqueryFunction();
+    this.$watch(function () {
+      return [this.myToggle, this.selected]
+    }, function () {
+      if (this.myToggle) {
+        MyMap.lego('map01', this.selected)
+      } else {
+        MyMap.legoRemove('map01', this.selected)
+      }
+    });
+
     this.$nextTick(function () {
-      $(".ol-scale-line").mousedown(function(event){
-        const target = $(this);
-        target.addClass("drag");
-        const eX = event.pageX - target.css("left").replace(/px/,"");
-        const eY = event.pageY - target.css("top").replace(/px/,"");
-        $(document).mousemove(function(event){
-          target.find('.drag').css("left",event.pageX - eX).css("top",event.pageY - eY);
-        });
-        $(document).mouseup(function(){
-          target.unbind("mousemove");
-          target.removeClass("drag");
-        });
-      });
-
-      /*
-      $(".handle").mousedown(function(event){
-        const parent = $(this).parent();
-        parent.addClass("drag");
-        const eX = event.pageX - parent.css("left").replace(/px/,"");
-        const eY = event.pageY - parent.css("top").replace(/px/,"");
-        $(document).mousemove(function(event){
-          $(this).parent('.drag').css("left",event.pageX - eX).css("top",event.pageY - eY);
-        });
-        $(document).mouseup(function(event){
-          $("div.drag").unbind("mousemove");
-          $("div.drag").removeClass("drag");
-        });
-      });
-      */
-
       // 縦バウンス無効化https://github.com/lazd/iNoBounce
       Inobounce();
       // map初期化

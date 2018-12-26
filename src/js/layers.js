@@ -1,6 +1,8 @@
-import TileLayer from 'ol/layer/Tile.js'
+import TileLayer from 'ol/layer/Tile'
+import ImageLaye from 'ol/layer/Image'
 import OSM from 'ol/source/OSM.js'
 import XYZ from 'ol/source/XYZ.js'
+import RasterSource from 'ol/source/Raster';
 import { transformExtent } from 'ol/proj.js'
 import LayerGroup from 'ol/layer/Group';
 import mw5 from './mw5'
@@ -10,6 +12,100 @@ const mapsStr = ['map01','map02','map03','map04'];
 const transformE = extent => {
   return transformExtent(extent,'EPSG:4326','EPSG:3857');
 };
+
+function flood(pixels, data) {
+  var pixel = pixels[0];
+  if (pixel[3]) {
+    //var height = -10000 + ((pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) * 0.1);
+    var height = (pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) / 100;
+    if (height <= data.level) {
+      var sinsui = -height + data.level;
+      if(sinsui>=10) sinsui=5;
+      var opacity = sinsui * 40;//240割る10
+      pixel[0] = 0;
+      pixel[1] = 0;
+      pixel[2] = 180;
+      pixel[3] = opacity;
+    } else {
+      pixel[3] = 0;
+    }
+  }
+  return pixel;
+}
+//dem10---------------------------------------------------------------------------------
+const elevation10 = new XYZ({
+  url:'https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png',
+  maxZoom:14,
+  crossOrigin:'anonymous'
+});
+function Dem10 () {
+  this.source = new RasterSource({
+    sources:[elevation10],
+    operation:flood
+  })
+}
+export const flood10Obj = {};
+for (let i of mapsStr) {
+  flood10Obj[i] = new ImageLaye(new Dem10());
+  flood10Obj[i].getSource().on('beforeoperations', function(event) {
+    event.data.level = Number($('#' + i  + " .flood-range").val());
+    // event.data.level = 100;
+  });
+}
+//dem5---------------------------------------------------------------------------------
+const elevation5 = new XYZ({
+  url:'https://cyberjapandata.gsi.go.jp/xyz/dem5a_png/{z}/{x}/{y}.png',
+  minZoom:15,
+  maxZoom:15,
+  crossOrigin:'anonymous'
+});
+function Dem5 () {
+  this.source = new RasterSource({
+    sources:[elevation5],
+    operation:flood
+  });
+  this.maxResolution = 38.22
+}
+export const flood5Obj = {};
+for (let i of mapsStr) {
+  flood5Obj[i] = new ImageLaye(new Dem5());
+  flood5Obj[i].getSource().on('beforeoperations', function(event) {
+    event.data.level = Number($('#' + i  + " .flood-range").val());
+    // event.data.level = 100;
+  });
+}
+const floodSumm = '下のスライダーを左右に操作します。zoom12以上で表示します。';
+const controls = '<div class="range-div"><input type="range"  class="flood-range" min="0" max="100" step="1" value="0"  v-model.number="item.opacity" @input="aaa" /></div>';
+
+
+
+//dem5----------------------------------------------------------------------------------
+/*
+const elevation5 = new ol.source.XYZ({
+  url:'https://cyberjapandata.gsi.go.jp/xyz/dem5a_png/{z}/{x}/{y}.png',
+  minZoom:15,
+  maxZoom:15,
+  crossOrigin:'anonymous'
+});
+const dem5source = new ol.source.Raster({
+  sources:[elevation5],
+  operation:flood
+});
+const floodLayer5 = new ol.layer.Image({
+  source:dem5source,
+  maxResolution: 38.22
+});
+floodLayer5.getSource().on('beforeoperations', function(event) {
+  // event.data.level = Number($("#map1 .level-text").text());
+});
+*/
+
+
+
+
+
+
+
 // オープンストリートマップ------------------------------------------------------------------------
 function Osm () {
   this.source = new OSM()
@@ -375,7 +471,8 @@ const layers =
             { text: '1922-1926年', data: { id: 'kon_hu01', layer: kon_hukuoka01Obj, opacity: 1, summary: kon_hukuoka01Summ } },
             // { text: '1936-1938年', data: { id: 'kon_hu02', layer: nihonCsArr, opacity: 1 } }
           ]}
-      ]}
+      ]},
+    { text: '海面上昇<span style="font-size: smaller;">シミュ5Mdem</span>', data: { id: 'flood', layer: flood5Obj, opacity: 1, summary: floodSumm, compoName: 'flood'} },
   ];
 export const Layers = layers;
 

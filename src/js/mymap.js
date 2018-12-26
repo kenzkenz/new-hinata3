@@ -11,6 +11,7 @@ import Notification from '../js/notification'
 import * as Layers from '../js/layers'
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
 let maxZndex = 0;
+let legoFilter = null;
 export function initMap (vm) {
   // マップ作製ループ用の配列を作成
   const maps = [
@@ -204,14 +205,15 @@ export function removeLayer (item, layerList, name) {
   const map = store.state.maps[name];
   map.removeLayer(item.layer)
 }
-let legoFilter = null;
-export function lego (name) {
+
+export function lego (name, selected) {
   const map = store.state.maps[name];
-  legoFilter = new Lego({ brickSize:20, img:'brick' });
+  try{map.removeFilter(legoFilter);}catch(e){}
+  legoFilter = new Lego({ brickSize:selected, img:'brick' });
   map.addFilter(legoFilter);
 }
 
 export function legoRemove (name) {
   const map = store.state.maps[name];
-  map.removeFilter(legoFilter);
+  try{map.removeFilter(legoFilter);}catch(e){}
 }

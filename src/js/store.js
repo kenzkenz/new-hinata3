@@ -24,6 +24,12 @@ const store = new Vuex.Store({
       map03info: {close: true, name: 'map03info', text: '03', summary:'', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto'}},
       map04info: {close: true, name: 'map04info', text: '04', summary:'', dialog: {top: '56px', left: 'calc(100% - 360px)', 'z-index': 1, height: 'auto'}},
     },
+    dialogsInfo: {
+      map01: [],
+      map02: [],
+      map03: [],
+      map04: []
+    },
     menuFlg:false,
     notifications: {},
     notification: '',
@@ -45,10 +51,14 @@ const store = new Vuex.Store({
       for (let layerList of layerListArr) {
         const layerList2 = [];
         for (let layer of layerList) {
-          layerList2.push({ id:layer.id, o:layer.opacity})
+          layerList2.push({
+            id:layer.id,
+            o:layer.opacity
+          })
         }
         layerListArr2.push(layerList2)
       }
+      console.log(layerListArr2);
       return JSON.stringify(layerListArr2)
       // return layerListArr2
     }
