@@ -11,18 +11,26 @@
                     <p v-html="item.summary"></p>
                 </div>
             </div>
-            <!--海面上昇シミュレーション-->
-            <div v-else-if="item.compoName === 'flood'">
+            <!--海面上昇シミュレーション5m-->
+            <div v-else-if="item.compoName === 'flood5m'">
                 <div class="info-content-div">
-                    <p v-html="item.name"></p>
-                    <hr>
-                    <p v-html="item.summary"></p>
-                    <hr>
-                    <div class="range-div"><input type="range" min="0" max="100" step="1" class="flood-range" v-model.number="seaLevel" @input="flood" /></div>
-                    海抜{{ seaLevel }}メートル
+                    <p v-html="item.name"></p><hr>
+                    <p v-html="item.summary"></p><hr>
+                    <b-form-radio-group v-model="selected5m" :options="options" name="flood5m" @change="floodChange5m"/>
+                    <input type="range" min="0" :max="floodMax5m" step="1" class="flood-range5m" v-model.number="seaLevel5m" @input="flood" />
+                    <div style="text-align: center;">海抜{{ seaLevel5m }}メートル</div>
                 </div>
             </div>
-
+            <!--海面上昇シミュレーション10m-->
+            <div v-else-if="item.compoName === 'flood10m'">
+                <div class="info-content-div">
+                    <p v-html="item.name"></p><hr>
+                    <p v-html="item.summary"></p><hr>
+                    <b-form-radio-group v-model="selected10m" :options="options" name="flood10m" @change="floodChange10m"/>
+                    <input type="range" min="0" :max="floodMax10m" step="1" class="flood-range10m" v-model.number="seaLevel10m" @input="flood" />
+                    <div style="text-align: center;">海抜{{ seaLevel10m }}メートル</div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -34,7 +42,18 @@
     props: ['name'],
     data () {
       return {
-        seaLevel: 0
+        seaLevel5m: 0,
+        seaLevel10m: 0,
+        selected5m: '100',
+        selected10m: '100',
+        options: [
+          { text: 'max 100m', value: '100' },
+          { text: 'max 500m', value: '500' },
+          { text: 'max 1000m', value: '1000' },
+          { text: 'max 4000m', value: '4000' }
+        ],
+        floodMax5m: '100',
+        floodMax10m: '100'
       }
     },
     computed: {
@@ -59,6 +78,20 @@
         Layers.flood5Obj['map02'].getSource().changed();
         Layers.flood5Obj['map03'].getSource().changed();
         Layers.flood5Obj['map04'].getSource().changed();
+        Layers.flood10Obj['map01'].getSource().changed();
+        Layers.flood10Obj['map02'].getSource().changed();
+        Layers.flood10Obj['map03'].getSource().changed();
+        Layers.flood10Obj['map04'].getSource().changed();
+      },
+      floodChange5m () {
+        this.$nextTick(function () {
+          this.floodMax5m = this.selected5m
+        })
+      },
+      floodChange10m () {
+        this.$nextTick(function () {
+          this.floodMax10m = this.selected10m
+        })
       }
     },
     mounted () {
@@ -68,6 +101,9 @@
 </script>
 
 <style scoped>
+    .form-group {
+        margin-bottom: 0;
+    }
     .dialog-info-div{
         position: absolute;
         z-index: 10;

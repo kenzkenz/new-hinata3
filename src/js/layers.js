@@ -48,7 +48,7 @@ export const flood10Obj = {};
 for (let i of mapsStr) {
   flood10Obj[i] = new ImageLaye(new Dem10());
   flood10Obj[i].getSource().on('beforeoperations', function(event) {
-    event.data.level = Number($('#' + i  + " .flood-range").val());
+    event.data.level = Number($('#' + i  + " .flood-range10m").val());
     // event.data.level = 100;
   });
 }
@@ -70,7 +70,7 @@ export const flood5Obj = {};
 for (let i of mapsStr) {
   flood5Obj[i] = new ImageLaye(new Dem5());
   flood5Obj[i].getSource().on('beforeoperations', function(event) {
-    event.data.level = Number($('#' + i  + " .flood-range").val());
+    event.data.level = Number($('#' + i  + " .flood-range5m").val());
     // event.data.level = 100;
   });
 }
@@ -472,7 +472,14 @@ const layers =
             // { text: '1936-1938年', data: { id: 'kon_hu02', layer: nihonCsArr, opacity: 1 } }
           ]}
       ]},
-    { text: '海面上昇<span style="font-size: smaller;">シミュ5Mdem</span>', data: { id: 'flood', layer: flood5Obj, opacity: 1, summary: floodSumm, compoName: 'flood'} },
+    { text: '海面上昇',
+      children: [
+        { text: '海面上昇シミュ5Mdem', data: { id: 'flood5m', layer: flood5Obj, opacity: 1, summary: floodSumm, compoName: 'flood5m'} },
+        { text: '海面上昇シミュ10Mdem', data: { id: 'flood10m', layer: flood10Obj, opacity: 1, summary: floodSumm, compoName: 'flood10m'} },
+      ]}
+
+    // { text: '海面上昇<span style="font-size: smaller;">シミュ5Mdem</span>', data: { id: 'flood5m', layer: flood5Obj, opacity: 1, summary: floodSumm, compoName: 'flood5m'} },
+    // { text: '海面上昇<span style="font-size: smaller;">シミュ10Mdem</span>', data: { id: 'flood10m', layer: flood10Obj, opacity: 1, summary: floodSumm, compoName: 'flood10m'} },
   ];
 export const Layers = layers;
 
