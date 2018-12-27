@@ -58,7 +58,7 @@
     },
     computed: {
       info () {
-        console.log(this.$store.state.dialogsInfo[this.name]);
+        // console.log(this.$store.state.dialogsInfo[this.name]);
         return this.$store.state.dialogsInfo[this.name]
       }
     },

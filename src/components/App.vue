@@ -1,103 +1,24 @@
 最初に呼び出されるvueファイル。ここに他のvueファイルを取り込んでいく。
 <template>
     <div id="map00">
-        <!--map01-->
-        <transition>
-            <div id="map01" :style="map01Size" v-show="map01Flg">
+        <!--map01からmap04をループで作成-->
+        <transition v-for="mapName in mapNames" :key="mapName">
+            <div :id=mapName :style="mapSize[mapName]" v-show="mapFlg[mapName]">
                 <div class="top-left-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMenuDialog)" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
-                    <b-button class='olbtn' :size="btnSize" @click="splitMap"><v-icon name="columns"  scale="1.0" /></b-button>
+                    <b-button v-if="mapName === 'map01'" class='olbtn' :size="btnSize" @click="openDialog(S_dialogs['menuDialog'])" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
+                    <b-button v-if="mapName === 'map01'" class='olbtn' :size="btnSize" @click="splitMap" style="margin-right:5px;"><v-icon name="columns"  scale="1.0" /></b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(S_dialogs[mapName])">背景</b-button>
                 </div>
-                <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMap01Dialog)">背景</b-button>
-                </div>
-                <G-Dialog :dialogStyle="storeMap01Dialog">
-                    <div class="content-div" :style="map01DialogContentSize">
-                        <div class="first-content-div">
-                            <Layer :name="storeMap01Dialog.name"/>
-                        </div>
-                        <div class="second-content-div">
-                            <LayerList :name="storeMap01Dialog.name" />
-                        </div>
+                <div class="top-right-div"></div>
+                <G-Dialog :dialogStyle="S_dialogs[mapName]">
+                    <div class="content-div" :style="contentSize[mapName]">
+                        <div class="first-content-div"><Layer :name="S_dialogs[mapName].name"/></div>
+                        <div class="second-content-div"><LayerList :name="S_dialogs[mapName].name" /></div>
                     </div>
                 </G-Dialog>
-                <G-Dialog-info name="map01" />
-                <G-Dialog :dialogStyle="storeMenuDialog">
-                  <div :style="menuContentSize">
-                      <div><b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button></div>
-                      <hr>
-                      <div>
-                          <b-button class='olbtn' :size="btnSize" @click="shortUrl">短縮URL作成</b-button>
-                          <div class="shortUrl-div">{{ shortUrlText }}</div>
-                      </div>
-                      <hr>
-                      <div>
-                          <b-button :pressed.sync="myToggle" class='olbtn' :size="btnSize">{{ myToggle ? 'ブロックOFF' : 'ブロックON' }}</b-button>
-                          <b-form-select v-model="selected" :options="options" style="width: 60px;margin-left: 10px;"/>
-                      </div>
-                  </div>
-                </G-Dialog>
-                <div class="zoom-div">{{ zoom.map01 }}</div>
-            </div>
-        </transition>
-        <!--map02-->
-        <transition>
-            <div id="map02" :style="map02Size" v-show="map02Flg">
-                <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMap02Dialog)">背景</b-button>
-                </div>
-                <G-Dialog :dialogStyle="storeMap02Dialog">
-                    <div class="content-div" :style="map02DialogContentSize">
-                        <div class="first-content-div">
-                            <Layer :name="storeMap02Dialog.name"/>
-                        </div>
-                        <div class="second-content-div">
-                            <LayerList :name="storeMap02Dialog.name" />
-                        </div>
-                    </div>
-                </G-Dialog>
-                <G-Dialog-info name="map02" />
-                <div class="zoom-div">{{ zoom.map02 }}</div>
-            </div>
-        </transition>
-        <!--map03-->
-        <transition>
-            <div id="map03" :style="map03Size" v-show="map03Flg">
-                <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMap03Dialog)">背景</b-button>
-                </div>
-                <G-Dialog :dialogStyle="storeMap03Dialog">
-                    <div class="content-div" :style="map03DialogContentSize" >
-                        <div class="first-content-div">
-                            <Layer :name="storeMap03Dialog.name"/>
-                        </div>
-                        <div class="second-content-div">
-                            <LayerList :name="storeMap03Dialog.name" />
-                        </div>
-                    </div>
-                </G-Dialog>
-                <G-Dialog-info name="map03" />
-                <div class="zoom-div">{{ zoom.map03 }}</div>
-            </div>
-        </transition>
-        <!--map04-->
-        <transition>
-            <div id="map04" :style="map04Size"  v-show="map04Flg">
-                <div class="top-right-div">
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(arguments[0],storeMap04Dialog)">背景</b-button>
-                </div>
-                <G-Dialog :dialogStyle="storeMap04Dialog">
-                    <div class="content-div" :style="map04DialogContentSize">
-                        <div class="first-content-div">
-                            <Layer :name="storeMap04Dialog.name"/>
-                        </div>
-                        <div class="second-content-div">
-                            <LayerList :name="storeMap04Dialog.name" />
-                        </div>
-                    </div>
-                </G-Dialog>
-                <G-Dialog-info name="map04" />
-                <div class="zoom-div">{{ zoom.map04 }}</div>
+                <G-Dialog-info :name=mapName />
+                <Menu/>
+                <div class="zoom-div">{{ zoom[mapName] }}</div>
             </div>
         </transition>
         <transition>
@@ -110,6 +31,7 @@
 </template>
 
 <script>
+import Menu from './Menu'
 import LayerList from './LayerList.vue'
 import Layer from './Layer.vue'
 import * as Permalink from '../js/permalink'
@@ -119,27 +41,30 @@ import JqueryFunction from '../js/jquery-function'
 export default {
   name: 'App',
   components: {
+    Menu,
     LayerList,
     Layer
   },
   data () {
     return {
+      mapNames: ['map01','map02','map03','map04'],
       btnSize: '',
-      menuContentSize: {'height': 'auto','margin': '10px', 'overflow': 'auto'},
-      map01Size: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
-      map02Size: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
-      map03Size: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
-      map04Size: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
-      map01DialogContentSize: {'max-height': '300px','overflow': 'auto'},
-      map02DialogContentSize: {'max-height': '300px','overflow': 'auto'},
-      map03DialogContentSize: {'max-height': '300px','overflow': 'auto'},
-      map04DialogContentSize: {'max-height': '300px','overflow': 'auto'},
-      zoom: {map01: '',map02: '',map03: '',map04: ''},
       splitFlg: 1,
-      map01Flg: true,
-      map02Flg: false,
-      map03Flg: false,
-      map04Flg: false,
+      menuContentSize: {'height': 'auto','margin': '10px', 'overflow': 'auto'},
+      mapSize: {
+        map01: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
+        map02: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
+        map03: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
+        map04: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'}
+      },
+      contentSize: {
+        map01: {'max-height': '300px','overflow': 'auto'},
+        map02: {'max-height': '300px','overflow': 'auto'},
+        map03: {'max-height': '300px','overflow': 'auto'},
+        map04: {'max-height': '300px','overflow': 'auto'}
+      },
+      zoom: {map01: '',map02: '',map03: '',map04: ''},
+      mapFlg: {map01:true, map02:false, map03:false, map04:false},
       synchDivFlg: false,
       synchFlg: true,
       shortUrlText: '',
@@ -152,29 +77,12 @@ export default {
         ]
     }
   },
-  // watch: {
-  //   myToggle : function (newValue) {
-  //     if (newValue) {
-  //       MyMap.lego('map01', this.selected)
-  //     } else {
-  //       MyMap.legoRemove('map01', this.selected)
-  //     }
-  //   }
-  // },
   computed: {
-    storeMenuDialog () {return this.$store.state.dialogs.menuDialog},
-    storeMap01Dialog () {return this.$store.state.dialogs.map01Dialog},
-    storeMap02Dialog () {return this.$store.state.dialogs.map02Dialog},
-    storeMap03Dialog () {return this.$store.state.dialogs.map03Dialog},
-    storeMap04Dialog () {return this.$store.state.dialogs.map04Dialog}
+    S_dialogs () { return this.$store.state.dialogs},
   },
   methods: {
-    // リセット------------------------------------------------------------------------------------
-    reset01 () {
-      alert('作成中！')
-    },
     // レイヤーのダイアログを開く------------------------------------------------------------------
-    openDialog (e,dialog) {
+    openDialog (dialog) {
       this.$store.commit('incrDialogMaxZindex');
       dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
       this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
@@ -196,71 +104,71 @@ export default {
         // 1画面
         case 1:
           vm.synchDivFlg = false;
-          vm.map02Flg = false; vm.map03Flg = false; vm.map04Flg = false;
-          vm.map01Size = {top: 0, left: 0, width: '100%', height: height};
-          vm.map02Size = {top: 0, right: 0, width: 0, height: 0};
-          vm.map03Size = {top: 0, left: 0, width: 0, height: 0};
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
-          vm.map01DialogContentSize = {'max-height': contentHeight};
+          vm.mapFlg['map02'] = false; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
+          vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height};
+          vm.mapSize['map02'] = {top: 0, right: 0, width: 0, height: 0};
+          vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
+          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+          vm.contentSize['map01'] = {'max-height': contentHeight};
           break;
         // 2画面（縦２画面）
         case 2:
           vm.synchDivFlg = true;
-          vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false;
-          vm.map01Size = {top: 0, left: 0, width: '50%', height: height};
-          vm.map02Size = {top: 0, left: '50%', width: '50%', height: height};
-          vm.map03Size = {top: 0, left: 0, width: 0, height: 0};
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
-          vm.map01DialogContentSize = {'max-height': contentHeight};
-          vm.map02DialogContentSize = {'max-height': contentHeight};
+          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
+          vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height};
+          vm.mapSize['map02'] = {top: 0, left: '50%', width: '50%', height: height};
+          vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
+          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+          vm.contentSize['map01'] = {'max-height': contentHeight};
+          vm.contentSize['map02'] = {'max-height': contentHeight};
           break;
         // 2画面（横２画面）
         case 3:
           vm.synchDivFlg = true;
-          vm.map02Flg = true; vm.map03Flg = false; vm.map04Flg = false;
-          vm.map01Size = {top: 0, left: 0, width: '100%', height: height2};
-          vm.map02Size = {top: '50%', left: 0, width: '100%', height: height2};
-          vm.map03Size = {top: 0, left: 0, width: 0, height: 0};
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
-          vm.map01DialogContentSize = {'max-height': contentHeight2};
-          vm.map02DialogContentSize = {'max-height': contentHeight2};
+          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
+          vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height2};
+          vm.mapSize['map02'] = {top: '50%', left: 0, width: '100%', height: height2};
+          vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
+          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+          vm.contentSize['map01'] = {'max-height': contentHeight2};
+          vm.contentSize['map02'] = {'max-height': contentHeight2};
           break;
         // 3画面１（左が縦全、右が縦半）
         case 4:
           vm.synchDivFlg = true;
-          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false;
-          vm.map01Size = {top: 0, left: 0, width: '50%', height: height};
-          vm.map02Size = {top: 0, left: '50%', width: '50%', height: height2};
-          vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2};
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
-          vm.map01DialogContentSize = {'max-height': contentHeight};
-          vm.map02DialogContentSize = {'max-height': contentHeight2};
-          vm.map03DialogContentSize = {'max-height': contentHeight2};
+          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = false;
+          vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height};
+          vm.mapSize['map02'] = {top: 0, left: '50%', width: '50%', height: height2};
+          vm.mapSize['map03'] = {top: '50%', left: '50%', width: '50%', height: height2};
+          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+          vm.contentSize['map01'] = {'max-height': contentHeight};
+          vm.contentSize['map02'] = {'max-height': contentHeight2};
+          vm.contentSize['map03'] = {'max-height': contentHeight2};
           break;
         // 3画面2（全て縦半）
         case 5:
           vm.synchDivFlg = true;
-          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = false;
-          vm.map01Size = {top: 0, left: 0, width: '100%', height: height2};
-          vm.map02Size = {top: '50%', left: 0, width: '50%', height: height2};
-          vm.map03Size = {top: '50%', left: '50%', width: '50%', height: height2};
-          vm.map04Size = {top: 0, left: 0, width: 0, height: 0};
-          vm.map01DialogContentSize = {'max-height': contentHeight2};
-          vm.map02DialogContentSize = {'max-height': contentHeight2};
-          vm.map03DialogContentSize = {'max-height': contentHeight2};
+          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = false;
+          vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height2};
+          vm.mapSize['map02'] = {top: '50%', left: 0, width: '50%', height: height2};
+          vm.mapSize['map03'] = {top: '50%', left: '50%', width: '50%', height: height2};
+          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+          vm.contentSize['map01'] = {'max-height': contentHeight2};
+          vm.contentSize['map02'] = {'max-height': contentHeight2};
+          vm.contentSize['map03'] = {'max-height': contentHeight2};
           break;
         // 4画面（全て縦半）
         case 6:
           vm.synchDivFlg = true;
-          vm.map02Flg = true; vm.map03Flg = true; vm.map04Flg = true;
-          vm.map01Size = {top: 0, left: 0, width: '50%', height: height2};
-          vm.map02Size = {top: 0, right: 0, width: '50%', height: height2};
-          vm.map03Size = {top: '50%', left: 0, width: '50%', height: height2};
-          vm.map04Size = {top: '50%', left: '50%', width: '50%', height: height2};
-          vm.map01DialogContentSize = {'max-height': contentHeight2};
-          vm.map02DialogContentSize = {'max-height': contentHeight2};
-          vm.map03DialogContentSize = {'max-height': contentHeight2};
-          vm.map04DialogContentSize = {'max-height': contentHeight2}
+          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = true;
+          vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height2};
+          vm.mapSize['map02'] = {top: 0, right: 0, width: '50%', height: height2};
+          vm.mapSize['map03'] = {top: '50%', left: 0, width: '50%', height: height2};
+          vm.mapSize['map04'] = {top: '50%', left: '50%', width: '50%', height: height2};
+          vm.contentSize['map01'] = {'max-height': contentHeight2};
+          vm.contentSize['map02'] = {'max-height': contentHeight2};
+          vm.contentSize['map03'] = {'max-height': contentHeight2};
+          vm.contentSize['map04'] = {'max-height': contentHeight2}
       }
       this.$nextTick(function () {
         MyMap.resize ()
@@ -269,41 +177,10 @@ export default {
     // 同期-------------------------------------------------------------------------------------
     synch () {
       MyMap.synch(this)
-    },
-    // 短縮URL作成----------------------------------------------------------------------------
-    shortUrl () {
-      const vm = this;
-      const url = 'https://api-ssl.bitly.com/v3/shorten';
-      const myToken = '032704dc9764ff62c36ef2aff9464eb50e89b4fe';
-      // const target = 'https://kenzkenz.xsrv.jp/aaa/#8/140.1/37.86%3FS%3D1%26L%3D%5B%5B%7B%22id%22%3A1%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A2%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A4%2C%22o%22%3A1%7D%5D%2C%5B%7B%22id%22%3A5%2C%22o%22%3A1%7D%5D%5D'
-      const target = window.location.href;
-      $.ajax({
-        type: 'GET',
-        url: url,
-        dataType: 'json',
-        data: {
-          "access_token":myToken,
-          "longUrl":target
-        }
-      }).done(function (json) {
-        vm.shortUrlText = json.data.url
-      }).fail(function () {
-        console.log("エラー")
-      });
     }
   },
   mounted () {
     JqueryFunction();
-    this.$watch(function () {
-      return [this.myToggle, this.selected]
-    }, function () {
-      if (this.myToggle) {
-        MyMap.lego('map01', this.selected)
-      } else {
-        MyMap.legoRemove('map01', this.selected)
-      }
-    });
-
     this.$nextTick(function () {
       // 縦バウンス無効化https://github.com/lazd/iNoBounce
       Inobounce();
@@ -426,12 +303,6 @@ export default {
         background-color: #fff;
         color: rgba(0,60,136,0.5);
         z-index: 10001;
-    }
-    .shortUrl-div{
-        margin-top: 10px;
-        padding: 5px;
-        border: solid 1px gray;
-        height: 36px;
     }
     #lock:hover{
         color: rgba(0,60,136,0.7);

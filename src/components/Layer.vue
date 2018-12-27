@@ -43,10 +43,9 @@ export default {
     info (e,item) {
       console.log(item.compoName);
       const rect = e.currentTarget.getBoundingClientRect();
-      console.log(rect.top);
       const dialogEl = $(e.currentTarget).parents('.dialog-div')[0];
       const top = dialogEl.offsetTop + 'px';
-      const left = dialogEl.offsetLeft - 210 + 'px';
+      const left = (dialogEl.offsetLeft + dialogEl.offsetWidth + 5) + 'px';
       const result = this.$store.state.dialogsInfo[this.name].find(el => el.id === item.id);
       this.$store.commit('incrDialogMaxZindex');
 
@@ -68,20 +67,6 @@ export default {
         result.style.display = 'block';
         result.style["z-index"] = this.$store.state.dialogMaxZindex
       }
-
-
-
-
-     /*
-      this.$store.commit('incrDialogMaxZindex');
-      const dialogName = this.name + 'info';
-      const dialog =this.$store.state.dialogs[dialogName];
-      dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
-      dialog.text = item.text;
-      dialog.summary = item.summary;
-      // this.$store.commit('setDialogs', {name: dialogName, dialog: dialog});
-      this.$store.commit('editDialogArr', {name: dialogName, flg: false})
-      */
     }
   },
   computed: {

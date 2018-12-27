@@ -75,35 +75,6 @@ for (let i of mapsStr) {
   });
 }
 const floodSumm = '下のスライダーを左右に操作します。zoom12以上で表示します。';
-const controls = '<div class="range-div"><input type="range"  class="flood-range" min="0" max="100" step="1" value="0"  v-model.number="item.opacity" @input="aaa" /></div>';
-
-
-
-//dem5----------------------------------------------------------------------------------
-/*
-const elevation5 = new ol.source.XYZ({
-  url:'https://cyberjapandata.gsi.go.jp/xyz/dem5a_png/{z}/{x}/{y}.png',
-  minZoom:15,
-  maxZoom:15,
-  crossOrigin:'anonymous'
-});
-const dem5source = new ol.source.Raster({
-  sources:[elevation5],
-  operation:flood
-});
-const floodLayer5 = new ol.layer.Image({
-  source:dem5source,
-  maxResolution: 38.22
-});
-floodLayer5.getSource().on('beforeoperations', function(event) {
-  // event.data.level = Number($("#map1 .level-text").text());
-});
-*/
-
-
-
-
-
 
 
 // オープンストリートマップ------------------------------------------------------------------------
