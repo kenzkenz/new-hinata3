@@ -7,7 +7,6 @@ import { transformExtent } from 'ol/proj.js'
 import LayerGroup from 'ol/layer/Group';
 import mw5 from './mw5'
 import mw20 from './mw20'
-
 const mapsStr = ['map01','map02','map03','map04'];
 const transformE = extent => {
   return transformExtent(extent,'EPSG:4326','EPSG:3857');
@@ -75,7 +74,6 @@ for (let i of mapsStr) {
   });
 }
 const floodSumm = '下のスライダーを左右に操作します。zoom12以上で表示します。';
-
 
 // オープンストリートマップ------------------------------------------------------------------------
 function Osm () {

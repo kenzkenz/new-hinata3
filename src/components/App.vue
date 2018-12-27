@@ -12,7 +12,7 @@
                 <div class="top-right-div"></div>
                 <G-Dialog :dialogStyle="S_dialogs[mapName]">
                     <div class="content-div" :style="contentSize[mapName]">
-                        <div class="first-content-div"><Layer :name="S_dialogs[mapName].name"/></div>
+                        <div class="first-content-div"><Layer :mapName="S_dialogs[mapName].name"/></div>
                         <div class="second-content-div"><LayerList :name="S_dialogs[mapName].name" /></div>
                     </div>
                 </G-Dialog>

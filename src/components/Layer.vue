@@ -23,7 +23,7 @@ import * as permalink from '../js/permalink'
 import * as MyMap from '../js/mymap'
 export default {
   name: 'Layer',
-  props: ['name'],
+  props: ['mapName'],
   components: {
     draggable
   },
@@ -38,19 +38,16 @@ export default {
       permalink.moveEnd()
     },
     removeLayer (item) {
-      MyMap.removeLayer(item, this.storeLayerList, this.name)
+      MyMap.removeLayer(item, this.storeLayerList, this.mapName)
     },
     info (e,item) {
-      console.log(item.compoName);
-      const rect = e.currentTarget.getBoundingClientRect();
       const dialogEl = $(e.currentTarget).parents('.dialog-div')[0];
       const top = dialogEl.offsetTop + 'px';
       const left = (dialogEl.offsetLeft + dialogEl.offsetWidth + 5) + 'px';
-      const result = this.$store.state.dialogsInfo[this.name].find(el => el.id === item.id);
+      const result = this.$store.state.dialogsInfo[this.mapName].find(el => el.id === item.id);
       this.$store.commit('incrDialogMaxZindex');
-
       if (!result) {
-        this.$store.state.dialogsInfo[this.name].push({
+        this.$store.state.dialogsInfo[this.mapName].push({
           id: item.id,
           name: item.name,
           summary: item.summary,
@@ -71,12 +68,12 @@ export default {
   },
   computed: {
     storeLayerList: {
-      get () { return this.$store.getters.layerList(this.name) },
-      set (value) { this.$store.commit('updateList', {value: value, name: this.name}) }
+      get () { return this.$store.getters.layerList(this.mapName) },
+      set (value) { this.$store.commit('updateList', {value: value, name: this.mapName}) }
     },
     // watch用にlengthのあるオブジェクト
     storeLayerListWatch: {
-      get () { return {value: this.$store.getters.layerList(this.name), length:this.$store.getters.layerList(this.name).length} },
+      get () { return {value: this.$store.getters.layerList(this.mapName), length:this.$store.getters.layerList(this.mapName).length} },
     },
     storeNotification: {
       get () { return this.$store.state.notification },
@@ -86,8 +83,8 @@ export default {
   watch: {
     // ストアを監視。レイヤーを追加したとき・順番を変えたときに動く
     storeLayerListWatch : function (newLayerList,oldLayerList) {
-      const map = this.$store.state.maps[this.name];
-      if (map) MyMap.watchLayer(map, this.name, newLayerList,oldLayerList);
+      const map = this.$store.state.maps[this.mapName];
+      if (map) MyMap.watchLayer(map, this.mapName, newLayerList,oldLayerList);
       permalink.moveEnd()
     }
   }

@@ -6,8 +6,7 @@
             <!--なにもないとき。普通のラスターのとき-->
             <div v-if="!item.compoName">
                 <div class="info-content-div">
-                    <p v-html="item.name"></p>
-                    <hr>
+                    <p v-html="item.name"></p><hr>
                     <p v-html="item.summary"></p>
                 </div>
             </div>

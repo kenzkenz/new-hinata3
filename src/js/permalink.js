@@ -1,11 +1,7 @@
 import store from './store'
 import { transform } from 'ol/proj.js'
 import * as Layers from '../js/layers'
-// import rison from 'rison'
 export function permalinkEventSet () {
-
-  // console.log(rison.encode_object({supportsObjects: true, ints: 435}))
-
   // 起動時の処理------------------------------------------------------------------------------
   if (window.location.hash !== '') {
      const hash = decodeURIComponent(window.location.hash.replace('#', ''));
@@ -103,7 +99,6 @@ export function moveEnd () {
     Math.round(center4326[1] * 100000) / 100000;
   let parameter = '?S=' + store.state.splitFlg;
   parameter += '&L=' + store.getters.layerLists;
-  // parameter += '&L=' + rison.encode(store.getters.layerLists)
   // parameterだけエンコードする。起動時にwindow.location.hashでハッシュ値を取得するため
   parameter = encodeURIComponent(parameter);
   const state = {

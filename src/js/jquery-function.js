@@ -1,11 +1,4 @@
 export default function () {
-  // $("body").on("input",".flood-range",function() {
-  //   console.log(this.value)
-  //   Layers.flood10Obj['map01'].getSource().changed();
-  //   Layers.flood10Obj['map02'].getSource().changed();
-  //   Layers.flood10Obj['map03'].getSource().changed();
-  //   Layers.flood10Obj['map04'].getSource().changed();
-  // })
   $(".ol-scale-line").mousedown(function(event){
     const target = $(this);
     target.addClass("drag");
