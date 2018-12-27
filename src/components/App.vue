@@ -17,7 +17,7 @@
                     </div>
                 </G-Dialog>
                 <G-Dialog-info :name=mapName />
-                <Menu/>
+                <Menu v-if="mapName === 'map01'"/>
                 <div class="zoom-div">{{ zoom[mapName] }}</div>
             </div>
         </transition>
