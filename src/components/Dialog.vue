@@ -1,11 +1,8 @@
-ダイアログ作成用の汎用vueファイル。グローバルで宣言。親からoptを取得して位置、スタイル等を設定する。
 <template>
-    <div  v-show="!this.storeFlg" class="dialog-div" :style="this.dialogStyle.dialog" @mousedown="dialogMouseDown">
+    <div  v-show="!this.s_flg" class="dialog-div" :style="this.dialogStyle.dialog" @mousedown="dialogMouseDown">
         <div class="drag-handle" v-my-drag-handle></div>
             <div>
-                <div class="close-btn-div" @click="closeBtn">
-                    <v-icon name="times" scale="1.5" class="hover"/>
-                </div>
+                <div class="close-btn-div" @click="closeBtn"><v-icon name="times" scale="1.5" class="hover"/></div>
                 <slot></slot>
             </div>
     </div>
@@ -15,12 +12,6 @@
 export default {
   name: 'Dialog',
   props: ['dialogStyle'],
-  components: {
-  },
-  data () {
-    return {
-    }
-  },
   methods: {
     closeBtn () {
       this.$store.commit('editDialogArr', {name: this.dialogStyle.name, flg: true})
@@ -31,22 +22,14 @@ export default {
     }
   },
   computed: {
-    storeDialogArr: {
-      get () { return this.$store.state.dialogArr },
-      set (value) { this.$store.commit('pushDialogArr', value) }
-    },
-    storeFlg: function () {
-      const result = this.storeDialogArr.find(el => el.name === this.dialogStyle.name);
+    s_flg: function () {
+      const result = this.$store.state.dialogArr.find(el => el.name === this.dialogStyle.name);
       return result.flg
     }
   },
   created () {
     // ダイアログクリエイト時に開閉のフラグをストアに設定する。
     this.$store.commit('pushDialogArr', {name: this.dialogStyle.name, flg: this.dialogStyle.close})
-  },
-  mounted () {
-    this.$nextTick(function () {
-    })
   }
 }
 </script>

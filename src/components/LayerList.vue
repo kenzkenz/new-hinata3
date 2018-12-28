@@ -24,7 +24,7 @@ export default {
         this.$store.commit('unshiftLayerList', {
           value: {
             id: node.data.id,
-            name: node.text,
+            title: node.text,
             layer: node.data.layer,
             opacity: node.data.opacity,
             addFlg:true,

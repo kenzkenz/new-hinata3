@@ -1,12 +1,11 @@
 選択されたリストを表示するvueファイル。
 <template>
-    <draggable element="ul" :options="{handle:'.handle-div',animation: 200}" v-model="storeLayerList">
-        <li v-for="item in storeLayerList" :key="item.id">
+    <v-draggable element="ul" :options="{handle:'.handle-div',animation: 200}" v-model="s_layerList">
+        <li v-for="item in s_layerList" :key="item.id">
             <div class="list-div">
                 <div class="handle-div" ><v-icon name="align-justify" class="hover-white handle-icon"/></div>
                 <div class="item-div">
-                    <!--{{ item.name }}-->
-                    <span v-html="item.name"></span>
+                    <span v-html="item.title"></span>
                 </div>
                 <div class="range-div"><input type="range" min="0" max="1" step="0.01" class="range" v-model.number="item.opacity" @input="opacityChange(item)" /></div>
                 <div class="info-div" @click="info(arguments[0],item)"><v-icon name="info-circle" scale="1.0" class="hover"/></div>
@@ -14,23 +13,18 @@
             </div>
         </li>
         <vue-snotify></vue-snotify>
-    </draggable>
+    </v-draggable>
 </template>
 
 <script>
-import draggable from 'vuedraggable'
+import vuedraggable from 'vuedraggable'
 import * as permalink from '../js/permalink'
 import * as MyMap from '../js/mymap'
 export default {
   name: 'Layer',
   props: ['mapName'],
   components: {
-    draggable
-  },
-  data () {
-    return {
-      list: this.storeLayerList
-    }
+    'v-draggable': vuedraggable
   },
   methods: {
     opacityChange (item) {
@@ -38,7 +32,7 @@ export default {
       permalink.moveEnd()
     },
     removeLayer (item) {
-      MyMap.removeLayer(item, this.storeLayerList, this.mapName)
+      MyMap.removeLayer(item, this.s_layerList, this.mapName)
     },
     info (e,item) {
       const dialogEl = $(e.currentTarget).parents('.dialog-div')[0];
@@ -47,32 +41,34 @@ export default {
       const result = this.$store.state.dialogsInfo[this.mapName].find(el => el.id === item.id);
       this.$store.commit('incrDialogMaxZindex');
       if (!result) {
-        this.$store.state.dialogsInfo[this.mapName].push({
-          id: item.id,
-          name: item.name,
-          summary: item.summary,
-          compoName: item.compoName,
-          style: {
-            display: 'block',
-            top: top,
-            left: left,
-            'z-index': this.$store.state.dialogMaxZindex
-          }
-        })
+        const dialog =
+          {
+            id: item.id,
+            title: item.title,
+            summary: item.summary,
+            compoName: item.compoName,
+            style: {
+              display: 'block',
+              top: top,
+              left: left,
+              'z-index': this.$store.state.dialogMaxZindex
+            }
+          };
+        this.$store.commit('pushDialogsInfo',{mapName: this.mapName, dialog: dialog});
       } else {
-        // 既に存在しているときは表示のみ
+        // 既に存在しているときは表示のみ。データを変更せずにスタイルを直接書き換えている。
         result.style.display = 'block';
         result.style["z-index"] = this.$store.state.dialogMaxZindex
       }
     }
   },
   computed: {
-    storeLayerList: {
+    s_layerList: {
       get () { return this.$store.getters.layerList(this.mapName) },
       set (value) { this.$store.commit('updateList', {value: value, name: this.mapName}) }
     },
     // watch用にlengthのあるオブジェクト
-    storeLayerListWatch: {
+    s_layerListWatch: {
       get () { return {value: this.$store.getters.layerList(this.mapName), length:this.$store.getters.layerList(this.mapName).length} },
     },
     storeNotification: {
@@ -82,7 +78,7 @@ export default {
   },
   watch: {
     // ストアを監視。レイヤーを追加したとき・順番を変えたときに動く
-    storeLayerListWatch : function (newLayerList,oldLayerList) {
+    s_layerListWatch : function (newLayerList,oldLayerList) {
       const map = this.$store.state.maps[this.mapName];
       if (map) MyMap.watchLayer(map, this.mapName, newLayerList,oldLayerList);
       permalink.moveEnd()

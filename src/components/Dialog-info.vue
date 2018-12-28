@@ -1,19 +1,19 @@
 <template>
     <div>
-        <div class="dialog-info-div" v-for="item in info" :key="item.id" :style="item.style" @mousedown="dialogMouseDown(item)">
+        <div class="v-dialog-info-div" v-for="item in info" :key="item.id" :style="item.style" @mousedown="dialogMouseDown(item)">
             <div class="drag-handle" v-my-drag-handle></div>
             <div class="close-btn-div" @click="close(item)"><v-icon name="times" scale="1.5" class="hover"/></div>
             <!--なにもないとき。普通のラスターのとき-->
             <div v-if="!item.compoName">
                 <div class="info-content-div">
-                    <p v-html="item.name"></p><hr>
+                    <p v-html="item.title"></p><hr>
                     <p v-html="item.summary"></p>
                 </div>
             </div>
             <!--海面上昇シミュレーション5m-->
             <div v-else-if="item.compoName === 'flood5m'">
                 <div class="info-content-div">
-                    <p v-html="item.name"></p><hr>
+                    <p v-html="item.title"></p><hr>
                     <p v-html="item.summary"></p><hr>
                     <b-form-radio-group v-model="selected5m" :options="options" name="flood5m" @change="floodChange5m"/>
                     <input type="range" min="0" :max="floodMax5m" step="1" class="flood-range5m" v-model.number="seaLevel5m" @input="flood" />
@@ -23,7 +23,7 @@
             <!--海面上昇シミュレーション10m-->
             <div v-else-if="item.compoName === 'flood10m'">
                 <div class="info-content-div">
-                    <p v-html="item.name"></p><hr>
+                    <p v-html="item.title"></p><hr>
                     <p v-html="item.summary"></p><hr>
                     <b-form-radio-group v-model="selected10m" :options="options" name="flood10m" @change="floodChange10m"/>
                     <input type="range" min="0" :max="floodMax10m" step="1" class="flood-range10m" v-model.number="seaLevel10m" @input="flood" />
@@ -37,7 +37,7 @@
 <script>
   import * as Layers from '../js/layers'
   export default {
-    name: "Dialog-info",
+    name: "v-dialog-info",
     props: ['name'],
     data () {
       return {
@@ -57,7 +57,7 @@
     },
     computed: {
       info () {
-        // console.log(this.$store.state.dialogsInfo[this.name]);
+        // console.log(this.$store.state.dialogsInfo);
         return this.$store.state.dialogsInfo[this.name]
       }
     },
@@ -103,7 +103,7 @@
     .form-group {
         margin-bottom: 0;
     }
-    .dialog-info-div{
+    .v-dialog-info-div{
         position: absolute;
         z-index: 10;
         background-color: #fff;

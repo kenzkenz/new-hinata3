@@ -1,7 +1,10 @@
 <template>
-    <G-Dialog :dialogStyle="S_menuDialog">
+    <v-dialog :dialogStyle="S_menuDialog">
         <div :style="menuContentSize">
-            <div><b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button></div>
+            <div>
+                <b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button>
+                <b-button class='olbtn' :size="btnSize" @click="reset02" style="margin-left:5px;">座標を残してリセット</b-button>
+            </div>
             <hr>
             <div>
                 <b-button class='olbtn' :size="btnSize" @click="shortUrl">短縮URL作成</b-button>
@@ -13,7 +16,7 @@
                 <b-form-select v-model="selected" :options="options" style="width: 60px;margin-left: 10px;"/>
             </div>
         </div>
-    </G-Dialog>
+    </v-dialog>
 </template>
 
 <script>
@@ -43,6 +46,11 @@
       // リセット------------------------------------------------------------------------------------
       reset01() {
         const url = window.location.href.split("#")[0];
+        history.pushState(null, null,url);
+        window.location.reload(true);
+      },
+      reset02() {
+        const url = decodeURIComponent(window.location.href).split("?")[0];
         history.pushState(null, null,url);
         window.location.reload(true);
       },

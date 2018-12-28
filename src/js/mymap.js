@@ -1,10 +1,10 @@
 // マップ関係の関数
 import store from './store'
 import 'ol/ol.css'
-import Map from 'ol/Map.js'
-import View from 'ol/View.js'
-import { transform, fromLonLat } from 'ol/proj.js'
-import {ScaleLine} from 'ol/control.js';
+import Map from 'ol/Map'
+import View from 'ol/View'
+import { transform, fromLonLat } from 'ol/proj'
+import { ScaleLine } from 'ol/control';
 import Target from 'ol-ext/control/Target'
 import Lego from 'ol-ext/filter/Lego'
 import Notification from '../js/notification'
@@ -15,10 +15,10 @@ let legoFilter = null;
 export function initMap (vm) {
   // マップ作製ループ用の配列を作成
   const maps = [
-    {name: 'map01', map:store.state.map01, layer:store.state.layerLists.map01[0].layer},
-    {name: 'map02', map:store.state.map02, layer:store.state.layerLists.map02[0].layer},
-    {name: 'map03', map:store.state.map03, layer:store.state.layerLists.map03[0].layer},
-    {name: 'map04', map:store.state.map04, layer:store.state.layerLists.map04[0].layer}
+    {mapName: 'map01', map:store.state.map01, layer:store.state.layerLists.map01[0].layer},
+    {mapName: 'map02', map:store.state.map02, layer:store.state.layerLists.map02[0].layer},
+    {mapName: 'map03', map:store.state.map03, layer:store.state.layerLists.map03[0].layer},
+    {mapName: 'map04', map:store.state.map04, layer:store.state.layerLists.map04[0].layer}
   ];
   const view01 = new View({
     center: fromLonLat([140.097, 37.856]),
@@ -26,23 +26,23 @@ export function initMap (vm) {
   });
   for (let i in maps) {
     // マップ作製
-    const name = maps[i].name;
+    const mapName = maps[i].mapName;
     const map = new Map({
       interactions: defaultInteractions().extend([
         new DragRotateAndZoom()
       ]),
       layers: [maps[i].layer],
-      target: name,
+      target: mapName,
       view: view01
     });
     // マップをストアに登録
-    store.commit('setMap', {name: maps[i].name, map});
+    store.commit('setMap', {mapName: maps[i].mapName, map});
     // イベント
     map.on('singleclick', function (evt) {
       console.log(transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
       const layers = map.getLayers().getArray();
-      const result5 = layers.find(el => el === Layers.mw5Obj[name]);
-      const result20 = layers.find(el => el === Layers.mw20Obj[name]);
+      const result5 = layers.find(el => el === Layers.mw5Obj[mapName]);
+      const result20 = layers.find(el => el === Layers.mw20Obj[mapName]);
       if(result5 && result20) {
         if(result5.myZindex > result20.myZindex) {
           extentChange(5)
@@ -58,10 +58,10 @@ export function initMap (vm) {
         let gLayers;
         let lonOutside; let latOutside;
         if(mw === 5) {
-          gLayers = Layers.mw5Obj[name].values_.layers.array_;
+          gLayers = Layers.mw5Obj[mapName].values_.layers.array_;
           lonOutside = 5000; latOutside = 4000
         } else {
-          gLayers = Layers.mw20Obj[name].values_.layers.array_;
+          gLayers = Layers.mw20Obj[mapName].values_.layers.array_;
           lonOutside = 24000; latOutside = 14000
         }
         const lon = evt.coordinate[0], lat = evt.coordinate[1];
@@ -85,13 +85,13 @@ export function initMap (vm) {
       }
     });
     map.on('moveend', function () {
-      vm.zoom[maps[i].name] = 'zoom=' + String(Math.floor(map.getView().getZoom() * 100) / 100)
+      vm.zoom[mapName] = 'zoom=' + String(Math.floor(map.getView().getZoom() * 100) / 100)
     });
     // コントロール追加
     map.addControl(new Target({composite: 'difference'}));
     const notification = new Notification();
     map.addControl(notification);
-    store.commit('setNotifications',{name:maps[i].name, control: notification});
+    store.commit('setNotifications',{mapName:mapName, control: notification});
     map.addControl(new ScaleLine());
 
     const className =' .ol-scale-line';

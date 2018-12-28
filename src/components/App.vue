@@ -10,17 +10,22 @@
                     <b-button class='olbtn' :size="btnSize" @click="openDialog(S_dialogs[mapName])">背景</b-button>
                 </div>
                 <div class="top-right-div"></div>
-                <G-Dialog :dialogStyle="S_dialogs[mapName]">
+                <v-dialog :dialogStyle="S_dialogs[mapName]">
                     <div class="content-div" :style="contentSize[mapName]">
-                        <div class="first-content-div"><Layer :mapName="S_dialogs[mapName].name"/></div>
-                        <div class="second-content-div"><LayerList :name="S_dialogs[mapName].name" /></div>
+                        <div class="first-content-div">
+                            <v-layer :mapName="S_dialogs[mapName].name"/>
+                        </div>
+                        <div class="second-content-div">
+                            <v-layerList :name="S_dialogs[mapName].name" />
+                        </div>
                     </div>
-                </G-Dialog>
-                <G-Dialog-info :name=mapName />
-                <Menu v-if="mapName === 'map01'"/>
+                </v-dialog>
+                <v-dialog-info :name=mapName />
+                <v-dialog-menu v-if="mapName === 'map01'"/>
                 <div class="zoom-div">{{ zoom[mapName] }}</div>
             </div>
         </transition>
+        <!--map01からmap04をループで作成。ここまで-->
         <transition>
             <div id="lock" v-show="synchDivFlg" @click="synch">
                 <v-icon v-if="synchFlg" name="lock" scale="1.5" class="hover"/>
@@ -31,9 +36,9 @@
 </template>
 
 <script>
-import Menu from './Menu'
-import LayerList from './LayerList.vue'
-import Layer from './Layer.vue'
+import DialogMenu from './Dialog-menu'
+import LayerList from './LayerList'
+import Layer from './Layer'
 import * as Permalink from '../js/permalink'
 import Inobounce from '../js/inobounce'
 import * as MyMap from '../js/mymap'
@@ -41,9 +46,9 @@ import JqueryFunction from '../js/jquery-function'
 export default {
   name: 'App',
   components: {
-    Menu,
-    LayerList,
-    Layer
+    'v-dialog-menu': DialogMenu,
+    'v-layerList': LayerList,
+    'v-layer': Layer
   },
   data () {
     return {

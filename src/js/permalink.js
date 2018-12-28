@@ -66,7 +66,7 @@ export function permalinkEventSet () {
                     store.commit('unshiftLayerList', {
                       value: {
                         id: node.data.id,
-                        name: node.text,
+                        title: node.text,
                         layer: node.data.layer,
                         opacity: urlLayerListArr[i][j].o,
                         summary: node.data.summary,
