@@ -15,12 +15,11 @@ const transformE = extent => {
 function flood(pixels, data) {
   var pixel = pixels[0];
   if (pixel[3]) {
-    //var height = -10000 + ((pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) * 0.1);
     var height = (pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) / 100;
     if (height <= data.level) {
-      var sinsui = -height + data.level;
-      if(sinsui>=10) sinsui=5;
-      var opacity = sinsui * 40;//240割る10
+      let sinsui = - height + data.level;
+      let opacity = sinsui * 20;
+      if (opacity>200) opacity = 200;
       pixel[0] = 0;
       pixel[1] = 0;
       pixel[2] = 180;
@@ -73,7 +72,7 @@ for (let i of mapsStr) {
     // event.data.level = 100;
   });
 }
-const floodSumm = '下のスライダーを左右に操作します。zoom12以上で表示します。';
+const floodSumm = 'zoom12以上で表示';
 
 // オープンストリートマップ------------------------------------------------------------------------
 function Osm () {

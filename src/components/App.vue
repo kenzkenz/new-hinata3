@@ -5,21 +5,12 @@
         <transition v-for="mapName in mapNames" :key="mapName">
             <div :id=mapName :style="mapSize[mapName]" v-show="mapFlg[mapName]">
                 <div class="top-left-div">
-                    <b-button v-if="mapName === 'map01'" class='olbtn' :size="btnSize" @click="openDialog(S_dialogs['menuDialog'])" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
+                    <b-button v-if="mapName === 'map01'" class='olbtn' :size="btnSize" @click="openDialog(s_dialogs['menuDialog'])" style="margin-right:5px;"><v-icon name="bars"  scale="1.0" /></b-button>
                     <b-button v-if="mapName === 'map01'" class='olbtn' :size="btnSize" @click="splitMap" style="margin-right:5px;"><v-icon name="columns"  scale="1.0" /></b-button>
-                    <b-button class='olbtn' :size="btnSize" @click="openDialog(S_dialogs[mapName])">背景</b-button>
+                    <b-button class='olbtn' :size="btnSize" @click="openDialog(s_dialogs[mapName])">背景</b-button>
                 </div>
                 <div class="top-right-div"></div>
-                <v-dialog :dialogStyle="S_dialogs[mapName]">
-                    <div class="content-div" :style="contentSize[mapName]">
-                        <div class="first-content-div">
-                            <v-layer :mapName="S_dialogs[mapName].name"/>
-                        </div>
-                        <div class="second-content-div">
-                            <v-layerList :name="S_dialogs[mapName].name" />
-                        </div>
-                    </div>
-                </v-dialog>
+                <v-dialog-layer :name=mapName />
                 <v-dialog-info :name=mapName />
                 <v-dialog-menu v-if="mapName === 'map01'"/>
                 <div class="zoom-div">{{ zoom[mapName] }}</div>
@@ -37,8 +28,7 @@
 
 <script>
 import DialogMenu from './Dialog-menu'
-import LayerList from './LayerList'
-import Layer from './Layer'
+import DialogLayer from './Dialog-layer'
 import * as Permalink from '../js/permalink'
 import Inobounce from '../js/inobounce'
 import * as MyMap from '../js/mymap'
@@ -46,9 +36,8 @@ import JqueryFunction from '../js/jquery-function'
 export default {
   name: 'App',
   components: {
-    'v-dialog-menu': DialogMenu,
-    'v-layerList': LayerList,
-    'v-layer': Layer
+    'v-dialog-layer': DialogLayer,
+    'v-dialog-menu': DialogMenu
   },
   data () {
     return {
@@ -61,12 +50,6 @@ export default {
         map02: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
         map03: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
         map04: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'}
-      },
-      contentSize: {
-        map01: {'max-height': '300px','overflow': 'auto'},
-        map02: {'max-height': '300px','overflow': 'auto'},
-        map03: {'max-height': '300px','overflow': 'auto'},
-        map04: {'max-height': '300px','overflow': 'auto'}
       },
       zoom: {map01: '',map02: '',map03: '',map04: ''},
       mapFlg: {map01:true, map02:false, map03:false, map04:false},
@@ -83,7 +66,8 @@ export default {
     }
   },
   computed: {
-    S_dialogs () { return this.$store.state.dialogs},
+    s_dialogs () { return this.$store.state.dialogs},
+    s_splitFlg () { return this.$store.state.splitFlg}
   },
   methods: {
     // レイヤーのダイアログを開く------------------------------------------------------------------
@@ -105,7 +89,7 @@ export default {
       const height2 = window.innerHeight / 2 + 'px';
       const contentHeight =(window.innerHeight -100) + 'px';
       const contentHeight2 =((window.innerHeight/2) -100) + 'px';
-      switch (this.$store.state.splitFlg) {
+      switch (this.s_splitFlg) {
         // 1画面
         case 1:
           vm.synchDivFlg = false;
@@ -114,7 +98,6 @@ export default {
           vm.mapSize['map02'] = {top: 0, right: 0, width: 0, height: 0};
           vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
           vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          vm.contentSize['map01'] = {'max-height': contentHeight};
           break;
         // 2画面（縦２画面）
         case 2:
@@ -124,8 +107,6 @@ export default {
           vm.mapSize['map02'] = {top: 0, left: '50%', width: '50%', height: height};
           vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
           vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          vm.contentSize['map01'] = {'max-height': contentHeight};
-          vm.contentSize['map02'] = {'max-height': contentHeight};
           break;
         // 2画面（横２画面）
         case 3:
@@ -135,8 +116,6 @@ export default {
           vm.mapSize['map02'] = {top: '50%', left: 0, width: '100%', height: height2};
           vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
           vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          vm.contentSize['map01'] = {'max-height': contentHeight2};
-          vm.contentSize['map02'] = {'max-height': contentHeight2};
           break;
         // 3画面１（左が縦全、右が縦半）
         case 4:
@@ -146,9 +125,6 @@ export default {
           vm.mapSize['map02'] = {top: 0, left: '50%', width: '50%', height: height2};
           vm.mapSize['map03'] = {top: '50%', left: '50%', width: '50%', height: height2};
           vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          vm.contentSize['map01'] = {'max-height': contentHeight};
-          vm.contentSize['map02'] = {'max-height': contentHeight2};
-          vm.contentSize['map03'] = {'max-height': contentHeight2};
           break;
         // 3画面2（全て縦半）
         case 5:
@@ -158,9 +134,6 @@ export default {
           vm.mapSize['map02'] = {top: '50%', left: 0, width: '50%', height: height2};
           vm.mapSize['map03'] = {top: '50%', left: '50%', width: '50%', height: height2};
           vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          vm.contentSize['map01'] = {'max-height': contentHeight2};
-          vm.contentSize['map02'] = {'max-height': contentHeight2};
-          vm.contentSize['map03'] = {'max-height': contentHeight2};
           break;
         // 4画面（全て縦半）
         case 6:
@@ -169,11 +142,7 @@ export default {
           vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height2};
           vm.mapSize['map02'] = {top: 0, right: 0, width: '50%', height: height2};
           vm.mapSize['map03'] = {top: '50%', left: 0, width: '50%', height: height2};
-          vm.mapSize['map04'] = {top: '50%', left: '50%', width: '50%', height: height2};
-          vm.contentSize['map01'] = {'max-height': contentHeight2};
-          vm.contentSize['map02'] = {'max-height': contentHeight2};
-          vm.contentSize['map03'] = {'max-height': contentHeight2};
-          vm.contentSize['map04'] = {'max-height': contentHeight2}
+          vm.mapSize['map04'] = {top: '50%', left: '50%', width: '50%', height: height2}
       }
       this.$nextTick(function () {
         MyMap.resize ()
@@ -270,32 +239,6 @@ export default {
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-    }
-    .select-on{
-        -webkit-user-select: text;
-        -moz-user-select: text;
-        -ms-user-select: text;
-        user-select: text;
-    }
-    .info-dialog{
-        margin: 0;
-        padding: 10px;
-        min-height: 100px;
-        width: 200px;
-    }
-    /*重要！！バウンスを止めたときに同時にスクロールを無効化させないために必要*/
-    .content-div{
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .first-content-div{
-        border: 1px solid grey;
-        margin: 5px;
-    }
-    .second-content-div{
-        border: 1px solid grey;
-        margin: 5px;
-        background: rgba(255,255,255,0.5);
     }
     #lock{
         position: absolute;

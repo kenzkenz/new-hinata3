@@ -16,8 +16,8 @@
                     <p v-html="item.title"></p><hr>
                     <p v-html="item.summary"></p><hr>
                     <b-form-radio-group v-model="selected5m" :options="options" name="flood5m" @change="floodChange5m"/>
-                    <input type="range" min="0" :max="floodMax5m" step="1" class="flood-range5m" v-model.number="seaLevel5m" @input="flood" />
-                    <div style="text-align: center;">海抜{{ seaLevel5m }}メートル</div>
+                    <input type="range" min="0" :max="floodMax5m" :step="seaLevelStep5m" class="flood-range5m" v-model.number="seaLevel5m" @input="flood" />
+                    <div style="text-align: center;">海抜{{ seaLevel5m.toFixed(1) }}メートル</div>
                 </div>
             </div>
             <!--海面上昇シミュレーション10m-->
@@ -26,8 +26,8 @@
                     <p v-html="item.title"></p><hr>
                     <p v-html="item.summary"></p><hr>
                     <b-form-radio-group v-model="selected10m" :options="options" name="flood10m" @change="floodChange10m"/>
-                    <input type="range" min="0" :max="floodMax10m" step="1" class="flood-range10m" v-model.number="seaLevel10m" @input="flood" />
-                    <div style="text-align: center;">海抜{{ seaLevel10m }}メートル</div>
+                    <input type="range" min="0" :max="floodMax10m" step="seaLevelStep10m" class="flood-range10m" v-model.number="seaLevel10m" @input="flood" />
+                    <div style="text-align: center;">海抜{{ seaLevel10m.toFixed(1) }}メートル</div>
                 </div>
             </div>
         </div>
@@ -45,11 +45,14 @@
         seaLevel10m: 0,
         selected5m: '100',
         selected10m: '100',
+        seaLevelStep5m: 0.5,
+        seaLevelStep10m: 0.5,
         options: [
-          { text: 'max 100m', value: '100' },
-          { text: 'max 500m', value: '500' },
-          { text: 'max 1000m', value: '1000' },
-          { text: 'max 4000m', value: '4000' }
+          { text: 'max 25m 0.1m刻み', value: '25' },
+          { text: 'max 100m 0.5m刻み', value: '100' },
+          { text: 'max 500m 0.5m刻み', value: '500' },
+          { text: 'max 1000m 0.5m刻み', value: '1000' },
+          { text: 'max 3800m 0.5m刻み', value: '3800' }
         ],
         floodMax5m: '100',
         floodMax10m: '100'
@@ -84,12 +87,25 @@
       },
       floodChange5m () {
         this.$nextTick(function () {
-          this.floodMax5m = this.selected5m
+          const val = this.selected5m;
+          this.floodMax5m = val;
+          if (val === '25') {
+            this.seaLevelStep5m = 0.1
+          } else {
+            this.seaLevelStep5m = 0.5
+          }
+
         })
       },
       floodChange10m () {
         this.$nextTick(function () {
-          this.floodMax10m = this.selected10m
+          const val = this.selected10m;
+          this.floodMax10m = val;
+          if (val === '25') {
+            this.seaLevelStep10m = 0.1
+          } else {
+            this.seaLevelStep10m = 0.5
+          }
         })
       }
     },
@@ -135,7 +151,7 @@
     }
     .info-content-div{
         padding: 10px;
-        width:200px;
+        width:250px;
         word-wrap: break-word;
         overflow-wrap: break-word;
     }

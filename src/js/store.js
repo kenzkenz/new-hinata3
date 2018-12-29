@@ -14,7 +14,7 @@ const store = new Vuex.Store({
       map04: [{id: 5, title: '全国最新写真', layer: Layers.Layers[1].children[4].data.layer['map04'], opacity: 1, summary:Layers.Layers[1].children[4].data.summary}]
     },
     dialogs: {
-      menuDialog: {close: true, name: 'menu01', dialog: {top: '56px', left: '10px', 'z-index': 1, height: 'auto', 'min-width': '220px'}},
+      menuDialog: {close: true, name: 'menu01', dialog: {top: '56px', left: '10px', 'z-index': 1, height: 'auto', 'min-width': '300px'}},
       map01: {close: true, name: 'map01', dialog: {top: '56px', left:'30px', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
       map02: {close: true, name: 'map02', dialog: {top: '56px', left:'30px', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
       map03: {close: true, name: 'map03', dialog: {top: '56px', left:'30px', 'z-index': 1, height: 'auto', 'min-width': '250px'}},
