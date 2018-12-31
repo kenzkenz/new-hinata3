@@ -11,19 +11,67 @@ const mapsStr = ['map01','map02','map03','map04'];
 const transformE = extent => {
   return transformExtent(extent,'EPSG:4326','EPSG:3857');
 };
-
 function flood(pixels, data) {
   var pixel = pixels[0];
   if (pixel[3]) {
     var height = (pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) / 100;
     if (height <= data.level) {
       let sinsui = - height + data.level;
+
+      if (sinsui >= 10) {
+        pixel[0] = 255;
+        pixel[1] = 25;
+        pixel[2] = 25
+      } else if (sinsui >= 9) {
+        pixel[0] = 255;
+        pixel[1] = 25;
+        pixel[2] = 25
+      } else if (sinsui >= 8) {
+        pixel[0] = 255;
+        pixel[1] = 25;
+        pixel[2] = 25
+      } else if (sinsui >= 7) {
+        pixel[0] = 255;
+        pixel[1] = 76;
+        pixel[2] = 76
+      } else if (sinsui >= 6) {
+        pixel[0] = 255;
+        pixel[1] = 102;
+        pixel[2] = 102
+      } else if (sinsui >= 5) {
+        pixel[0] = 255;
+        pixel[1] = 127;
+        pixel[2] = 127
+      } else if (sinsui >= 4) {
+        pixel[0] = 255;
+        pixel[1] = 153;
+        pixel[2] = 153
+      } else if (sinsui >= 3) {
+        pixel[0] = 255;
+        pixel[1] = 178;
+        pixel[2] = 178
+      } else if (sinsui >= 2) {
+        pixel[0] = 255;
+        pixel[1] = 204;
+        pixel[2] = 204
+      } else if (sinsui >= 1) {
+        pixel[0] = 255;
+        pixel[1] = 229;
+        pixel[2] = 229
+      } else {
+        pixel[0] = 255;
+        pixel[1] = 255;
+        pixel[2] = 0
+      }
+      pixel[3] = 180
+      /*
       let opacity = sinsui * 20;
       if (opacity>200) opacity = 200;
       pixel[0] = 0;
       pixel[1] = 0;
       pixel[2] = 180;
       pixel[3] = opacity;
+      */
     } else {
       pixel[3] = 0;
     }
@@ -442,12 +490,9 @@ const layers =
       ]},
     { text: '海面上昇',
       children: [
-        { text: '海面上昇シミュ5Mdem', data: { id: 'flood5m', layer: flood5Obj, opacity: 1, summary: floodSumm, compoName: 'flood5m'} },
-        { text: '海面上昇シミュ10Mdem', data: { id: 'flood10m', layer: flood10Obj, opacity: 1, summary: floodSumm, compoName: 'flood10m'} },
+        { text: '海面上昇シミュ5Mdem', data: { id: 'flood5m', layer: flood5Obj, opacity: 1, summary: floodSumm, component: {name: 'flood5m', values:[]}} },
+        { text: '海面上昇シミュ10Mdem', data: { id: 'flood10m', layer: flood10Obj, opacity: 1, summary: floodSumm, component: {name: 'flood10m', values:[]}} },
       ]}
-
-    // { text: '海面上昇<span style="font-size: smaller;">シミュ5Mdem</span>', data: { id: 'flood5m', layer: flood5Obj, opacity: 1, summary: floodSumm, compoName: 'flood5m'} },
-    // { text: '海面上昇<span style="font-size: smaller;">シミュ10Mdem</span>', data: { id: 'flood10m', layer: flood10Obj, opacity: 1, summary: floodSumm, compoName: 'flood10m'} },
   ];
 export const Layers = layers;
 

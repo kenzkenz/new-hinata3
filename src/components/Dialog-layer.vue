@@ -1,11 +1,11 @@
 <template>
-    <v-dialog :dialogStyle="s_dialogs[name]">
-        <div class="content-div" :style="contentSize[name]">
+    <v-dialog :dialog="s_dialogs[mapName]">
+        <div class="content-div" :style="contentSize[mapName]">
             <div class="first-content-div">
-                <v-layer :mapName="s_dialogs[name].name"/>
+                <v-layer :mapName="mapName"/>
             </div>
             <div class="second-content-div">
-                <v-layerList :name="s_dialogs[name].name" />
+                <v-layerList :mapName="mapName" />
             </div>
         </div>
     </v-dialog>
@@ -20,7 +20,7 @@
       'v-layerList': LayerList,
       'v-layer': Layer
     },
-    props: ['name'],
+    props: ['mapName'],
     data() {
       return {
         contentSize: {
@@ -32,18 +32,13 @@
       }
     },
     computed: {
-      s_dialogs() {
-        return this.$store.state.dialogs
-      },
-      s_splitFlg() {
-        return this.$store.state.splitFlg
-      }
+      s_dialogs() { return this.$store.state.base.dialogs },
+      s_splitFlg() { return this.$store.state.base.splitFlg }
     },
     methods: {
       splitMap () {
         const contentHeight = (window.innerHeight - 100) + 'px';
         const contentHeight2 = ((window.innerHeight / 2) - 100) + 'px';
-        console.log(contentHeight);
         switch (this.s_splitFlg) {
           // 1画面
           case 1:

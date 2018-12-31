@@ -1,5 +1,5 @@
 <template>
-    <div  v-show="!this.s_flg" class="dialog-div" :style="this.dialogStyle.dialog" @mousedown="dialogMouseDown">
+    <div class="dialog-div" :style="this.dialog.style" @mousedown="dialogMouseDown">
         <div class="drag-handle" v-my-drag-handle></div>
             <div>
                 <div class="close-btn-div" @click="closeBtn"><v-icon name="times" scale="1.5" class="hover"/></div>
@@ -11,25 +11,21 @@
 <script>
 export default {
   name: 'Dialog',
-  props: ['dialogStyle'],
+  props: ['dialog'],
   methods: {
     closeBtn () {
-      this.$store.commit('editDialogArr', {name: this.dialogStyle.name, flg: true})
+      this.dialog.style.display = 'none'
     },
     dialogMouseDown () {
-      this.$store.commit('incrDialogMaxZindex');
-      this.dialogStyle.dialog["z-index"] = this.$store.state.dialogMaxZindex
+      this.$store.commit('base/incrDialogMaxZindex');
+      this.dialog.style["z-index"] = this.$store.state.base.dialogMaxZindex
     }
   },
   computed: {
     s_flg: function () {
-      const result = this.$store.state.dialogArr.find(el => el.name === this.dialogStyle.name);
+      const result = this.$store.state.base.dialogArr.find(el => el.name === this.dialog.name);
       return result.flg
     }
-  },
-  created () {
-    // ダイアログクリエイト時に開閉のフラグをストアに設定する。
-    this.$store.commit('pushDialogArr', {name: this.dialogStyle.name, flg: this.dialogStyle.close})
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :dialogStyle="S_menuDialog">
+    <v-dialog :dialog="S_menuDialog">
         <div :style="menuContentSize">
             <div>
                 <b-button class='olbtn' :size="btnSize" @click="reset01">リセット</b-button>
@@ -25,7 +25,7 @@
     name: "Menu",
     data () {
       return {
-        menuContentSize: {'height': 'auto','margin': '10px', 'overflow': 'auto'},
+        menuContentSize: {'height': 'auto','margin': '10px', 'overflow': 'auto', 'user-select': 'text'},
         btnSize: 'sm',
         shortUrlText: '',
         myToggle: false,
@@ -39,7 +39,7 @@
     },
     computed: {
       S_menuDialog () {
-        return this.$store.state.dialogs.menuDialog
+        return this.$store.state.base.dialogs.menuDialog
       }
     },
     methods: {

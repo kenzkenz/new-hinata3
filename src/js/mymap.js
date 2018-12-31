@@ -15,10 +15,10 @@ let legoFilter = null;
 export function initMap (vm) {
   // マップ作製ループ用の配列を作成
   const maps = [
-    {mapName: 'map01', map:store.state.map01, layer:store.state.layerLists.map01[0].layer},
-    {mapName: 'map02', map:store.state.map02, layer:store.state.layerLists.map02[0].layer},
-    {mapName: 'map03', map:store.state.map03, layer:store.state.layerLists.map03[0].layer},
-    {mapName: 'map04', map:store.state.map04, layer:store.state.layerLists.map04[0].layer}
+    {mapName: 'map01', map:store.state.base.map01, layer:store.state.base.layerLists.map01[0].layer},
+    {mapName: 'map02', map:store.state.base.map02, layer:store.state.base.layerLists.map02[0].layer},
+    {mapName: 'map03', map:store.state.base.map03, layer:store.state.base.layerLists.map03[0].layer},
+    {mapName: 'map04', map:store.state.base.map04, layer:store.state.base.layerLists.map04[0].layer}
   ];
   const view01 = new View({
     center: fromLonLat([140.097, 37.856]),
@@ -36,7 +36,7 @@ export function initMap (vm) {
       view: view01
     });
     // マップをストアに登録
-    store.commit('setMap', {mapName: maps[i].mapName, map});
+    store.commit('base/setMap', {mapName: maps[i].mapName, map});
     // イベント
     map.on('singleclick', function (evt) {
       console.log(transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
@@ -91,7 +91,7 @@ export function initMap (vm) {
     map.addControl(new Target({composite: 'difference'}));
     const notification = new Notification();
     map.addControl(notification);
-    store.commit('setNotifications',{mapName:mapName, control: notification});
+    store.commit('base/setNotifications',{mapName:mapName, control: notification});
     map.addControl(new ScaleLine());
 
     const className =' .ol-scale-line';
@@ -118,7 +118,7 @@ export function initMap (vm) {
 
 export function synch (vm) {
   vm.synchFlg = !vm.synchFlg;
-  let map01View = store.state.maps.map01.getView();
+  let map01View = store.state.base.maps.map01.getView();
   if (!vm.synchFlg) {
     const viewArr = [];
     for (let i = 0; i < 3; i++) {
@@ -127,21 +127,21 @@ export function synch (vm) {
         zoom: map01View.getZoom()
       })
     }
-    store.state.maps.map02.setView(viewArr[0]);
-    store.state.maps.map03.setView(viewArr[1]);
-    store.state.maps.map04.setView(viewArr[2]);
+    store.state.base.maps.map02.setView(viewArr[0]);
+    store.state.base.maps.map03.setView(viewArr[1]);
+    store.state.base.maps.map04.setView(viewArr[2]);
   } else {
-    store.state.maps.map02.setView(map01View);
-    store.state.maps.map03.setView(map01View);
-    store.state.maps.map04.setView(map01View)
+    store.state.base.maps.map02.setView(map01View);
+    store.state.base.maps.map03.setView(map01View);
+    store.state.base.maps.map04.setView(map01View)
   }
 }
 
 export function resize () {
-  store.state.maps.map01.updateSize();
-  store.state.maps.map02.updateSize();
-  store.state.maps.map03.updateSize();
-  store.state.maps.map04.updateSize()
+  store.state.base.maps.map01.updateSize();
+  store.state.base.maps.map02.updateSize();
+  store.state.base.maps.map03.updateSize();
+  store.state.base.maps.map04.updateSize()
 }
 
 export function watchLayer (map, thisName, newLayerList,oldLayerList) {
@@ -162,16 +162,16 @@ export function watchLayer (map, thisName, newLayerList,oldLayerList) {
             $('<a>').text('戻す')
             .click(function() {
               map.getView().setCenter(oldCenter);
-              store.state.notifications[thisName].hide();
+              store.state.base.notifications[thisName].hide();
             })
             .appendTo(div);
 
             $('<a style="margin-left: 10px;">').text('NO')
             .click(function() {
-              store.state.notifications[thisName].hide();
+              store.state.base.notifications[thisName].hide();
             })
             .appendTo(div);
-            store.state.notifications[thisName].show(div.get(0),5000)
+            store.state.base.notifications[thisName].show(div.get(0),5000)
           }
         }
       }
@@ -199,21 +199,21 @@ export function opacityChange (item) {
 
 export function removeLayer (item, layerList, name) {
   const result = layerList.filter((el) => el.id !== item.id);
-  store.commit('updateList', {value: result, name: name});
+  store.commit('base/updateList', {value: result, mapName: name});
   // 削除するレイヤーの透過度を１に戻す。再度追加するときのために
   item.layer.setOpacity(1);
-  const map = store.state.maps[name];
+  const map = store.state.base.maps[name];
   map.removeLayer(item.layer)
 }
 
 export function lego (name, selected) {
-  const map = store.state.maps[name];
+  const map = store.state.base.maps[name];
   try{map.removeFilter(legoFilter);}catch(e){}
   legoFilter = new Lego({ brickSize:selected, img:'brick' });
   map.addFilter(legoFilter);
 }
 
 export function legoRemove (name) {
-  const map = store.state.maps[name];
+  const map = store.state.base.maps[name];
   try{map.removeFilter(legoFilter);}catch(e){}
 }

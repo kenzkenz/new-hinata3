@@ -10,8 +10,8 @@
                     <b-button class='olbtn' :size="btnSize" @click="openDialog(s_dialogs[mapName])">背景</b-button>
                 </div>
                 <div class="top-right-div"></div>
-                <v-dialog-layer :name=mapName />
-                <v-dialog-info :name=mapName />
+                <v-dialog-layer :mapName=mapName />
+                <v-dialog-info :mapName=mapName />
                 <v-dialog-menu v-if="mapName === 'map01'"/>
                 <div class="zoom-div">{{ zoom[mapName] }}</div>
             </div>
@@ -43,8 +43,6 @@ export default {
     return {
       mapNames: ['map01','map02','map03','map04'],
       btnSize: '',
-      splitFlg: 1,
-      menuContentSize: {'height': 'auto','margin': '10px', 'overflow': 'auto'},
       mapSize: {
         map01: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
         map02: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
@@ -66,19 +64,22 @@ export default {
     }
   },
   computed: {
-    s_dialogs () { return this.$store.state.dialogs},
-    s_splitFlg () { return this.$store.state.splitFlg}
+    s_dialogs () { return this.$store.state.base.dialogs},
+    s_splitFlg () { return this.$store.state.base.splitFlg},
+    s_dialogMaxZindex () { return this.$store.state.base.dialogMaxZindex}
   },
   methods: {
     // レイヤーのダイアログを開く------------------------------------------------------------------
     openDialog (dialog) {
-      this.$store.commit('incrDialogMaxZindex');
-      dialog.dialog["z-index"] = this.$store.state.dialogMaxZindex;
-      this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
+      this.$store.commit('base/incrDialogMaxZindex');
+      dialog.style["z-index"] = this.s_dialogMaxZindex;
+      dialog.style.display = 'block'
+
+      // this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
     },
     // 分割-------------------------------------------------------------------------------------
     splitMap () {
-      this.$store.commit('incrSplitFlg');
+      this.$store.commit('base/incrSplitFlg');
       this.splitMap2();
       Permalink.moveEnd()
     },

@@ -4,118 +4,52 @@
             <div class="drag-handle" v-my-drag-handle></div>
             <div class="close-btn-div" @click="close(item)"><v-icon name="times" scale="1.5" class="hover"/></div>
             <!--なにもないとき。普通のラスターのとき-->
-            <div v-if="!item.compoName">
+            <div v-if="!item.component">
                 <div class="info-content-div">
                     <p v-html="item.title"></p><hr>
                     <p v-html="item.summary"></p>
                 </div>
             </div>
             <!--海面上昇シミュレーション5m-->
-            <div v-else-if="item.compoName === 'flood5m'">
-                <div class="info-content-div">
-                    <p v-html="item.title"></p><hr>
-                    <p v-html="item.summary"></p><hr>
-                    <b-form-radio-group v-model="selected5m" :options="options" name="flood5m" @change="floodChange5m"/>
-                    <input type="range" min="0" :max="floodMax5m" :step="seaLevelStep5m" class="flood-range5m" v-model.number="seaLevel5m" @input="flood" />
-                    <div style="text-align: center;">海抜{{ seaLevel5m.toFixed(1) }}メートル</div>
-                </div>
-            </div>
+            <v-flood :item="item" :mapName="mapName" v-else-if="item.component.name === 'flood5m'" />
             <!--海面上昇シミュレーション10m-->
-            <div v-else-if="item.compoName === 'flood10m'">
-                <div class="info-content-div">
-                    <p v-html="item.title"></p><hr>
-                    <p v-html="item.summary"></p><hr>
-                    <b-form-radio-group v-model="selected10m" :options="options" name="flood10m" @change="floodChange10m"/>
-                    <input type="range" min="0" :max="floodMax10m" step="seaLevelStep10m" class="flood-range10m" v-model.number="seaLevel10m" @input="flood" />
-                    <div style="text-align: center;">海抜{{ seaLevel10m.toFixed(1) }}メートル</div>
-                </div>
-            </div>
+            <v-flood :item="item" :mapName="mapName" v-else-if="item.component.name === 'flood10m'"/>
         </div>
     </div>
 </template>
 
 <script>
-  import * as Layers from '../js/layers'
+  import DialogInfoFlood from './dialog-info/Dialog-info-flood'
   export default {
     name: "v-dialog-info",
-    props: ['name'],
+    components: {
+      'v-flood': DialogInfoFlood
+    },
+    props: ['mapName'],
     data () {
       return {
-        seaLevel5m: 0,
-        seaLevel10m: 0,
-        selected5m: '100',
-        selected10m: '100',
-        seaLevelStep5m: 0.5,
-        seaLevelStep10m: 0.5,
-        options: [
-          { text: 'max 25m 0.1m刻み', value: '25' },
-          { text: 'max 100m 0.5m刻み', value: '100' },
-          { text: 'max 500m 0.5m刻み', value: '500' },
-          { text: 'max 1000m 0.5m刻み', value: '1000' },
-          { text: 'max 3800m 0.5m刻み', value: '3800' }
-        ],
-        floodMax5m: '100',
-        floodMax10m: '100'
       }
     },
     computed: {
       info () {
-        // console.log(this.$store.state.dialogsInfo);
-        return this.$store.state.dialogsInfo[this.name]
+        return this.$store.state.base.dialogsInfo[this.mapName]
       }
     },
     methods: {
       close (item) {
-        const result = this.$store.state.dialogsInfo[this.name] .find(el => el.id === item.id);
+        const result = this.$store.state.base.dialogsInfo[this.mapName] .find(el => el.id === item.id);
         result.style.display = 'none'
       },
       dialogMouseDown (item) {
-        const result = this.$store.state.dialogsInfo[this.name] .find(el => el.id === item.id);
-        this.$store.commit('incrDialogMaxZindex');
-        result.style["z-index"] = this.$store.state.dialogMaxZindex
-      },
-      // 海面上昇シミュレーション
-      flood () {
-        Layers.flood5Obj['map01'].getSource().changed();
-        Layers.flood5Obj['map02'].getSource().changed();
-        Layers.flood5Obj['map03'].getSource().changed();
-        Layers.flood5Obj['map04'].getSource().changed();
-        Layers.flood10Obj['map01'].getSource().changed();
-        Layers.flood10Obj['map02'].getSource().changed();
-        Layers.flood10Obj['map03'].getSource().changed();
-        Layers.flood10Obj['map04'].getSource().changed();
-      },
-      floodChange5m () {
-        this.$nextTick(function () {
-          const val = this.selected5m;
-          this.floodMax5m = val;
-          if (val === '25') {
-            this.seaLevelStep5m = 0.1
-          } else {
-            this.seaLevelStep5m = 0.5
-          }
-
-        })
-      },
-      floodChange10m () {
-        this.$nextTick(function () {
-          const val = this.selected10m;
-          this.floodMax10m = val;
-          if (val === '25') {
-            this.seaLevelStep10m = 0.1
-          } else {
-            this.seaLevelStep10m = 0.5
-          }
-        })
+        const result = this.$store.state.base.dialogsInfo[this.mapName] .find(el => el.id === item.id);
+        this.$store.commit('base/incrDialogMaxZindex');
+        result.style["z-index"] = this.$store.state.base.dialogMaxZindex
       }
-    },
-    mounted () {
-      // this.seaLevel = 50
     }
   }
 </script>
 
-<style scoped>
+<style>
     .form-group {
         margin-bottom: 0;
     }
